@@ -1,5 +1,7 @@
 package backend.entites;
 
+import backend.entites.accounts.ProtectedAccount;
+
 public class FeedItem {
     //Attributes
     private ProtectedAccount account;

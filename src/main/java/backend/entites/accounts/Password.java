@@ -1,0 +1,34 @@
+package backend.entites.accounts;
+
+import backend.entites.criteria.Criteria;
+import backend.entites.criteria.CriteriaExpression;
+import backend.entites.criteria.verifiable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Password implements verifiable {
+    // Instance Variable
+    private final String password;
+
+    // Constructor
+    public Password(String password) throws Exception {
+        this.password = password;
+
+        Criteria criteria = new Criteria(new ArrayList<CriteriaExpression>(List.of(
+                new CriteriaExpression("5", "at least size", password),
+                new CriteriaExpression("20", "at most size", password),
+                new CriteriaExpression(new ArrayList<String>(List.of("number", "letter", "special")), password),
+                new CriteriaExpression("number", "contains type", password),
+                new CriteriaExpression("letter", "contains type", password),
+                new CriteriaExpression("special", "contains type", password)
+        )));
+
+        this.isValid(password, criteria);
+    }
+
+    // Getter
+    public String getPassword() {
+        return this.password;
+    }
+}

@@ -1,10 +1,12 @@
 package backend.entites;
 
+import backend.entites.IDs.ItemID;
+
 import java.sql.Blob;
 
 public class ShopItem {
     //attributes are final since the charateristic of shopItem doesn't change
-    private ItemId itemId;
+    private ItemID itemId;
     private final Double cost;
     private final String name;
     private final String description;
@@ -12,7 +14,7 @@ public class ShopItem {
 
 
     // Contructor
-    public ShopItem(ItemId itemId, Double cost, String name, String description, Blob image){
+    public ShopItem(ItemID itemId, Double cost, String name, String description, Blob image){
         this.itemId = itemId;
         this.cost = cost;
         this.name = name;
@@ -22,7 +24,7 @@ public class ShopItem {
 
 
     // Getters
-    public ItemId getItemId(){
+    public ItemID getItemId(){
         return itemId;
     }
 
