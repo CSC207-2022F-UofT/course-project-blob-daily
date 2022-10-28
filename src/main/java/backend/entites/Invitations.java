@@ -26,7 +26,7 @@ public class Invitations {
     public String getReceiverID() {
         return this.receiverID;
     }
-    
+
     public Timestamp getTimestamp() {
         return this.timestamp;
     }
