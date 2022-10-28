@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SessionID extends backend.entites.IDs.ID {
-    public SessionID(String defaultID) throws Exception {
+    public SessionID(String defaultID) {
         super(defaultID, new Criteria(new ArrayList<CriteriaExpression>(List.of(
                 new CriteriaExpression("10", "at least size", defaultID),
                 new CriteriaExpression("19", "at most size", defaultID),

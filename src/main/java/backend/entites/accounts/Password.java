@@ -7,12 +7,12 @@ import backend.entites.criteria.verifiable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Password implements verifiable {
-    // Instance Variable
-    private final String password;
-
+/**
+ * @param password Instance Variable
+ */
+public record Password(String password) implements verifiable {
     // Constructor
-    public Password(String password) throws Exception {
+    public Password(String password) {
         this.password = password;
 
         Criteria criteria = new Criteria(new ArrayList<CriteriaExpression>(List.of(
@@ -25,10 +25,5 @@ public class Password implements verifiable {
         )));
 
         this.isValid(password, criteria);
-    }
-
-    // Getter
-    public String getPassword() {
-        return this.password;
     }
 }

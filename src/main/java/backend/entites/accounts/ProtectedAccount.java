@@ -8,19 +8,19 @@ public class ProtectedAccount {
     private final Timestamp timestamp;
 
     // Constructor
-    public ProtectedAccount(String username, Timestamp timestamp) throws Exception {
+    public ProtectedAccount(String username, Timestamp timestamp) {
         this.username = new Username(username);
         this.timestamp = timestamp;
     }
 
-    public ProtectedAccount(String username) throws Exception {
+    public ProtectedAccount(String username) {
         this.username = new Username(username);
         this.timestamp = null;
     }
 
     // Getters
     public String getUsername() {
-        return username.getUsername();
+        return username.username();
     }
 
     public Timestamp getTimestamp() {

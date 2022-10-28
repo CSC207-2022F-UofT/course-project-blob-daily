@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountID extends backend.entites.IDs.ID {
-    public AccountID(String defaultID) throws Exception {
+    public AccountID(String defaultID) {
         super(defaultID, new Criteria(new ArrayList<CriteriaExpression>(List.of(
                 new CriteriaExpression("20", "at least size", defaultID),
                 new CriteriaExpression(new ArrayList<String>(List.of("number", "letter", "special")), defaultID),

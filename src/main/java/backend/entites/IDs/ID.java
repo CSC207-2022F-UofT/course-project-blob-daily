@@ -9,7 +9,7 @@ public class ID implements verifiable {
     private final Criteria criteria;
 
     // Constructors
-    public ID(String defaultID, Criteria criteria) throws Exception {
+    public ID(String defaultID, Criteria criteria) {
         this.ID = defaultID;
         this.criteria = criteria;
 

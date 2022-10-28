@@ -40,7 +40,7 @@ public class CriteriaExpression {
         this.legend.put("letter", this.legend.get("uppercase") + this.legend.get("lowercase"));
     }
 
-    public boolean evaluate(String overriddenCondition, String overriddenValue) throws Exception {
+    public boolean evaluate(String overriddenCondition, String overriddenValue) {
         String testedCondition;
         String testedValue;
 
@@ -50,11 +50,11 @@ public class CriteriaExpression {
         if (this.conditionList.size() > 0 && testedCondition == null) {
             StringBuilder typeElements = new StringBuilder();
             for (String condition : this.conditionList) {
-                try {
-                    typeElements.append(this.legend.get(condition));
-                } catch (Exception e) {
-                    throw new Exception(String.format("The condition %s is not a valid condition type.", condition));
+                if(!this.legend.containsKey(condition)) {
+                    System.out.printf("The condition %s is not a valid condition type.%n", condition);
+                    return false;
                 }
+                typeElements.append(this.legend.get(condition));
             }
             return this.evaluate("contains only", typeElements.toString());
         }
@@ -71,11 +71,12 @@ public class CriteriaExpression {
             case "contains type":
                 String type;
 
-                try {
-                    type = this.legend.get(testedValue);
-                } catch (Exception e){
-                    throw new Exception(String.format("The condition '%s, %s' is not a valid condition type", testedCondition, testedValue));
+                if(!this.legend.containsKey(testedValue)) {
+                    System.out.printf("The condition %s is not a valid condition type.%n", testedCondition);
+                    return false;
                 }
+
+                type = this.legend.get(testedValue);
 
                  for (char c : this.target.toCharArray()) {
                     if (type.indexOf(c) != -1) return true;
@@ -88,7 +89,8 @@ public class CriteriaExpression {
             case "size":
                 return this.target.length() == Integer.parseInt(testedValue);
             default:
-                throw new Exception(String.format("The condition %s is not a valid condition type.", testedCondition));
+                System.out.printf("The condition %s is not a valid condition type.%n", testedCondition);
+                return false;
         }
     }
 

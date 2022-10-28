@@ -13,13 +13,13 @@ public class Account extends ProtectedAccount{
     private Timestamp timestamp;
 
     // Constructors
-    public Account(AccountID accountID, String username, String password, Timestamp timestamp) throws Exception {
+    public Account(AccountID accountID, String username, String password, Timestamp timestamp) {
         super(username, timestamp);
         this.accountID = accountID;
         this.password = new Password(password);
     }
 
-    public Account(SessionID sessionID, String username, String password) throws Exception {
+    public Account(SessionID sessionID, String username, String password) {
         super(username);
         this.sessionID = sessionID;
         this.password = new Password(password);
@@ -35,6 +35,6 @@ public class Account extends ProtectedAccount{
     }
 
     public String getPassword() {
-        return password.getPassword();
+        return password.password();
     }
 }
