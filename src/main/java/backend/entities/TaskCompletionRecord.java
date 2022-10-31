@@ -1,4 +1,6 @@
 package backend.entities;
+
+import backend.entities.IDs.AccountID;
 import java.sql.Timestamp;
 
 public class TaskCompletionRecord {
