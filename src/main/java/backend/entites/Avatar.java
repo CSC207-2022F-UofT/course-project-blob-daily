@@ -2,7 +2,7 @@ package backend.entites;
 
 import java.util.List;
 
-public class Avatar {
+public class Pet {
     private AccountID accountID;
     private Double health;
     private List<ShopItem> inventory;
@@ -10,7 +10,7 @@ public class Avatar {
 
 
     // Contructor
-    public Avatar(AccountID accountID, Double health, List<ShopItem> inventory, List<ShopItem> currentOutfit){
+    public Pet(AccountID accountID, Double health, List<ShopItem> inventory, List<ShopItem> currentOutfit){
         this.accountID = accountID;
         this.health = health;
         this.inventory = inventory;
