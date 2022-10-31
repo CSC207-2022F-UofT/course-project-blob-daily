@@ -1,4 +1,4 @@
-package backend.entites;
+package backend.entities;
 import java.sql.Timestamp;
 
 public class TaskCompletionRecord {

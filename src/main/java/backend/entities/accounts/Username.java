@@ -1,8 +1,8 @@
-package backend.entites.accounts;
+package backend.entities.accounts;
 
-import backend.entites.criteria.Criteria;
-import backend.entites.criteria.CriteriaExpression;
-import backend.entites.criteria.verifiable;
+import backend.entities.criteria.Criteria;
+import backend.entities.criteria.CriteriaExpression;
+import backend.entities.criteria.verifiable;
 
 import java.util.ArrayList;
 import java.util.List;

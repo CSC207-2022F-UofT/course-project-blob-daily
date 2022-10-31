@@ -1,4 +1,4 @@
-package backend.entites;
+package backend.entities;
 
 public class Task {
     private String taskName;

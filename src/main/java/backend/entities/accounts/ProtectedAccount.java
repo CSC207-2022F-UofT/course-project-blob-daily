@@ -1,4 +1,4 @@
-package backend.entites.accounts;
+package backend.entities.accounts;
 
 import java.sql.Timestamp;
 

@@ -1,7 +1,7 @@
-package backend.entites.accounts;
+package backend.entities.accounts;
 
-import backend.entites.IDs.AccountID;
-import backend.entites.IDs.SessionID;
+import backend.entities.IDs.AccountID;
+import backend.entities.IDs.SessionID;
 
 import java.sql.Timestamp;
 

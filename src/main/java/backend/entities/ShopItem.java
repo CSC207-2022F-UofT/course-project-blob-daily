@@ -1,6 +1,6 @@
-package backend.entites;
+package backend.entities;
 
-import backend.entites.IDs.ItemID;
+import backend.entities.IDs.ItemID;
 
 import java.sql.Blob;
 

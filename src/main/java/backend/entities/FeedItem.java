@@ -1,6 +1,6 @@
-//package backend.entites;
+//package backend.entities;
 //
-//import backend.entites.accounts.ProtectedAccount;
+//import backend.entities.accounts.ProtectedAccount;
 //
 //public class FeedItem {
 //    //Attributes

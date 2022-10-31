@@ -1,12 +1,12 @@
-package backend.entites.IDs;
+package backend.entities.IDs;
 
-import backend.entites.criteria.Criteria;
-import backend.entites.criteria.CriteriaExpression;
+import backend.entities.criteria.Criteria;
+import backend.entities.criteria.CriteriaExpression;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountID extends backend.entites.IDs.ID {
+public class AccountID extends backend.entities.IDs.ID {
     public AccountID(String defaultID) {
         super(defaultID, new Criteria(new ArrayList<CriteriaExpression>(List.of(
                 new CriteriaExpression("20", "at least size", defaultID),

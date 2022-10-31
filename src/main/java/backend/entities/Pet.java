@@ -1,6 +1,6 @@
-package backend.entites;
+package backend.entities;
 
-import backend.entites.IDs.AccountID;
+import backend.entities.IDs.AccountID;
 
 import java.util.List;
 
