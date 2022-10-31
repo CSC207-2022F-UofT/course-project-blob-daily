@@ -27,14 +27,19 @@ public class Account extends ProtectedAccount{
 
     // Getters
     public AccountID getAccountID() {
-        return accountID;
+        return this.accountID;
     }
 
     public SessionID getSessionID() {
-        return sessionID;
+        return this.sessionID;
     }
 
     public String getPassword() {
-        return password.password();
+        return this.password.password();
+    }
+
+    @Override
+    public Timestamp getTimestamp() {
+        return this.timestamp;
     }
 }

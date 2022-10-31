@@ -7,7 +7,7 @@ public class ProtectedAccount {
     private final Username username;
     private final Timestamp timestamp;
 
-    // Constructor
+    // Constructors
     public ProtectedAccount(String username, Timestamp timestamp) {
         this.username = new Username(username);
         this.timestamp = timestamp;

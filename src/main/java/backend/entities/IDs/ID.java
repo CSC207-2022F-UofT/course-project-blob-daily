@@ -22,6 +22,8 @@ public class ID implements verifiable {
 
     // Getter
     public String getID() {
-        return ID;
+        return this.ID;
     }
+
+    public Criteria getCriteria() { return this.criteria; }
 }

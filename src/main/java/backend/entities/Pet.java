@@ -5,10 +5,10 @@ import backend.entities.IDs.AccountID;
 import java.util.List;
 
 public class Pet {
-    private AccountID accountID;
-    private Double health;
-    private List<ShopItem> inventory;
-    private List<ShopItem> currentOutfit;
+    private final AccountID accountID;
+    private final Double health;
+    private final List<ShopItem> inventory;
+    private final List<ShopItem> currentOutfit;
 
 
     // Contructor

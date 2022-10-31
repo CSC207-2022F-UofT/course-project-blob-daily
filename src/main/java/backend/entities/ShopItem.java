@@ -6,7 +6,7 @@ import java.sql.Blob;
 
 public class ShopItem {
     //attributes are final since the charateristic of shopItem doesn't change
-    private ItemID itemId;
+    private final ItemID itemID;
     private final Double cost;
     private final String name;
     private final String description;
@@ -14,8 +14,8 @@ public class ShopItem {
 
 
     // Contructor
-    public ShopItem(ItemID itemId, Double cost, String name, String description, Blob image){
-        this.itemId = itemId;
+    public ShopItem(ItemID itemID, Double cost, String name, String description, Blob image){
+        this.itemID = itemID;
         this.cost = cost;
         this.name = name;
         this.description = description;
@@ -25,7 +25,7 @@ public class ShopItem {
 
     // Getters
     public ItemID getItemId(){
-        return itemId;
+        return itemID;
     }
 
     public Double getCost(){

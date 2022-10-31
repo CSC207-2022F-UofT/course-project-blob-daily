@@ -9,7 +9,7 @@ import java.util.List;
 public class AccountID extends backend.entities.IDs.ID {
     public AccountID(String defaultID) {
         super(defaultID, new Criteria(new ArrayList<CriteriaExpression>(List.of(
-                new CriteriaExpression("20", "at least size", defaultID),
+                new CriteriaExpression("20", "size", defaultID),
                 new CriteriaExpression(new ArrayList<String>(List.of("number", "letter", "special")), defaultID),
                 new CriteriaExpression("number", "contains type", defaultID),
                 new CriteriaExpression("letter", "contains type", defaultID),

@@ -4,9 +4,9 @@ import backend.entities.IDs.AccountID;
 import java.sql.Timestamp;
 
 public class TaskCompletionRecord {
-    private AccountID accountID;
-    private Timestamp timestamp;
-    private String taskName;
+    private final AccountID accountID;
+    private final Timestamp timestamp;
+    private final String taskName;
 
     public TaskCompletionRecord(AccountID accountID, Timestamp timestamp, String taskName){
         this.accountID = accountID;
