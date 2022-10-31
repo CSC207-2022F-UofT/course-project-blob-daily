@@ -1,20 +1,21 @@
 package backend.entites;
+import java.sql.Timestamp;
 
 public class TaskCompletionRecord {
-    private String accountID;
-    private String timestamp;
+    private AccountID accountID;
+    private Timestamp timestamp;
     private String taskName;
 
-    public TaskCompletionRecord(String accountID, String timestamp, String taskName){
+    public TaskCompletionRecord(AccountID accountID, Timestamp timestamp, String taskName){
         this.accountID = accountID;
         this.timestamp = timestamp;
         this.taskName = taskName;
     }
 
-    public String getAccountID(){
+    public AccountID getAccountID(){
         return this.accountID;
     }
-    public String getTimestamp(){
+    public Timestamp getTimestamp(){
         return this.timestamp;
     }
     public String getTaskName(){
