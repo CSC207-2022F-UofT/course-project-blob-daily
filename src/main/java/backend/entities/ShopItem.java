@@ -5,16 +5,16 @@ import backend.entities.IDs.ItemID;
 import java.sql.Blob;
 
 public class ShopItem {
-    //attributes are final since the charateristic of shopItem doesn't change
+    //attributes are final since the characteristic of shopItem doesn't change
     private final ItemID itemID;
     private final Double cost;
     private final String name;
     private final String description;
-    private final Blob image;
+    private final String image;
 
 
     // Contructor
-    public ShopItem(ItemID itemID, Double cost, String name, String description, Blob image){
+    public ShopItem(ItemID itemID, Double cost, String name, String description, String image){
         this.itemID = itemID;
         this.cost = cost;
         this.name = name;
@@ -40,7 +40,7 @@ public class ShopItem {
         return description;
     }
 
-    public Blob getImage(){
+    public String getImage(){
         return image;
     }
 }
