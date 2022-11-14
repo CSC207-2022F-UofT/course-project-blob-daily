@@ -1,5 +1,8 @@
 package backend.entities.criteria.conditions;
 
+import backend.error.exceptions.ConditionException;
+import backend.error.handlers.LogHandler;
+
 public class SizeRangeExpression extends CriteriaExpression{
 
     private final int min;
@@ -14,7 +17,12 @@ public class SizeRangeExpression extends CriteriaExpression{
     }
 
     public boolean evaluate() {
-        return this.min <= super.getTarget().length() && super.getTarget().length() <= this.max;
+        if (this.min <= super.getTarget().length() && super.getTarget().length() <= this.max) {
+            return true;
+        }
+        String errorMessage = String.format("The string '%s' (length: %s) must be between %s and %s characters long", super.getTarget(), super.getTarget().length(), this.min, this.max);
+        super.logError(errorMessage);
+        return false;
     }
 
     public int getMin() {

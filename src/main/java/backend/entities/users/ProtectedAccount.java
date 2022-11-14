@@ -1,6 +1,6 @@
-package backend.entities.accounts;
+package backend.entities.users;
 
-import backend.entities.accounts.info.Username;
+import backend.entities.users.info.Username;
 
 import java.sql.Timestamp;
 

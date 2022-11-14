@@ -3,8 +3,8 @@ package backend.usecases;
 import backend.entities.IDs.AccountID;
 import backend.entities.IDs.ID;
 import backend.entities.IDs.SessionID;
-import backend.entities.accounts.Account;
-import backend.entities.accounts.ProtectedAccount;
+import backend.entities.users.Account;
+import backend.entities.users.ProtectedAccount;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

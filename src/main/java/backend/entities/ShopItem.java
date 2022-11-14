@@ -1,6 +1,8 @@
 package backend.entities;
 
 import backend.entities.IDs.ItemID;
+import backend.error.exceptions.CriteriaException;
+import backend.error.handlers.LogHandler;
 
 import java.sql.Blob;
 

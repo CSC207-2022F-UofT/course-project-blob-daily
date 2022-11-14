@@ -1,5 +1,8 @@
 package backend.entities.criteria.conditions;
 
+import backend.error.exceptions.ConditionException;
+import backend.error.handlers.LogHandler;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,11 +45,16 @@ public abstract class CriteriaExpression {
     public boolean checkTypes(List<String> typeList) {
         for (String type : typeList) {
             if (!legend.containsKey(type)) {
-                System.out.printf("The type: %s is not a valid type%n", type);
+                LogHandler.logError(new ConditionException(String.format("The type: %s is not a valid type%n", type)));
                 return false;
             }
         }
         return true;
+    }
+
+    // Log a condition error
+    protected void logError(String message) {
+        LogHandler.logError(new ConditionException(message));
     }
 
     // Getters

@@ -3,6 +3,8 @@ package backend.entities.criteria;
 import backend.entities.criteria.conditions.CriteriaExpression;
 import backend.entities.criteria.conditions.SizeExpression;
 import backend.entities.criteria.conditions.SizeRangeExpression;
+import backend.error.exceptions.CriteriaException;
+import backend.error.handlers.LogHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +49,10 @@ public interface generatable extends verifiable{
             }
         }
 
-        if (!this.isValid(newString.toString(), criteria)) System.out.printf("Invalid criteria, %s%n", criteria);
+        if (!this.isValid(newString.toString(), criteria)) {
+            String errorMessage = String.format("Invalid criteria, %s%n", criteria);
+            LogHandler.logError(new CriteriaException(errorMessage));
+        }
 
         return newString.toString();
     }

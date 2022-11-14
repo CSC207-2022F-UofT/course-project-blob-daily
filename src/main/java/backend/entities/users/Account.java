@@ -1,8 +1,8 @@
-package backend.entities.accounts;
+package backend.entities.users;
 
 import backend.entities.IDs.AccountID;
 import backend.entities.IDs.SessionID;
-import backend.entities.accounts.info.Password;
+import backend.entities.users.info.Password;
 
 import java.sql.Timestamp;
 

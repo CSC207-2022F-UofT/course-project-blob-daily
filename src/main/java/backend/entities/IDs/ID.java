@@ -2,6 +2,7 @@ package backend.entities.IDs;
 
 import backend.entities.criteria.Criteria;
 import backend.entities.criteria.generatable;
+import backend.error.handlers.LogHandler;
 
 public class ID implements generatable {
     // Instance Variables
