@@ -1,0 +1,27 @@
+package backend.entities.criteria.conditions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class ContainsOnlyTypeExpression extends CriteriaExpression{
+    // Constructor
+    public ContainsOnlyTypeExpression(ArrayList<String> values, String target) {
+        super(values, target);
+    }
+
+    // Evaluate the target based on values
+    public boolean evaluate() {
+        HashMap<String, String> types = super.getLegend();
+        StringBuilder typeString = new StringBuilder();
+
+        for (String type : super.getTypeList()) {
+            typeString.append(types.get(type));
+        }
+
+        for(char c : super.getTarget().toCharArray()) {
+            if (typeString.toString().indexOf(c) == -1) return false;
+        }
+
+        return true;
+    }
+}
