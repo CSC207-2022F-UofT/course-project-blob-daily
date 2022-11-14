@@ -18,7 +18,7 @@ public class AccountManager {
     }
 
     // Hash the given string using the SHA-256 algorithm, return hexadecimal value
-    private String hash(String string) throws NoSuchAlgorithmException {
+    public static String hash(String string) throws NoSuchAlgorithmException {
         // Hash given String (SHA-256)
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedHash = digest.digest(
@@ -67,11 +67,4 @@ public class AccountManager {
         throw new UnsupportedOperationException();
     }
 
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        Timestamp t = new Timestamp(System.currentTimeMillis());
-
-        Account acc = new Account(new AccountID(null), null, null, t);
-        AccountManager a = new AccountManager();
-
-    }
 }
