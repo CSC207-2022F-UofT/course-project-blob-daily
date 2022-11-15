@@ -7,18 +7,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
 
-@Document(collection = "TaskCompletionCollections")
+@Document(collection = "TaskCompletedCollections")
 public class TaskCompletionRecord {
-    @Id
     private AccountID accountID;
     private Timestamp timestamp;
-    private String taskName;
+    private String task;
     private String image;
 
-    public TaskCompletionRecord(AccountID accountID, Timestamp timestamp, String taskName, String image){
+    public TaskCompletionRecord(AccountID accountID, Timestamp timestamp, String task, String image){
         this.accountID = accountID;
         this.timestamp = timestamp;
-        this.taskName = taskName;
+        this.task = task;
         this.image = image;
     }
 
@@ -32,7 +31,7 @@ public class TaskCompletionRecord {
         return this.timestamp;
     }
     public String getTask(){
-        return this.taskName;
+        return this.task;
     }
     public String getImage() {
         return this.image;
