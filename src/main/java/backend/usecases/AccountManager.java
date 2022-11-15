@@ -2,7 +2,6 @@ package backend.usecases;
 
 import backend.entities.IDs.AccountID;
 import backend.entities.IDs.ID;
-import backend.entities.IDs.ItemID;
 import backend.entities.IDs.SessionID;
 import backend.entities.users.Account;
 import backend.entities.users.ProtectedAccount;
@@ -12,6 +11,7 @@ import backend.error.handlers.LogHandler;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 
 public class AccountManager {
 
@@ -68,7 +68,12 @@ public class AccountManager {
         return null;
     }
 
-    public SessionID registerAccount() {
+    public SessionID registerAccount(String username, String password) {
+        // Create account instance with the given info
+        // Generate required IDs
+        // Validate created account
+        // Save to DB
+
         // Not implemented yet
         LogHandler.logError(new UnsupportedOperationException());
         return null;
@@ -99,7 +104,13 @@ public class AccountManager {
     }
 
     public static void main(String[] args) {
-        ProtectedAccount a = new ProtectedAccount("ShaanP22");
+        ProtectedAccount a = new ProtectedAccount("ShaanP22", new Timestamp(System.currentTimeMillis()));
+        Account p = new Account(new AccountID(""), null, null, new Timestamp(System.currentTimeMillis()));
+
+        p.getAccountID().generateID();
+        p.getSessionID().generateID();
+        p.getPassword().generatePassword();
+        p.getUsername().generateUsername();
 
         System.out.println(AccountManager.verifyAccountInfo(a));
     }
