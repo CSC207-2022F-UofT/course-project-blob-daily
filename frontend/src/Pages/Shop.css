@@ -1,0 +1,32 @@
+.shopDisplay {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.avatar {
+    width: 600px;
+    height: 450px;
+    background-color: gray;
+}
+
+.shopItems {
+    width: 400px;
+    height: 400px;
+    background-color: gray;
+}
+
+
+.shopText {
+    padding-left: 50px;
+    font-weight: 300;
+}
+
+.manageFlex {
+    width: 200px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+

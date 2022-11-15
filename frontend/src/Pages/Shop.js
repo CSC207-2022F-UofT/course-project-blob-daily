@@ -1,7 +1,29 @@
+import "./Shop.css"
+import Navbar from "../Components/navbar";
+
 function Shop(){
     return(
         <div>
-            <h1>Shop</h1>
+            <Navbar />
+            <div className="shopDisplay">
+                <div className="avatar"></div>
+                <div>
+                    <div className="shopItems"></div>
+                    <div className="manageFlex">
+                        <p>Equip</p>
+                        <p>|</p>
+                        <p>Reset</p>
+                    </div>
+
+                </div>
+
+            </div>
+            <h1 className="shopText">Current Balance:</h1>
+            <h1 className="shopText">$2400</h1>
         </div>
+
+
     )
 }
+
+export default Shop
