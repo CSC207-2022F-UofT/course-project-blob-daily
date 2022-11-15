@@ -12,13 +12,13 @@ import java.util.Random;
 
 public class TaskManager {
     //pass taskcompletionrecord
-    List<Task> tasks = new ArrayList<Task>();
-    static List<Task> active = new ArrayList<Task>();
-    static List<TaskCompletionRecord> complete = new ArrayList<TaskCompletionRecord>();
+    List<Task> tasks = new ArrayList<>();
+    static List<Task> active = new ArrayList<>();
+    static List<TaskCompletionRecord> complete = new ArrayList<>();
     public static boolean uploadImage(SessionID sessionID, int bson, String taskName){
         try {
 
-
+            return true;
         } catch (IOException e){
             e.printStackTrace();
             return false;
