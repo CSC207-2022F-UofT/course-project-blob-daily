@@ -1,4 +1,6 @@
-package backend.entities.accounts;
+package backend.entities.users;
+
+import backend.entities.users.info.Username;
 
 import java.sql.Timestamp;
 
@@ -19,8 +21,8 @@ public class ProtectedAccount {
     }
 
     // Getters
-    public String getUsername() {
-        return username.username();
+    public Username getUsername() {
+        return this.username;
     }
 
     public Timestamp getTimestamp() {

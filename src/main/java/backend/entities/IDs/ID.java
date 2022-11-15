@@ -1,11 +1,12 @@
 package backend.entities.IDs;
 
 import backend.entities.criteria.Criteria;
-import backend.entities.criteria.verifiable;
+import backend.entities.criteria.generatable;
+import backend.error.handlers.LogHandler;
 
-public class ID implements verifiable {
+public class ID implements generatable {
     // Instance Variables
-    private final String ID;
+    private String ID;
     private final Criteria criteria;
 
     // Constructors
@@ -13,11 +14,14 @@ public class ID implements verifiable {
         this.ID = defaultID;
         this.criteria = criteria;
 
-        this.isValid(this.ID, this.criteria);
+        if(this.ID != null) {
+            this.isValid(this.ID, this.criteria);
+        }
     }
 
     // ID Methods
     public void generateID() {
+        this.ID = generate(this.criteria);
     }
 
     // Getter
@@ -25,5 +29,12 @@ public class ID implements verifiable {
         return this.ID;
     }
 
-    public Criteria getCriteria() { return this.criteria; }
+    public Criteria getCriteria() {
+        return this.criteria;
+    }
+
+    @Override
+    public String toString() {
+        return this.ID;
+    }
 }
