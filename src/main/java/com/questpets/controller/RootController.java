@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RootController {
 
     @Autowired
-    private com.questpets.repositories.AccountsRepo accountsRepo;
+    private com.questpets.repositories.AccountsRepo Accounts_Repo;
 
     @GetMapping("/" )
     public String root(){
@@ -23,7 +23,7 @@ public class RootController {
         acc.getAccountID().generateID();
         DBAccount dbAcc = new DBAccount(acc);
 
-        accountsRepo.save(dbAcc);
+        Accounts_Repo.save(dbAcc);
         return "Hello World!";
     }
 }
