@@ -1,0 +1,44 @@
+.homeMain {
+    padding-top: 30px;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.feed {
+    display: flex;
+    flex-direction: column;
+}
+
+.goal {
+    font-weight: 200;
+}
+
+.goal h2 {
+    font-weight: 300;
+    font-size: 30px;
+    margin: 0px;
+}
+
+.goal p {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.progress {
+    display: flex;
+    flex-direction: row;
+}
+
+.progress p {
+    margin: 0px;
+    padding-left: 5px;
+}
+
+.fillBar {
+    margin-top: 5px;
+    width: 280px;
+    height: 10px;
+    background-color: black;
+    border-radius: 15px;
+}
