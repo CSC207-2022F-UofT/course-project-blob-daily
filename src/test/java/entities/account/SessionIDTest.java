@@ -28,14 +28,14 @@ public class SessionIDTest {
 
         // Action
         sessionID = new SessionID(expectedDefaultID);
-        String actualAccountID = sessionID.getID();
+        String actualSessionID = sessionID.getID();
 
         // Assert messages
         String getConstructorMessage = String.format("The given ID %s was returned instead of the expect %s",
-                actualAccountID, expectedDefaultID);
+                actualSessionID, expectedDefaultID);
 
         // Asserts
-        Assertions.assertEquals(actualAccountID, expectedDefaultID, getConstructorMessage);
+        Assertions.assertEquals(actualSessionID, expectedDefaultID, getConstructorMessage);
     }
 
     @Test
@@ -45,14 +45,14 @@ public class SessionIDTest {
 
         // Action
         sessionID = new SessionID(expectedDefaultID);
-        String actualAccountID = sessionID.getID();
+        String actualSessionID = sessionID.getID();
 
         // Assert messages
         String getAccountIDMessage = String.format("The given ID %s was returned instead of the expect %s",
-                actualAccountID, expectedDefaultID);
+                actualSessionID, expectedDefaultID);
 
         // Asserts
-        Assertions.assertEquals(actualAccountID, expectedDefaultID, getAccountIDMessage);
+        Assertions.assertEquals(actualSessionID, expectedDefaultID, getAccountIDMessage);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class SessionIDTest {
     @Test
     public void testInvalidSessionIDSizeTooSmall() {
         // Expected values
-        String invalidDefaultID = "&*8adD";
+        String invalidDefaultID = "dD";
 
         // Action
         sessionID = new SessionID(invalidDefaultID);
@@ -90,7 +90,7 @@ public class SessionIDTest {
     @Test
     public void testInvalidSessionIDSizeTooLarge() {
         // Expected values
-        String invalidDefaultID = "&*8adDdlkamdklamkdmKDMALKDMdad22ed";
+        String invalidDefaultID = "am8adDdlkamdklamkdmKDMALKDMdad22ed";
 
         // Action
         sessionID = new SessionID(invalidDefaultID);
@@ -120,7 +120,7 @@ public class SessionIDTest {
     }
 
     @Test
-    public void testInvalidAccountIDMissingValue() {
+    public void testInvalidSessionIDMissingValue() {
         // Expected values
         String invalidDefaultID = "aaliadjl88kkkkwk";
 
@@ -164,7 +164,7 @@ public class SessionIDTest {
         sessionID.generateID();
 
         // Assert messages
-        String generateSessionIDMessage = String.format("The generated accountID %s is not valid",
+        String generateSessionIDMessage = String.format("The generated sessionID %s is not valid",
                 sessionID.getID());
 
         // Asserts

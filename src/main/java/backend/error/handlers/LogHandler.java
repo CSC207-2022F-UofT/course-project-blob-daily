@@ -58,10 +58,4 @@ public class LogHandler {
             logInfo(e.getMessage());
         }
     }
-
-    public static void main(String[] args) {
-        logWarning("hey this may be important");
-
-        Account a = new Account(new AccountID("dila"), null, null, null);
-    }
 }
