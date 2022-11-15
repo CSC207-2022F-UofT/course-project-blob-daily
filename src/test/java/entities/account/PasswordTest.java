@@ -25,18 +25,18 @@ public class PasswordTest {
     @Test
     public void testConstructor() {
         // Expected values
-        String expectedDefaultID = "p0LkdlajijdILD*9";
+        String expectedPassword = "p0LkdlajijdILD*9";
 
         // Action
-        password = new Password(expectedDefaultID);
+        password = new Password(expectedPassword);
         String actualPassword = password.toString();
 
         // Assert messages
         String getConstructorMessage = String.format("The given Password %s was returned instead of the expect %s",
-                actualPassword, expectedDefaultID);
+                actualPassword, expectedPassword);
 
         // Asserts
-        Assertions.assertEquals(actualPassword, expectedDefaultID, getConstructorMessage);
+        Assertions.assertEquals(actualPassword, expectedPassword, getConstructorMessage);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class PasswordTest {
         password = new Password(invalidPassword);
 
         // Assert messages
-        String invalidPasswordMessage = String.format("An expected invalid username %s was found to be valid",
+        String invalidPasswordMessage = String.format("An expected invalid Password %s was found to be valid",
                 invalidPassword);
 
         // Asserts

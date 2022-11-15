@@ -52,7 +52,12 @@ public class LogHandler {
 
     public static void logError(Exception e) {
         if (!DEPRECATED) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            if (e.getMessage() != null) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            } else {
+                LOGGER.log(Level.SEVERE, e.getClass().getName(), e);
+            }
+
             e.printStackTrace();
         } else {
             logInfo(e.getMessage());

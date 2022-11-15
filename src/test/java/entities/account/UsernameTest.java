@@ -25,127 +25,127 @@ public class UsernameTest {
     @Test
     public void testConstructor() {
         // Expected values
-        String expectedDefaultID = "p0LkdlajijdILD*9";
+        String expectedUsername = "p0LkdlajijdILD9";
 
         // Action
-        password = new Password(expectedDefaultID);
-        String actualPassword = password.toString();
+        username = new Username(expectedUsername);
+        String actualUsername = username.toString();
 
         // Assert messages
-        String getConstructorMessage = String.format("The given Password %s was returned instead of the expect %s",
-                actualPassword, expectedDefaultID);
+        String getConstructorMessage = String.format("The given Username %s was returned instead of the expect %s",
+                actualUsername, expectedUsername);
 
         // Asserts
-        Assertions.assertEquals(actualPassword, expectedDefaultID, getConstructorMessage);
+        Assertions.assertEquals(actualUsername, expectedUsername, getConstructorMessage);
     }
 
     @Test
     public void testGetUsername() {
         // Expected values
-        String expectedPassword = "p0LkdlajijdILD*9";
+        String expectedUsername = "p0LkdlajijdILD9";
 
         // Action
-        password = new Password(expectedPassword);
-        String actualPassword = password.toString();
+        username = new Username(expectedUsername);
+        String actualUsername = username.toString();
 
         // Assert messages
-        String getPasswordMessage = String.format("The given Password %s was returned instead of the expect %s",
-                actualPassword, expectedPassword);
+        String getConstructorMessage = String.format("The given Username %s was returned instead of the expect %s",
+                actualUsername, expectedUsername);
 
         // Asserts
-        Assertions.assertEquals(actualPassword, expectedPassword, getPasswordMessage);
+        Assertions.assertEquals(actualUsername, expectedUsername, getConstructorMessage);
     }
 
     @Test
     public void testIsValid() {
         // Expected values
-        String expectedPassword = "p0LkdlajijdILD*9";
+        String expectedUsername = "p0LkdlajijdILD9";
 
         // Action
-        password = new Password(expectedPassword);
+        username = new Username(expectedUsername);
 
         // Assert messages
-        String getValidMessage = String.format("The given Password %s was unexpectedly found invalid",
-                expectedPassword);
+        String getValidMessage = String.format("The given Username %s was unexpectedly found invalid",
+                expectedUsername);
 
         // Asserts
-        Assertions.assertTrue(password.isValid(), getValidMessage);
+        Assertions.assertTrue(username.isValid(), getValidMessage);
     }
 
     @Test
     public void testInvalidUsernameSizeTooSmall() {
         // Expected values
-        String invalidPassword = "&dD";
+        String invalidUsername = "ddD";
 
         // Action
-        password = new Password(invalidPassword);
+        username = new Username(invalidUsername);
 
         // Assert messages
-        String invalidPasswordMessage = String.format("An expected invalid Password %s was found to be valid",
-                invalidPassword);
+        String invalidUsernameMessage = String.format("An expected invalid Username %s was found to be valid",
+                invalidUsername);
 
         // Asserts
-        Assertions.assertFalse(password.isValid(), invalidPasswordMessage);
+        Assertions.assertFalse(username.isValid(), invalidUsernameMessage);
     }
 
     @Test
     public void testInvalidUsernameSizeTooLarge() {
         // Expected values
-        String invalidPassword = "&*8adDdlkamdklamkdmKDMALKDMdad22ed";
+        String invalidUsername = "8adDdlkamdklamkdmKDMALKDMdad22ed";
 
         // Action
-        password = new Password(invalidPassword);
+        username = new Username(invalidUsername);
 
         // Assert messages
-        String invalidPasswordMessage = String.format("An expected invalid Password %s was found to be valid",
-                invalidPassword);
+        String invalidUsernameMessage = String.format("An expected invalid Username %s was found to be valid",
+                invalidUsername);
 
         // Asserts
-        Assertions.assertFalse(password.isValid(), invalidPasswordMessage);
+        Assertions.assertFalse(username.isValid(), invalidUsernameMessage);
     }
 
     @Test
     public void testInvalidUsernameContainsIllegalValue() {
         // Expected values
-        String invalidPassword = "IDliadjl88*🫡kkk";
+        String invalidUsername = "IDliadjl88*🫡kkk";
 
         // Action
-        password = new Password(invalidPassword);
+        username = new Username(invalidUsername);
 
         // Assert messages
-        String invalidPasswordMessage = String.format("An expected invalid Password %s was found to be valid",
-                invalidPassword);
+        String invalidUsernameMessage = String.format("An expected invalid Username %s was found to be valid",
+                invalidUsername);
 
         // Asserts
-        Assertions.assertFalse(password.isValid(), invalidPasswordMessage);
+        Assertions.assertFalse(username.isValid(), invalidUsernameMessage);
     }
 
     @Test
     public void testInvalidUsernameMissingValue() {
         // Expected values
-        String invalidPassword = "aaliadjl88kkkkwk";
+        String invalidUsername = "aaliadjl88kkkkwk";
 
         // Action
-        password = new Password(invalidPassword);
+        username = new Username(invalidUsername);
 
         // Assert messages
-        String invalidPasswordMessage = String.format("An expected invalid username %s was found to be valid",
-                invalidPassword);
+        String invalidUsernameMessage = String.format("An expected invalid Username %s was found to be valid",
+                invalidUsername);
 
         // Asserts
-        Assertions.assertFalse(password.isValid(), invalidPasswordMessage);
+        Assertions.assertFalse(username.isValid(), invalidUsernameMessage);
     }
 
     @Test
     public void testGetCriteria() {
         // Expected values
-        String expectedPassword = "p0LkdlajijdI*LD89";
+        String expectedUsername = "p0LkdlajijdILD89";
         Criteria expectedCriteria;
 
         // Action
-        password = new Password(expectedPassword);
-        expectedCriteria = Password.getCriteria();
-        Criteria actualCriteria = Password.criteria;
+        username = new Username(expectedUsername);
+        expectedCriteria = Username.criteria;
+        Criteria actualCriteria = Username.criteria;
 
         // Assert messages
         String getCriteriaMessage = String.format("The return criteria %s doesn't match the expected criteria %s",
@@ -158,17 +158,17 @@ public class UsernameTest {
     @Test
     public void testGenerateUsername() {
         // Expected values
-        String expectedPassword = null;
+        String expectedUsername = null;
 
         // Action
-        password = new Password(expectedPassword);
-        password.generatePassword();
+        username = new Username(expectedUsername);
+        username.generateUsername();
 
         // Assert messages
-        String generatePasswordMessage = String.format("The generated Password %s is not valid",
-                password.toString());
+        String generateUsernameMessage = String.format("The generated Username %s is not valid",
+                username.toString());
 
         // Asserts
-        Assertions.assertTrue(password.isValid(), generatePasswordMessage);
+        Assertions.assertTrue(username.isValid(), generateUsernameMessage);
     }
 }

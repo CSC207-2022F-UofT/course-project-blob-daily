@@ -2,8 +2,12 @@ package backend.usecases;
 
 import backend.entities.IDs.AccountID;
 import backend.entities.IDs.ID;
+import backend.entities.IDs.ItemID;
 import backend.entities.IDs.SessionID;
+import backend.entities.users.Account;
 import backend.entities.users.ProtectedAccount;
+import backend.error.exceptions.IDException;
+import backend.error.handlers.LogHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -11,8 +15,20 @@ import java.security.NoSuchAlgorithmException;
 
 public class AccountManager {
 
-    public boolean verifyAccountInfo(ProtectedAccount account) {
-        throw new UnsupportedOperationException();
+    public static boolean verifyAccountInfo(ProtectedAccount account) {
+        boolean isValid;
+
+        // verify credentials
+        isValid = account.getUsername().isValid();
+        isValid &= account.getTimestamp() != null;
+
+        if (account instanceof Account) {
+            isValid &= ((Account) account).getAccountID().isValid();
+            isValid &= ((Account) account).getSessionID().isValid();
+            isValid &= ((Account) account).getPassword().isValid();
+        }
+
+        return isValid;
     }
 
     // Hash the given string using the SHA-256 algorithm, return hexadecimal value
@@ -34,35 +50,58 @@ public class AccountManager {
         return hexString.toString();
     }
 
-    public ProtectedAccount getAccountInfo(ID id) {
+    public static ProtectedAccount getAccountInfo(ID id) {
+        if (id instanceof SessionID) {
+            // Make DB call to verify session to get account ID
+        }
+
         if(id instanceof AccountID) {
-            throw new UnsupportedOperationException();
-        }else if(id instanceof SessionID) {
-            throw new UnsupportedOperationException();
+            // Make DB call to find account based on id
+            // package data into account instance
         }else {
-            System.out.printf("Incorrect ID type: %s%n", id.getClass().toString());
+            LogHandler.logError(new IDException(String.format("Incorrect ID type: %s%n", id.getClass().toString())));
             return null;
         }
+
+        // Not implemented yet
+        LogHandler.logError(new UnsupportedOperationException());
+        return null;
     }
 
     public SessionID registerAccount() {
-        throw new UnsupportedOperationException();
+        // Not implemented yet
+        LogHandler.logError(new UnsupportedOperationException());
+        return null;
     }
 
     public SessionID loginAccount() {
-        throw new UnsupportedOperationException();
+        // Not implemented yet
+        LogHandler.logError(new UnsupportedOperationException());
+        return null;
     }
 
     public boolean logoutAccount() {
-        throw new UnsupportedOperationException();
+        // Not implemented yet
+        LogHandler.logError(new UnsupportedOperationException());
+        return false;
     }
 
     public boolean deleteAccount() {
-        throw new UnsupportedOperationException();
+        // Not implemented yet
+        LogHandler.logError(new UnsupportedOperationException());
+        return false;
     }
 
     public boolean updateAccount() {
-        throw new UnsupportedOperationException();
+        // Not implemented yet
+        LogHandler.logError(new UnsupportedOperationException());
+        return false;
+    }
+
+    public static void main(String[] args) {
+        ProtectedAccount a = new ProtectedAccount("ShaanP22");
+
+        System.out.println(AccountManager.verifyAccountInfo(a));
     }
 
 }
