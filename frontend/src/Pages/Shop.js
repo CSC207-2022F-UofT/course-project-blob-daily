@@ -13,7 +13,9 @@ function Shop(){
                 </div>
 
                 <div>
-                    <div className="shopItems"></div>
+                    <div className="shopItems grid grid-cols-3 gap-3">
+
+                    </div>
                     <div className="manageFlex">
                         <p>Equip</p>
                         <p>|</p>
