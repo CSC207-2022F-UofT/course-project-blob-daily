@@ -79,7 +79,7 @@ public class ProtectedAccountTest {
     }
 
     @Test
-    public void testInvalidUsernameSizeToobig() {
+    public void testInvalidUsernameSizeTooBig() {
         // Expected values
         String invalidUsername = "d0oaod0adoakdkLIJD223";
         Timestamp expectedTimestamp = new Timestamp(System.currentTimeMillis());
@@ -145,5 +145,40 @@ public class ProtectedAccountTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Timestamp.valueOf(expectedTimestamp);
         }, invalidTimestampMessage);
+    }
+
+    @Test
+    public void testGetUsername() {
+        // Expected values
+        String expectedUsername = "ShaanP22";
+
+        // Action
+        protectedAccount = new ProtectedAccount(expectedUsername);
+        String actualUsername = protectedAccount.getUsername().toString();
+
+        // Assert messages
+        String getUsernameMessage = String.format("The given username %s was return instead of the expect %s",
+                actualUsername, expectedUsername);
+
+        // Asserts
+        Assertions.assertEquals(actualUsername, expectedUsername, getUsernameMessage);
+    }
+
+    @Test
+    public void testGetTimestamp() {
+        // Expected values
+        String expectedUsername = "ShaanP22";
+        Timestamp expectedTimestamp = new Timestamp(System.currentTimeMillis());
+
+        // Action
+        protectedAccount = new ProtectedAccount(expectedUsername, expectedTimestamp);
+        Timestamp actualTimestamp = protectedAccount.getTimestamp();
+
+        // Assert messages
+        String getTimestampMessage = String.format("The given timestamp %s was return instead of the expect %s",
+                actualTimestamp, expectedTimestamp);
+
+        // Asserts
+        Assertions.assertEquals(actualTimestamp, expectedTimestamp, getTimestampMessage);
     }
 }

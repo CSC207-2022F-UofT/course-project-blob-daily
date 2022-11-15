@@ -1,6 +1,7 @@
 package backend.error.handlers;
 
 import backend.entities.IDs.AccountID;
+import backend.entities.users.Account;
 
 import java.util.HashMap;
 import java.util.logging.ConsoleHandler;
@@ -60,5 +61,7 @@ public class LogHandler {
 
     public static void main(String[] args) {
         logWarning("hey this may be important");
+
+        Account a = new Account(new AccountID("dila"), null, null, null);
     }
 }

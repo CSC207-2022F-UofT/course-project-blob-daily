@@ -11,13 +11,13 @@ import java.util.List;
 
 public class Username implements generatable {
     // Instance Variables
-    private String username;
-
-    private static Criteria criteria = new Criteria(new ArrayList<>(List.of(
+    private static final Criteria criteria = new Criteria(new ArrayList<>(List.of(
             new SizeRangeExpression(5, 20, null),
             new ContainsOnlyTypeExpression(new ArrayList<>(List.of("number", "letter")), null),
             new ContainsAtleastTypeExpression(new ArrayList<>(List.of("number", "letter", "uppercase", "lowercase")), null)
     )));
+
+    private String username;
 
     // Constructor
     public Username(String username) {
