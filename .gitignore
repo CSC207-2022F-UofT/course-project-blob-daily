@@ -81,6 +81,9 @@ fabric.properties
 **/build/
 !src/**/build/
 
+## Mongo-Related
+src/main/resources/application.properties
+
 # Ignore Gradle GUI config
 gradle-app.setting
 
