@@ -11,7 +11,7 @@ function Friends(){
 
     return(
         <div>
-            <Navbar />
+            <Navbar curPage={1}/>
             <div className="FriendsMain">
                 <div className="Friends">
                     <h3>Friends</h3>

@@ -4,9 +4,14 @@ import Navbar from "../Components/navbar";
 function Shop(){
     return(
         <div>
-            <Navbar />
+            <Navbar curPage={2}/>
             <div className="shopDisplay">
-                <div className="avatar"></div>
+                <div>
+                    <div className="avatar"></div>
+                    <h1 className="shopText">Current Balance:</h1>
+                    <h1 className="shopText">$2400</h1>
+                </div>
+
                 <div>
                     <div className="shopItems"></div>
                     <div className="manageFlex">
@@ -18,8 +23,7 @@ function Shop(){
                 </div>
 
             </div>
-            <h1 className="shopText">Current Balance:</h1>
-            <h1 className="shopText">$2400</h1>
+
         </div>
 
 

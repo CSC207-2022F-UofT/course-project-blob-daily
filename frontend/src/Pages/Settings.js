@@ -8,7 +8,7 @@ function Settings(){
 
     return(
         <div>
-            <Navbar />
+            <Navbar curPage={3}/>
                 <div className="settingsForm">
                     <input
                         className="answerBox"

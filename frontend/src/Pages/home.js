@@ -5,7 +5,7 @@ import Feeditem from "../Components/feeditem";
 function Home(){
     return(
         <div>
-            <Navbar />
+            <Navbar curPage={0}/>
             <div className="homeMain">
                 <div className="feed">
                     <Feeditem />
