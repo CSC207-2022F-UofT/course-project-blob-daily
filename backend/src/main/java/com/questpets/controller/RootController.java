@@ -11,7 +11,7 @@ public class RootController {
     @Autowired
     private com.questpets.repositories.AccountsRepo accountsRepo;
 
-    @GetMapping("/")
+    @GetMapping("/" )
     public String root(){
         accountsRepo.save(new Account(
                 new com.questpets.entities.IDs.AccountID(null),
