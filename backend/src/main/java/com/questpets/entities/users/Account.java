@@ -3,11 +3,9 @@ package com.questpets.entities.users;
 import com.questpets.entities.IDs.AccountID;
 import com.questpets.entities.IDs.SessionID;
 import com.questpets.entities.users.info.Password;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
 
-@Document(collection = "AccountsCollection")
 public class Account extends ProtectedAccount{
     // Instance Variables
     private final AccountID accountID;
