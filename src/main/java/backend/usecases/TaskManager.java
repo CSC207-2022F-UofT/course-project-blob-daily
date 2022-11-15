@@ -1,18 +1,50 @@
 package backend.usecases;
 
+import backend.entities.IDs.AccountID;
 import backend.entities.IDs.SessionID;
 import backend.entities.Task;
+import backend.entities.TaskCompletionRecord;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.IOException;
+import java.util.Random;
 
 public class TaskManager {
-    boolean uploadImage(SessionID sessionID, Image img, String taskName){
+    //pass taskcompletionrecord
+    List<Task> tasks = new ArrayList<Task>();
+    static List<Task> active = new ArrayList<Task>();
+    static List<TaskCompletionRecord> complete = new ArrayList<TaskCompletionRecord>();
+    public static boolean uploadImage(SessionID sessionID, int bson, String taskName){
+        try {
 
+
+        } catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
     }
-    List<Task> getTaskList(){
-
+    public void setTaskList(){
+        this.tasks = taskRepository();
     }
-    List<Task> getCompletedTaskList(SessionID sessionID){
-
+    public void setCompleteTasks(){
+        complete = taskCompletionRepository();
+    }
+    public void setActiveTasks(){
+        active.clear();
+        Random rand = new Random();
+        while (active.size() <= 3) {
+            int a = rand.nextInt(tasks.size()) + 1;
+            Task t = tasks.get(a);
+            if (!active.contains(t)) {
+                active.add(t);
+            }
+        }
+    }
+    public static List<Task> getActiveTasks(){
+        return active;
+    }
+    public static List<TaskCompletionRecord> getCompleteTasks(SessionID sessionID) {
+        return complete;
     }
 }
