@@ -3,19 +3,23 @@ import Navbar from "../Components/navbar";
 import React, {useState} from "react";
 
 function Settings(){
-    const [username, setUsername] = useState("new username ...");
-    const [password, setPassword] = useState("new password ...");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
+    function sendLoginRequest(){}
+    function deleteAccountRequest(){}
+    function sendLogoutRequest(){}
 
     return(
         <div>
             <Navbar curPage={3}/>
+                <h3>Login</h3>
                 <div className="settingsForm">
                     <input
                         className="answerBox"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
-                    <p className="blue">Send</p>
                 </div>
 
                 <div className="settingsForm space">
@@ -24,12 +28,24 @@ function Settings(){
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <p className="blue">Send</p>
+                </div>
+                <div>
+                    <button id="submit" type="button" onClick={()=>sendLoginRequest()}>
+                        Login
+                    </button>
+                </div>  
+
+                <div>
+                    <button id="submit" type="button" onClick={()=>deleteAccountRequest()}>
+                        Delete Account
+                    </button>
                 </div>
 
-                <h3 className="account">Delete account</h3>
-
-                <h3 className="account">Logout</h3>
+                <div>
+                    <button id="submit" type="button" onClick={()=>sendLogoutRequest()}>
+                        Logout
+                    </button> 
+                </div>
 
         </div>
     )
