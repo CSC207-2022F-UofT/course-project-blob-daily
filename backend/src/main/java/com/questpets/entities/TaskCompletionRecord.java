@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
 
-@Document(collection = "TaskCompletedCollections")
+@Document(collection = "TaskCompletedCollection")
 public class TaskCompletionRecord {
     private AccountID accountID;
     private Timestamp timestamp;
