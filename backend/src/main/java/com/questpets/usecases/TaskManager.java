@@ -42,13 +42,15 @@ public class TaskManager {
         return new ResponseEntity<List<Task>>(tas, HttpStatus.OK);
     }
 
-    @PostMapping("/home")
     public static boolean postCompletedTask(AccountID account, Timestamp timestamp, String task, String image){
         try {
-            TaskCompletionRecord record = new TaskCompletionRecord(account, timestamp, task, image);
-            System.out.println("created record");
-            System.out.println(record);
-            completeRepo.save(record);
+            System.out.println("created record");;
+            completeRepo.save(new TaskCompletionRecord(
+                    account,
+                    timestamp,
+                    task,
+                    image
+            ));
             System.out.println("saved record");
             return true;
         } catch (Exception e) {

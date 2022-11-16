@@ -21,28 +21,27 @@ public class TaskCompletionController {
     public ResponseEntity<?> postCompletedTask(@RequestBody String task){
         AccountID a = new AccountID(null);
         a.generateID();
-        try {
-            completeRepo.save(new TaskCompletionRecord(
-                    a,
-                    new Timestamp(System.currentTimeMillis()),
-                    task,
-                    "image"));
-            return new ResponseEntity<TaskCompletionRecord>(HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-//        if (TaskManager.postCompletedTask(
-//                a,
-//                new Timestamp(System.currentTimeMillis()),
-//                "task",
-//                "image"
-//                //task.getTaskName(),
-//                //image
-//                )) {
+//        try {
+//            completeRepo.save(new TaskCompletionRecord(
+//                    a,
+//                    new Timestamp(System.currentTimeMillis()),
+//                    task,
+//                    "image"));
 //            return new ResponseEntity<TaskCompletionRecord>(HttpStatus.OK);
-//        }else {
+//        } catch (Exception e){
 //            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
+        if (TaskManager.postCompletedTask(
+                a,
+                new Timestamp(System.currentTimeMillis()),
+                "task",
+                "image"
+                //task.getName(),
+                //image
+                )) {
+            return new ResponseEntity<TaskCompletionRecord>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

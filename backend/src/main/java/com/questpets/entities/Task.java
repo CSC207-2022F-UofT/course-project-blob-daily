@@ -12,7 +12,7 @@ public class Task {
         this.reward = reward;
     }
 
-    public String getTaskName(){
+    public String getName(){
         return this.task;
     }
     public double getReward(){
