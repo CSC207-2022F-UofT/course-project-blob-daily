@@ -11,7 +11,7 @@ public class LogHandler {
 
     private static final HashMap<String, Level> levelConverter = new HashMap<>();
 
-    public static boolean DEPRECATED = false;
+    public static boolean DEPRECATED = true;
 
     static {
         levelConverter.put("INFO", Level.INFO);

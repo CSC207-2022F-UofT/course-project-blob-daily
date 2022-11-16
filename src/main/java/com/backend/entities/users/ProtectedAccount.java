@@ -1,8 +1,10 @@
 package com.backend.entities.users;
 
 import com.backend.entities.users.info.Username;
+import net.minidev.json.JSONObject;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class ProtectedAccount {
     // Instance Variables
@@ -27,5 +29,14 @@ public class ProtectedAccount {
 
     public Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject entity = new JSONObject();
+
+        entity.put("username", this.username.toString());
+        if (this.timestamp != null) entity.put("timestamp", this.timestamp.toString());
+
+        return entity;
     }
 }
