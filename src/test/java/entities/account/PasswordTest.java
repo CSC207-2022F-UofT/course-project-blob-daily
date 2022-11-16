@@ -1,9 +1,8 @@
 package entities.account;
 
-import backend.entities.IDs.SessionID;
-import backend.entities.criteria.Criteria;
-import backend.entities.users.info.Password;
-import backend.error.handlers.LogHandler;
+import com.backend.entities.criteria.Criteria;
+import com.backend.entities.users.info.Password;
+import com.backend.error.handlers.LogHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
