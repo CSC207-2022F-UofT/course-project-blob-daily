@@ -12,16 +12,4 @@ public class RootController {
     @Autowired
     private com.questpets.repositories.AccountsRepo accountsRepo;
 
-    @GetMapping("/" )
-    public String root(){
-        Account acc = new Account(
-                new com.questpets.entities.IDs.AccountID("298374j"),
-                "Shaan03",
-                "CurryMuncher27;",
-                new java.sql.Timestamp(System.currentTimeMillis())
-        );
-        DBAccount dbAcc = new DBAccount(acc);
-        accountsRepo.save(dbAcc);
-        return "Hello World!";
-    }
 }

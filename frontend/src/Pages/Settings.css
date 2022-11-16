@@ -1,0 +1,37 @@
+.blue {
+    color: blue;
+}
+
+.answerBox {
+    height: 20px;
+    width: 130px;
+    padding-left: 5px;
+    background-color: #fdfaf6;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: 250;
+    outline: none;
+}
+
+.settingsForm{
+    padding-left: 100px;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.settingsForm p {
+    margin: 0px;
+    padding-top: 4px;
+    padding-left: 10px;
+}
+
+.space {
+    padding-bottom: 200px;
+}
+
+.account {
+    color: red;
+    padding-left: 100px;
+}
+
