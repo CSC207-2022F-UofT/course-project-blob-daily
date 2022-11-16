@@ -1,5 +1,7 @@
 import "./Shop.css"
 import Navbar from "../Components/navbar";
+import 'scrollable-component';
+import ShopItem from "../Components/shopitems";
 
 function Shop(){
     return(
@@ -13,9 +15,7 @@ function Shop(){
                 </div>
 
                 <div>
-                    <div className="shopItems grid grid-cols-3 gap-3">
-
-                    </div>
+                    <ShopItem/>
                     <div className="manageFlex">
                         <p>Equip</p>
                         <p>|</p>
