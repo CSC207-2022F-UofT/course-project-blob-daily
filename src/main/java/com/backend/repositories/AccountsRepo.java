@@ -1,16 +1,16 @@
 package com.backend.repositories;
 
-import com.backend.entities.users.DBAccount;
+import com.backend.entities.users.Account;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-public interface AccountsRepo extends MongoRepository<com.backend.entities.users.DBAccount, String> {
+public interface AccountsRepo extends MongoRepository<com.backend.entities.users.Account, String> {
     @Query("{accountID :?0}")
-    DBAccount findByAccountID(String accountID);
+    Account findByAccountID(String accountID);
     @Query("{sessionID :?0}")
-    DBAccount findBySessionID(String sessionID);
+    Account findBySessionID(String sessionID);
     @Query("{sessionID :?0}")
-    DBAccount findAccountID(String sessionID);
+    Account findAccountID(String sessionID);
     @Query("{username :?0, password : ?1}")
-    DBAccount findByCredentials(String username, String password);
+    Account findByCredentials(String username, String password);
 }

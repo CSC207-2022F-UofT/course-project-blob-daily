@@ -34,11 +34,11 @@ public class ProtectedAccountTest {
         String timestampMessage = String.format("The timestamp was not initialized correctly, given %s and wanted %s",
                 protectedAccount.getTimestamp(), null);
         String usernameMessage = String.format("The username was not initialized correctly, given %s and wanted %s",
-                protectedAccount.getUsername(), expectedUsername);
+                protectedAccount.getUsernameObject(), expectedUsername);
 
         // Asserts
         Assertions.assertNull(protectedAccount.getTimestamp(), timestampMessage);
-        Assertions.assertEquals(expectedUsername, protectedAccount.getUsername().toString(), usernameMessage);
+        Assertions.assertEquals(expectedUsername, protectedAccount.getUsernameObject().toString(), usernameMessage);
     }
 
     @Test
@@ -54,11 +54,11 @@ public class ProtectedAccountTest {
         String timestampMessage = String.format("The timestamp was not initialized correctly, given %s and wanted %s",
                 protectedAccount.getTimestamp(), expectedTimestamp);
         String usernameMessage = String.format("The username was not initialized correctly, given %s and wanted %s",
-                protectedAccount.getUsername(), expectedUsername);
+                protectedAccount.getUsernameObject(), expectedUsername);
 
         // Asserts
         Assertions.assertEquals(expectedTimestamp, protectedAccount.getTimestamp(), timestampMessage);
-        Assertions.assertEquals(expectedUsername, protectedAccount.getUsername().toString(), usernameMessage);
+        Assertions.assertEquals(expectedUsername, protectedAccount.getUsernameObject().toString(), usernameMessage);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ProtectedAccountTest {
                 invalidUsername);
 
         // Asserts
-        Assertions.assertFalse(protectedAccount.getUsername().isValid(), invalidUsernameMessage);
+        Assertions.assertFalse(protectedAccount.getUsernameObject().isValid(), invalidUsernameMessage);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ProtectedAccountTest {
                 invalidUsername);
 
         // Asserts
-        Assertions.assertFalse(protectedAccount.getUsername().isValid(), invalidUsernameMessage);
+        Assertions.assertFalse(protectedAccount.getUsernameObject().isValid(), invalidUsernameMessage);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class ProtectedAccountTest {
                 invalidUsername);
 
         // Asserts
-        Assertions.assertFalse(protectedAccount.getUsername().isValid(), invalidUsernameMessage);
+        Assertions.assertFalse(protectedAccount.getUsernameObject().isValid(), invalidUsernameMessage);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class ProtectedAccountTest {
                 invalidUsername);
 
         // Asserts
-        Assertions.assertFalse(protectedAccount.getUsername().isValid(), invalidUsernameMessage);
+        Assertions.assertFalse(protectedAccount.getUsernameObject().isValid(), invalidUsernameMessage);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class ProtectedAccountTest {
 
         // Action
         protectedAccount = new ProtectedAccount(expectedUsername);
-        String actualUsername = protectedAccount.getUsername().toString();
+        String actualUsername = protectedAccount.getUsernameObject().toString();
 
         // Assert messages
         String getUsernameMessage = String.format("The given username %s was return instead of the expect %s",

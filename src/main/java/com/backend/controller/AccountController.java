@@ -84,6 +84,6 @@ public class AccountController {
         if (protectedAccount == null) return new ResponseEntity<Object>("Something went wrong", HttpStatus.NOT_FOUND);
 
         // Response
-        return new ResponseEntity<Object>(protectedAccount.getJSONObject(), HttpStatus.OK);
+        return new ResponseEntity<Object>(protectedAccount, HttpStatus.OK);
     }
 }

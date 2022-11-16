@@ -40,4 +40,8 @@ public class ID implements generatable {
     public String toString() {
         return this.ID;
     }
+
+    public void setID(String newID) {
+        this.ID = newID;
+    }
 }

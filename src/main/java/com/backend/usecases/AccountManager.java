@@ -5,7 +5,6 @@ import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.ID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.users.Account;
-import com.backend.entities.users.DBAccount;
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.entities.users.info.Password;
 import com.backend.entities.users.info.Username;
@@ -13,7 +12,6 @@ import com.backend.error.exceptions.IDException;
 import com.backend.error.exceptions.InvalidAccountInfoException;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
-import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +28,13 @@ public class AccountManager {
         boolean isValid;
 
         // verify credentials
-        isValid = account.getUsername().isValid();
+        isValid = account.getUsernameObject().isValid();
         isValid &= account.getTimestamp() != null;
 
         if (account instanceof Account) {
-            isValid &= ((Account) account).getAccountID().isValid();
-            isValid &= ((Account) account).getSessionID().isValid();
-            isValid &= ((Account) account).getPassword().isValid();
+            isValid &= ((Account) account).getAccountIDObject().isValid();
+            isValid &= ((Account) account).getSessionIDObject().isValid();
+            isValid &= ((Account) account).getPasswordObject().isValid();
         }
 
         if(!isValid) LogHandler.logError(new InvalidAccountInfoException("The given account info is invalid"));
@@ -46,7 +44,7 @@ public class AccountManager {
 
     public static AccountID verifySession(SessionID sessionID) {
         // Make DB call to find account based on id
-        DBAccount account = AccountController.accountsRepo.findAccountID(sessionID.getID());
+        Account account = AccountController.accountsRepo.findAccountID(sessionID.getID());
 
         // Check if found
         if (account == null) {
@@ -92,7 +90,7 @@ public class AccountManager {
             // Make DB call to find account based on id (check if exists aswell)
             if (!AccountController.accountsRepo.existsById(id.toString())) return null;
 
-            DBAccount foundAccount = AccountController.accountsRepo.findByAccountID(id.toString());
+            Account foundAccount = AccountController.accountsRepo.findByAccountID(id.toString());
 
             // package data into account instance
             return new ProtectedAccount(foundAccount.getUsername(), foundAccount.getTimestamp());
@@ -109,20 +107,21 @@ public class AccountManager {
         Account newAccount = new Account(new AccountID(null), username, password, new Timestamp(System.currentTimeMillis()));
 
         // Generate required IDs
-        newAccount.getAccountID().generateID();
-        newAccount.getSessionID().generateID();
+        newAccount.getAccountIDObject().generateID();
+        newAccount.getSessionIDObject().generateID();
 
         // Validate created account
         if (!AccountManager.verifyAccountInfo(newAccount)) return null;
 
         // Hash the password
-        newAccount.getPassword().setPassword(AccountManager.hash(password));
+        newAccount.setPassword(AccountManager.hash(password));
+
+        newAccount.updateData();
 
         // Save to DB
-        DBAccount dbAcc = new DBAccount(newAccount);
-        AccountController.accountsRepo.save(dbAcc);
+        AccountController.accountsRepo.save(newAccount);
 
-        return newAccount.getSessionID();
+        return newAccount.getSessionIDObject();
     }
 
     public static SessionID loginAccount(String username, String password) {
@@ -136,7 +135,7 @@ public class AccountManager {
         password = AccountManager.hash(password);
 
         // Get accountID
-        DBAccount account = AccountController.accountsRepo.findByCredentials(username, password);
+        Account account = AccountController.accountsRepo.findByCredentials(username, password);
 
         // Check if the account could be found
         if (account == null) {
@@ -150,7 +149,10 @@ public class AccountManager {
         // Generate a session ID
         SessionID newSessionID = new SessionID(null);
         newSessionID.generateID();
-        account.setSessionID(newSessionID.getID());
+        account.getSessionIDObject().setID(newSessionID.getID());
+
+        account.updateData();
+
         AccountController.accountsRepo.save(account);
 
         return newSessionID;
@@ -164,8 +166,11 @@ public class AccountManager {
         if (accountID == null) return false;
 
         // Delete account by the accountID
-        DBAccount account = AccountController.accountsRepo.findByAccountID(accountID.getID());
-        account.setSessionID(null);
+        Account account = AccountController.accountsRepo.findByAccountID(accountID.getID());
+        account.getSessionIDObject().setID(null);
+
+        account.updateData();
+
         AccountController.accountsRepo.save(account);
 
         return true;
@@ -186,13 +191,10 @@ public class AccountManager {
 
     public boolean updateAccount(Account updatedAccount) {
         // verify updated account
-        if (!AccountManager.verifyAccountInfo(updatedAccount) && AccountController.accountsRepo.existsById(updatedAccount.getAccountID().getID())) return false;
-
-        // Convert to data representation
-        DBAccount dbAccount = new DBAccount(updatedAccount);
+        if (!AccountManager.verifyAccountInfo(updatedAccount) && AccountController.accountsRepo.existsById(updatedAccount.getAccountIDObject().getID())) return false;
 
         // Delete account by the accountID
-        AccountController.accountsRepo.save(dbAccount);
+        AccountController.accountsRepo.save(updatedAccount);
 
         return true;
     }
