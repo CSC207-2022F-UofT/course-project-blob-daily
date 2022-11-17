@@ -9,12 +9,14 @@ import {
     Routes,
     Route
 } from "react-router-dom";
+import Login from "./Pages/Login";
 
 function App() {
   return (
       <Router>
           <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Login />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/friends" element={<Friends />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/settings" element={<Settings />} />

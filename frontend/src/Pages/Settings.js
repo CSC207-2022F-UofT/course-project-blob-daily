@@ -1,10 +1,15 @@
 import './Settings.css'
 import Navbar from "../Components/navbar";
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 function Settings(){
     const [username, setUsername] = useState("new username ...");
     const [password, setPassword] = useState("new password ...");
+
+    const navigate = useNavigate();
+
+    const handleLogoutClick = useCallback(() => navigate('/', {replace: true}), [navigate]);
 
     return(
         <div>
@@ -29,7 +34,7 @@ function Settings(){
 
                 <h3 className="account">Delete account</h3>
 
-                <h3 className="account">Logout</h3>
+                <h3 className="account" onClick={handleLogoutClick}>Logout</h3>
 
         </div>
     )
