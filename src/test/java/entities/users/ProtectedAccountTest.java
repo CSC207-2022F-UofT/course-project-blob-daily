@@ -1,4 +1,4 @@
-package entities.account;
+package entities.users;
 
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.error.handlers.LogHandler;

@@ -1,4 +1,4 @@
-package entities.account;
+package entities.users.info;
 
 import com.backend.entities.criteria.Criteria;
 import com.backend.entities.users.info.Password;

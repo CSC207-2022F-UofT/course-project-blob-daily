@@ -1,4 +1,4 @@
-package entities.account;
+package entities.IDs;
 
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.criteria.Criteria;
