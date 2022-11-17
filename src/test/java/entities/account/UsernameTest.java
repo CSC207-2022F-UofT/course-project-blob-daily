@@ -122,7 +122,7 @@ public class UsernameTest {
     @Test
     public void testInvalidUsernameMissingValue() {
         // Expected values
-        String invalidUsername = "aaliadjl88kkkkwk";
+        String invalidUsername = "25425253535";
 
         // Action
         username = new Username(invalidUsername);

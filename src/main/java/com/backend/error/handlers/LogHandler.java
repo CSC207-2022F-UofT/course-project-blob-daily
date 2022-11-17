@@ -1,5 +1,9 @@
 package com.backend.error.handlers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.xml.sax.ErrorHandler;
+
 import java.util.HashMap;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
@@ -59,5 +63,10 @@ public class LogHandler {
         } else {
             logInfo(e.getMessage());
         }
+    }
+
+    public static ResponseEntity<Object> logError(Exception e, HttpStatus status) {
+        logError(e);
+        return ResponseHandler.packageErrorResponse(e, status);
     }
 }

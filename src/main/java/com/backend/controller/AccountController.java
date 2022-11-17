@@ -30,60 +30,30 @@ public class AccountController {
     @PostMapping("/login" )
     public ResponseEntity<Object> loginAccount(@RequestParam String username, String password){
         // Run AccountManager service
-        SessionID sessionID = AccountManager.loginAccount(username, password);
-
-        // Check for errors
-        if (sessionID == null) return new ResponseEntity<Object>("Something went wrong", HttpStatus.NOT_FOUND);
-
-        // Response
-        return new ResponseEntity<Object>(sessionID.getID(), HttpStatus.OK);
+        return AccountManager.loginAccount(username, password);
     }
 
     @PostMapping("/logout" )
     public ResponseEntity<Object> logoutAccount(@RequestParam String sessionID){
         // Run AccountManager service
-        boolean isSuccessful = AccountManager.logoutAccount(new SessionID(sessionID));
-
-        // Check for errors
-        if (!isSuccessful) return new ResponseEntity<Object>("Something went wrong", HttpStatus.NOT_FOUND);
-
-        // Response
-        return new ResponseEntity<Object>("Successfully Logged out", HttpStatus.OK);
+        return AccountManager.logoutAccount(new SessionID(sessionID));
     }
 
     @PostMapping("/register" )
     public ResponseEntity<Object> registerAccount(@RequestParam String username, String password){
         // Run AccountManager service
-        SessionID sessionID = AccountManager.registerAccount(username, password);
-
-        // Check for errors
-        if (sessionID == null) return new ResponseEntity<Object>("Something went wrong", HttpStatus.NOT_FOUND);
-
-        // Response
-        return new ResponseEntity<Object>(sessionID.getID(), HttpStatus.OK);
+        return AccountManager.registerAccount(username, password);
     }
 
     @DeleteMapping("/delete" )
     public ResponseEntity<Object> deleteAccount(@RequestParam String sessionID){
         // Run AccountManager service
-        boolean isSuccessful = AccountManager.deleteAccount(new SessionID(sessionID));
-
-        // Check for errors
-        if (!isSuccessful) return new ResponseEntity<Object>("Something went wrong", HttpStatus.NOT_FOUND);
-
-        // Response
-        return new ResponseEntity<Object>("Successfully Deleted Account!", HttpStatus.OK);
+        return AccountManager.deleteAccount(new SessionID(sessionID));
     }
 
     @GetMapping("/account" )
     public ResponseEntity<Object> getAccount(@RequestParam String sessionID) {
         // Run AccountManager service
-        ProtectedAccount protectedAccount = AccountManager.getAccountInfo(new SessionID(sessionID));
-
-        // Check for errors
-        if (protectedAccount == null) return new ResponseEntity<Object>("Something went wrong", HttpStatus.NOT_FOUND);
-
-        // Response
-        return new ResponseEntity<Object>(protectedAccount, HttpStatus.OK);
+        return AccountManager.getAccountInfo(new SessionID(sessionID));
     }
 }

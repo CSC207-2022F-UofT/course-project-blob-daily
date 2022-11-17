@@ -115,7 +115,7 @@ public class ProtectedAccountTest {
     @Test
     public void testInvalidUsernameMissingValue() {
         // Expected values
-        String invalidUsername = "jdaidj82";
+        String invalidUsername = "2125252";
         Timestamp expectedTimestamp = new Timestamp(System.currentTimeMillis());
 
         // Action

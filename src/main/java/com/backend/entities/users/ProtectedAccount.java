@@ -50,6 +50,7 @@ public class ProtectedAccount {
     }
 
     public Timestamp getTimestamp() {
+        if (this.timestamp == null) return null;
         return new Timestamp(timestamp.getTime());
     }
 }

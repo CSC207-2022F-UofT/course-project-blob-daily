@@ -13,4 +13,6 @@ public interface AccountsRepo extends MongoRepository<com.backend.entities.users
     Account findAccountID(String sessionID);
     @Query("{username :?0, password : ?1}")
     Account findByCredentials(String username, String password);
+    @Query("{username :?0}")
+    Account findByUsername(String username);
 }
