@@ -1,5 +1,6 @@
 package com.questpets.usecases;
 
+import com.questpets.controller.TaskActiveController;
 import com.questpets.controller.TaskCompletionController;
 import com.questpets.controller.TaskController;
 import com.questpets.entities.TaskActive;
@@ -23,12 +24,12 @@ public class TaskManager {
     public static List<TaskCompletionRecord> getCompleteTaskList() {
         return TaskCompletionController.completeRepo.findAll();
     }
-    public static List<TaskActive> getActiveTaskList(){
-        return TaskController.activeRepo.findAll();
+    public static void getActiveTaskList(){
+        active = TaskActiveController.activeRepo.findAll();
     }
 
 
-    public static boolean postCompletedTask(AccountID account, Timestamp timestamp, String task, String image){
+    public static boolean postCompletedTask(AccountID account, String timestamp, String task, String image){
         try {
             TaskCompletionController.completeRepo.save(new TaskCompletionRecord(
                     account,
@@ -45,14 +46,16 @@ public class TaskManager {
     public static void updateActiveTasks() {
         List<Task> tasks = getTaskList();
         active.clear();
+        TaskActiveController.activeRepo.deleteAll();
+
         Random rand = new Random();
         List<Integer> prev = new ArrayList<>();
 
-        while (active.size() <= 3) {
+        while (active.size() < 3) {
             int num = rand.nextInt(tasks.size()) + 1;
             if (!prev.contains(num)) {
                 Task t = tasks.get(num);
-                TaskActive tas = new TaskActive(t.getName(), t.getReward(), new Timestamp(System.currentTimeMillis()));
+                TaskActive tas = new TaskActive(t.getName(), t.getReward(), new Timestamp(System.currentTimeMillis()).toString());
                 active.add(tas);
                 prev.add(num);
             }
@@ -62,9 +65,17 @@ public class TaskManager {
     public static List<TaskActive> getActiveTasks() {
         String td = new Timestamp(System.currentTimeMillis()).toString();
         int today = Integer.parseInt(td.substring(8,10));
-        String recent = active.get(0).getTimestamp().toString().substring(8,10);
-        if (Integer.parseInt(recent) != today){
+        getActiveTaskList();
+        String recent = active.get(0).getTimestamp().substring(8,10);
+        if (Integer.parseInt(recent) != today) {
             updateActiveTasks();
+
+            for (int x = 0; x < 3; x++){
+                TaskActive task = active.get(x);
+                TaskActiveController.activeRepo.save(new TaskActive(
+                   task.getName(), task.getReward(), task.getTimestamp()
+                ));
+            }
         }
         return active;
     }

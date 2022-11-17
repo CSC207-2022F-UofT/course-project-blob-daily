@@ -24,7 +24,7 @@ public class TaskCompletionController {
         a.generateID();
         if (TaskManager.postCompletedTask(
                 a,
-                new Timestamp(System.currentTimeMillis()),
+                new Timestamp(System.currentTimeMillis()).toString(),
                 "task",
                 "image"
                 )) {

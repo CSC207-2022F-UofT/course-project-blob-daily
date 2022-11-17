@@ -9,25 +9,26 @@ import java.sql.Timestamp;
 
 @Document(collection = "TaskCompletedCollection")
 public class TaskCompletionRecord {
+    @Id
     private AccountID accountID;
-    private Timestamp timestamp;
+    private String timestamp;
     private String task;
     private String image;
 
-    public TaskCompletionRecord(AccountID accountID, Timestamp timestamp, String task, String image){
+    public TaskCompletionRecord(AccountID accountID, String timestamp, String task, String image){
         this.accountID = accountID;
         this.timestamp = timestamp;
         this.task = task;
         this.image = image;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
     public AccountID getAccountID(){
         return this.accountID;
     }
-    public Timestamp getTimestamp(){
+    public String getTimestamp(){
         return this.timestamp;
     }
     public String getTask(){
