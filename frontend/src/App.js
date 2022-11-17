@@ -3,6 +3,7 @@ import Home from "./Pages/home";
 import Friends from "./Pages/Friends"
 import Shop from "./Pages/Shop";
 import Settings from "./Pages/Settings";
+import React, {useEffect, useState} from 'react';
 
 import {
     BrowserRouter as Router,
@@ -22,5 +23,7 @@ function App() {
       </Router>
   );
 }
+
+
 
 export default App;

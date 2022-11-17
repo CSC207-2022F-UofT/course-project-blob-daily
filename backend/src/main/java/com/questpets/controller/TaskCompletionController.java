@@ -18,7 +18,7 @@ public class TaskCompletionController {
     public TaskCompletionController(TaskCompletionRepo completeRepo){
         TaskCompletionController.completeRepo = completeRepo;
     }
-    @PostMapping("/home")
+    @PostMapping("/")
     public ResponseEntity<?> postCompletedTask(@RequestBody String task){
         AccountID a = new AccountID(null);
         a.generateID();

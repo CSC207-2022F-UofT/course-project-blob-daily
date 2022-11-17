@@ -1,6 +1,8 @@
 package com.questpets.usecases;
 
 import com.questpets.controller.TaskCompletionController;
+import com.questpets.controller.TaskController;
+import com.questpets.entities.TaskActive;
 import com.questpets.entities.IDs.AccountID;
 import com.questpets.entities.IDs.SessionID;
 import com.questpets.entities.Task;
@@ -12,22 +14,19 @@ import java.util.List;
 import java.util.Random;
 
 public class TaskManager {
-    private static List<Task> tasks = new ArrayList<>();
-    private static List<Task> active = new ArrayList<>();
+    private static List<TaskActive> active = new ArrayList<>();
     private static List<TaskCompletionRecord> complete = new ArrayList<>();
 
-//    public void setTaskList() {
-//        this.tasks = taskRepository();
-//    }
-//
-//    public void setCompleteTasks() {
-//        complete = taskCompletionRepository();
-//    }
+    public static List<Task> getTaskList() {
+        return TaskController.taskRepo.findAll();
+    }
+    public static List<TaskCompletionRecord> getCompleteTaskList() {
+        return TaskCompletionController.completeRepo.findAll();
+    }
+    public static List<TaskActive> getActiveTaskList(){
+        return TaskController.activeRepo.findAll();
+    }
 
-//    public ResponseEntity<?> findTasks(){
-//        List<Task> tas = taskRepo.findAll();
-//        return new ResponseEntity<List<Task>>(tas, HttpStatus.OK);
-//    }
 
     public static boolean postCompletedTask(AccountID account, Timestamp timestamp, String task, String image){
         try {
@@ -44,21 +43,26 @@ public class TaskManager {
     }
 
     public static void updateActiveTasks() {
+        List<Task> tasks = getTaskList();
         active.clear();
         Random rand = new Random();
+        List<Integer> prev = new ArrayList<>();
+
         while (active.size() <= 3) {
-            int a = rand.nextInt(tasks.size()) + 1;
-            Task t = tasks.get(a);
-            if (!active.contains(t)) {
-                active.add(t);
+            int num = rand.nextInt(tasks.size()) + 1;
+            if (!prev.contains(num)) {
+                Task t = tasks.get(num);
+                TaskActive tas = new TaskActive(t.getName(), t.getReward(), new Timestamp(System.currentTimeMillis()));
+                active.add(tas);
+                prev.add(num);
             }
         }
     }
 
-    public static List<Task> getActiveTasks() {
+    public static List<TaskActive> getActiveTasks() {
         String td = new Timestamp(System.currentTimeMillis()).toString();
         int today = Integer.parseInt(td.substring(8,10));
-        String recent = complete.get(1).getTimestamp().toString().substring(8,10);
+        String recent = active.get(0).getTimestamp().toString().substring(8,10);
         if (Integer.parseInt(recent) != today){
             updateActiveTasks();
         }
