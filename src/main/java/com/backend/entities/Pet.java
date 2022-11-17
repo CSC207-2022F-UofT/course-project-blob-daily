@@ -15,15 +15,17 @@ public class Pet {
     @Id
     private final String ID;
     private final Double health;
+    private final Double balance;
     private final List<ShopItem> inventory;
     private final List<ShopItem> currentOutfit;
 
 
     // Contructor
-    public Pet(String ID, Double health, List<ShopItem> inventory, List<ShopItem> currentOutfit){
+    public Pet(String ID, Double health, Double balance, List<ShopItem> inventory, List<ShopItem> currentOutfit){
         this.accountID = new AccountID(ID);
         this.ID = ID;
         this.health = health;
+        this.balance = balance;
         this.inventory = inventory;
         this.currentOutfit = currentOutfit;
     }
@@ -37,6 +39,10 @@ public class Pet {
 
     public double getHealth(){
         return this.health;
+    }
+
+    public double getBalance() {
+        return this.balance;
     }
 
     public List<ShopItem> getInventory(){

@@ -23,9 +23,9 @@ public class ShopManager {
     }
 
     public static void addPet(){
-        ArrayList<ShopItem> curOutfit = new ArrayList<>();
-        curOutfit.add(new ShopItem("124", 59.90, "hoodie", "provides warmth"));
-        Pet pet = new Pet("9j(Gc5g)Id0G#Pt9s?De", 85.00, curOutfit, new ArrayList<>());
+        ArrayList<ShopItem> curInventory = new ArrayList<>();
+        curInventory.add(new ShopItem("124", 59.90, "hoodie", "provides warmth"));
+        Pet pet = new Pet("9j(Gc5g)Id0G#Pt9s?De", 85.00, 0.0, curInventory, new ArrayList<>());
         PetController.petRepo.save(pet);
     }
 
@@ -36,23 +36,43 @@ public class ShopManager {
     public static Optional<Pet> getPet(String sessionID){
         String curAccount = "9j(Gc5g)Id0G#Pt9s?De";
         Optional<Pet> pet = PetController.petRepo.findById(curAccount);
-        if (pet == null){
-            LogHandler.logError(new Exception("pet is null"));
-        }
+//        if (pet == null){
+//            LogHandler.logError(new Exception("pet is null"));
+//        }
         return pet;
     }
 
-    public static boolean updateCurrentOutfit(String sessionID, List<String> newOutfit){
-        throw new UnsupportedOperationException();
+    public static boolean updateCurrentOutfit(String sessionID, List<ShopItem> newOutfit){
+        String curAccount = "9j(Gc5g)Id0G#Pt9s?De";
+        Optional<Pet> pet = PetController.petRepo.findById(curAccount);
+//        if (pet == null){
+//            LogHandler.logError(new Exception("pet is null"));
+//        }
+        Pet updatedPet = new Pet(curAccount, pet.get().getHealth(), 0.0, pet.get().getInventory(), newOutfit);
+        PetController.petRepo.save(updatedPet);
+        return true;
     }
 
     public static double getBalance(String sessionID){
-        double balance = 28.9; //dataBase.getPet;
+        String curAccount = "9j(Gc5g)Id0G#Pt9s?De";
+        Optional<Pet> pet = PetController.petRepo.findById(curAccount);
+//        if (pet == null){
+//            LogHandler.logError(new Exception("pet is null"));
+//        }
 
-        return balance;
+        return pet.get().getBalance();
     }
 
     public static boolean purchaseItem(String itemID, String sessionID) {
-        throw new UnsupportedOperationException();
+        String curAccount = "9j(Gc5g)Id0G#Pt9s?De";
+        Optional<Pet> pet = PetController.petRepo.findById(curAccount);
+//        if (pet == null){
+//            LogHandler.logError(new Exception("pet is null"));
+//        }
+        Optional<ShopItem> item = ShopController.shopRepo.findById(itemID);
+//        if (item == null){
+//            LogHandler.logError(new Exception("item is null"));
+//        }
+        return true;
     }
 }
