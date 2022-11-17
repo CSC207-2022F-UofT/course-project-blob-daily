@@ -1,7 +1,7 @@
 import Navbar from "../Components/navbar";
 import "./home.css"
 import Feeditem from "../Components/feeditem";
-import Task from "../api/Task"
+import Task from "../api/Task";
 
 function Home(){
     return(

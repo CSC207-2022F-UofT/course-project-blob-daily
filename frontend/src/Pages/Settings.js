@@ -1,25 +1,26 @@
 import './Settings.css'
 import Navbar from "../Components/navbar";
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 function Settings(){
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("new username ...");
+    const [password, setPassword] = useState("new password ...");
 
-    function sendLoginRequest(){}
-    function deleteAccountRequest(){}
-    function sendLogoutRequest(){}
+    const navigate = useNavigate();
+
+    const handleLogoutClick = useCallback(() => navigate('/', {replace: true}), [navigate]);
 
     return(
         <div>
             <Navbar curPage={3}/>
-                <h3>Login</h3>
                 <div className="settingsForm">
                     <input
                         className="answerBox"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
+                    <p className="blue">Send</p>
                 </div>
 
                 <div className="settingsForm space">
@@ -28,24 +29,12 @@ function Settings(){
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                </div>
-                <div>
-                    <button id="submit" type="button" onClick={()=>sendLoginRequest()}>
-                        Login
-                    </button>
-                </div>  
-
-                <div>
-                    <button id="submit" type="button" onClick={()=>deleteAccountRequest()}>
-                        Delete Account
-                    </button>
+                    <p className="blue">Send</p>
                 </div>
 
-                <div>
-                    <button id="submit" type="button" onClick={()=>sendLogoutRequest()}>
-                        Logout
-                    </button> 
-                </div>
+                <h3 className="account">Delete account</h3>
+
+                <h3 className="account" onClick={handleLogoutClick}>Logout</h3>
 
         </div>
     )
