@@ -2,31 +2,38 @@ package com.backend.entities;
 
 
 import com.backend.entities.IDs.ItemID;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Blob;
-
+@Document(collection = "ShopItemsCollection")
 public class ShopItem {
-    //attributes are final since the charateristic of shopItem doesn't change
+    //attributes are final since the characteristic of shopItem doesn't change
+    @Transient
     private final ItemID itemID;
+    @Id
+    private final String ID;
     private final Double cost;
     private final String name;
     private final String description;
-    private final Blob image;
+
 
 
     // Contructor
-    public ShopItem(ItemID itemID, Double cost, String name, String description, Blob image){
-        this.itemID = itemID;
+    @PersistenceCreator
+    public ShopItem(String ID, Double cost, String name, String description){
+        this.itemID = new ItemID(ID);
+        this.ID = ID;
         this.cost = cost;
         this.name = name;
         this.description = description;
-        this.image = image;
     }
 
 
     // Getters
-    public ItemID getItemId(){
-        return itemID;
+    public String getID(){
+        return itemID.getID();
     }
 
     public Double getCost(){
@@ -41,7 +48,4 @@ public class ShopItem {
         return description;
     }
 
-    public Blob getImage(){
-        return image;
-    }
 }
