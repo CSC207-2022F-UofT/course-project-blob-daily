@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from "react";
-
 import {useNavigate} from 'react-router-dom';
 import "./Login.css"
+import ShowError from "../Components/showError";
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -24,13 +24,17 @@ function Login() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
+            <ShowError error={"Username doesn't exist"}/>
 
             <p>Password</p>
             <input
                 className="answerBox"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                type="password"
             />
+            <ShowError error={"Password doesn't exist"}/>
+
             <div className="loginButton" onClick={handleLoginClick}>
                 <p>Login</p>
             </div>

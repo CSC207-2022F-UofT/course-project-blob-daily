@@ -2,6 +2,7 @@ import "./Shop.css"
 import Navbar from "../Components/navbar";
 import 'scrollable-component';
 import ShopItem from "../Components/shopitems";
+import ShowError from "../Components/showError";
 
 function Shop(){
     return(
@@ -21,6 +22,7 @@ function Shop(){
                         <p>|</p>
                         <p>Reset</p>
                     </div>
+                    <ShowError error={"Not enough money"}/>
 
                 </div>
 
