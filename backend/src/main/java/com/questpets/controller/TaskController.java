@@ -13,9 +13,4 @@ public class TaskController {
     public TaskController(TaskRepo taskRepo){
         TaskController.taskRepo = taskRepo;
     }
-
-//    @GetMapping("/")
-//    public List<Task> getTasks() {
-//        return TaskManager.getTaskList();
-//    }
 }

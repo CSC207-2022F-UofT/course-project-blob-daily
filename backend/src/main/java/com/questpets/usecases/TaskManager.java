@@ -32,10 +32,7 @@ public class TaskManager {
     public static boolean postCompletedTask(AccountID account, String timestamp, String task, String image){
         try {
             TaskCompletionController.completeRepo.save(new TaskCompletionRecord(
-                    account,
-                    timestamp,
-                    task,
-                    image
+                    account, timestamp, task, image
             ));
             return true;
         } catch (Exception e) {
@@ -55,7 +52,9 @@ public class TaskManager {
             int num = rand.nextInt(tasks.size()) + 1;
             if (!prev.contains(num)) {
                 Task t = tasks.get(num);
-                TaskActive tas = new TaskActive(t.getName(), t.getReward(), new Timestamp(System.currentTimeMillis()).toString());
+                TaskActive tas = new TaskActive(
+                        t.getName(), t.getReward(), new Timestamp(System.currentTimeMillis()).toString()
+                );
                 active.add(tas);
                 prev.add(num);
             }

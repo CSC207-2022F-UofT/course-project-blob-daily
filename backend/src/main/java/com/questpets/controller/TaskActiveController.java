@@ -17,7 +17,7 @@ public class TaskActiveController {
         TaskActiveController.activeRepo = activeRepo;
     }
 
-    @GetMapping("/")
+    @GetMapping("/activetasks")
     public List<TaskActive> getActiveTasks() {
         return TaskManager.getActiveTasks();
     }
