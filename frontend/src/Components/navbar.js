@@ -7,7 +7,7 @@ function navbar(props){
         <div>
             <h1 className="navTitle">Quest Pets</h1>
             <div className="navList">
-                <Link to='/' className={`navItem ${props.curPage === 0 ? "selected" : ""}`}>Home</Link>
+                <Link to='/home' className={`navItem ${props.curPage === 0 ? "selected" : ""}`}>Home</Link>
                 <p>/</p>
                 <Link to='/friends' className={`navItem ${props.curPage === 1 ? "selected" : ""}`}>Friends</Link>
                 <p>/</p>
