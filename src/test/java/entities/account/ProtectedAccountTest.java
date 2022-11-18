@@ -1,7 +1,7 @@
 package entities.account;
 
 
-import backend.error.handlers.LogHandler;
+import com.backend.error.handlers.LogHandler;
 import com.backend.entities.users.ProtectedAccount;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
