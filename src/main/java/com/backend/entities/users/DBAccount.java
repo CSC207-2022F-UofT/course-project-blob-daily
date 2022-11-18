@@ -1,9 +1,11 @@
 package com.backend.entities.users;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Document(collection = "AccountsCollection")
 public class DBAccount {
@@ -12,8 +14,7 @@ public class DBAccount {
     @Id
     private final String accountID;
     private String sessionID;
-
-    private Timestamp timestamp;
+    private Date timestamp;
 
     public DBAccount(Account account) {
         this.username = account.getUsername().toString();
@@ -21,6 +22,15 @@ public class DBAccount {
         this.accountID = account.getAccountID().toString();
         this.sessionID = account.getSessionID().toString();
         this.timestamp = account.getTimestamp();
+    }
+
+    @PersistenceCreator
+    public DBAccount(String username, String password, String accountID, String sessionID, Date timestamp) {
+        this.username = username;
+        this.password = password;
+        this.accountID = accountID;
+        this.sessionID = sessionID;
+        this.timestamp = timestamp;
     }
 
     public String getUsername() {
@@ -40,7 +50,7 @@ public class DBAccount {
     }
 
     public Timestamp getTimestamp() {
-        return timestamp;
+        return new Timestamp(this.timestamp.getTime());
     }
 
     public void setUsername(String username) {

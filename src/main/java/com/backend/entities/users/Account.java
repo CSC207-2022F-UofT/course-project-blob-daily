@@ -20,13 +20,6 @@ public class Account extends ProtectedAccount{
         this.sessionID = new SessionID(null);
     }
 
-    public Account(SessionID sessionID, String username, String password) {
-        super(username);
-        this.sessionID = sessionID;
-        this.password = new Password(password);
-        this.accountID = new AccountID(null);
-    }
-
     // Getters
     public AccountID getAccountID() {
         return this.accountID;
