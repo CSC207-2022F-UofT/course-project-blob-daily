@@ -19,6 +19,7 @@ function Home(){
             <Navbar curPage={0}/>
             <div className="homeMain">
                 <div className="feed">
+                    <h2>Add Friends to see their accomplishments</h2>
                     <Feeditem />
                     <Feeditem />
                     <Feeditem />

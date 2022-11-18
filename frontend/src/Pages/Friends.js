@@ -1,6 +1,7 @@
 import Navbar from "../Components/navbar";
 import React, { useState} from "react";
 import "./Friends.css"
+import ShowError from "../Components/showError";
 
 function Friends(){
 
@@ -24,22 +25,16 @@ function Friends(){
                     <h3 className="requestTitle">Request</h3>
                     <div className="Request">
 
-                        <div className="RequstUser">
+                        <div className="RequestUser">
+
                             <p>@TonyKim</p>
-                            <p>@TonyKim</p>
-                        </div>
-                        <div className="RequestAccept">
                             <p className="accept">Accept</p>
-                            <p className="accept">Accept</p>
-                        </div>
-                        <div>
                             <p className="blue">/</p>
-                            <p className="blue">/</p>
-                        </div>
-                        <div>
                             <p className="decline">Decline</p>
-                            <p className="decline">Decline</p>
+
                         </div>
+                        <ShowError error={"Friend no longer doesn't exist"}/>
+
 
                     </div>
                 </div>
@@ -53,7 +48,7 @@ function Friends(){
                         />
                         <p className="blue">Send</p>
                     </div>
-
+                    <ShowError error={"Friend doesn't exist"}/>
                     <h3>Remove Friend</h3>
                     <div className="friendForm">
                         <input
@@ -63,6 +58,7 @@ function Friends(){
                         />
                         <p className="blue">Submit</p>
                     </div>
+                    <ShowError error={"Friend doesn't exist"}/>
                 </div>
             </div>
         </div>

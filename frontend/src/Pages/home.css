@@ -10,6 +10,10 @@
     flex-direction: column;
 }
 
+.feed h2 {
+    font-weight: 200;
+}
+
 .goal {
     font-weight: 200;
 }

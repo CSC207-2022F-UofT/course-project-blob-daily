@@ -2,6 +2,7 @@ import './Settings.css'
 import Navbar from "../Components/navbar";
 import React, {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import ShowError from "../Components/showError";
 
 function Settings(){
     const [username, setUsername] = useState("new username ...");
@@ -22,8 +23,12 @@ function Settings(){
                     />
                     <p className="blue">Send</p>
                 </div>
+                <div className="errorTextSettings">
+                    <ShowError error={"Invalid username"}/>
+                </div>
 
-                <div className="settingsForm space">
+
+                <div className="settingsForm">
                     <input
                         className="answerBox"
                         value={password}
@@ -31,6 +36,10 @@ function Settings(){
                     />
                     <p className="blue">Send</p>
                 </div>
+                <div className="errorTextSettings space">
+                    <ShowError error={"Invalid password"}/>
+                </div>
+
 
                 <h3 className="account">Delete account</h3>
 
