@@ -1,25 +1,14 @@
 import Navbar from "../Components/navbar";
 import "./home.css"
 import Feeditem from "../Components/feeditem";
+import Task from "../api/Task";
 
 function Home(){
-    // function createTaskCompletion(){
-    //     fetch("/home",{
-    //         method: "POST",
-    //     }).then((response) => {
-    //         if (response.status === 200) return response.json();
-    //     }),then((data) =>{
-    //         console.log(data);
-    //     });
-    // }
-
-
     return(
         <div>
             <Navbar curPage={0}/>
             <div className="homeMain">
                 <div className="feed">
-                    <h2>Add Friends to see their accomplishments</h2>
                     <Feeditem />
                     <Feeditem />
                     <Feeditem />
@@ -27,6 +16,7 @@ function Home(){
                 <div className="goal">
                     <h2>Daily Challenge</h2>
                     <p>Do something out of your comfort zone</p>
+                    <Task />
                     {/* <div className="progress">
                         <div className="fillBar"/>
                         

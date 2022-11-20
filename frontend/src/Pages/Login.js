@@ -1,15 +1,39 @@
 import React, {useState, useCallback} from "react";
-import {useNavigate} from 'react-router-dom';
+
+import {resolvePath, useNavigate} from 'react-router-dom';
 import "./Login.css"
-import ShowError from "../Components/showError";
+
+export var ses;
 
 function Login() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("asdasd");
+    const [password, setPassword] = useState("123aA!");
 
     const navigate = useNavigate();
-
-    const handleLoginClick = useCallback(() => navigate('/home', {replace: true}), [navigate]);
+    // const handleLoginClick = useCallback(() => navigate('/home', {replace: true}), [navigate]);
+    const loginReq = `http://localhost:8080/login?username=${username}&password=${password}`
+    
+    ses = (
+        async function handleLoginClick() {
+            const session = (
+                fetch(loginReq, {
+                    method: "post",
+                }).then((response) => {
+                    if (response.status === 200) {
+                        console.log("login success");
+                        navigate('/home');
+                        return response.json();
+                    } else {
+                        console.log(`invalid: ${response.status}`);
+                    }
+                }).then((data) => {
+                    return data.id;
+                })
+            )
+            const sesid = await session;
+            console.log(sesid);
+            return sesid;
+        })
 
 
     return(
@@ -24,20 +48,16 @@ function Login() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
-            <ShowError error={"Username doesn't exist"}/>
 
             <p>Password</p>
             <input
                 className="answerBox"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                type="password"
             />
-            <ShowError error={"Password doesn't exist"}/>
-
-            <div className="loginButton" onClick={handleLoginClick}>
+            <button className="loginButton" onClick={ses}>
                 <p>Login</p>
-            </div>
+            </button>
             <p>New here? Create an account</p>
         </div>
     )

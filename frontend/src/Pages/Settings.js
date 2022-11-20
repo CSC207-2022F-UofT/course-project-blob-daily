@@ -2,15 +2,43 @@ import './Settings.css'
 import Navbar from "../Components/navbar";
 import React, {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import ShowError from "../Components/showError";
+import ses from './Login'
 
 function Settings(){
     const [username, setUsername] = useState("new username ...");
     const [password, setPassword] = useState("new password ...");
+    const session = ses;
+    console.log(session);
 
     const navigate = useNavigate();
+    const logoutReq = `http://localhost:8080/logout?sessionID=${session}`
+    const deleteReq = `http://localhost:8080/delete?sessionID=${session}`
 
-    const handleLogoutClick = useCallback(() => navigate('/', {replace: true}), [navigate]);
+    function handleLogoutClick(){
+        fetch(logoutReq, {
+            method: "post"
+        }).then((response) => {
+            if(response.status === 200) {
+                console.log("logout success");
+                navigate('/');
+            } else {
+                console.log(`invalid ${response.status}`)
+            }
+        })
+    }
+
+    function handleDeleteClick(){
+        fetch(deleteReq, {
+            method: "delete"
+        }).then((response) => {
+            if (response.status === 200) {
+                console.log("delete success");
+                navigate('/');
+            } else {
+                console.log(`invalid ${response.status}`)
+            }
+        })
+    }
 
     return(
         <div>
@@ -23,12 +51,8 @@ function Settings(){
                     />
                     <p className="blue">Send</p>
                 </div>
-                <div className="errorTextSettings">
-                    <ShowError error={"Invalid username"}/>
-                </div>
 
-
-                <div className="settingsForm">
+                <div className="settingsForm space">
                     <input
                         className="answerBox"
                         value={password}
@@ -36,14 +60,16 @@ function Settings(){
                     />
                     <p className="blue">Send</p>
                 </div>
-                <div className="errorTextSettings space">
-                    <ShowError error={"Invalid password"}/>
+
+                
+                <div>
+                    <button className="account" onClick={handleDeleteClick}>Delete account</button>
                 </div>
 
-
-                <h3 className="account">Delete account</h3>
-
-                <h3 className="account" onClick={handleLogoutClick}>Logout</h3>
+                <div>
+                    <button className="account" onClick={handleLogoutClick}>Logout</button>
+                </div>
+                
 
         </div>
     )

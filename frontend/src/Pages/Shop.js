@@ -2,7 +2,8 @@ import "./Shop.css"
 import Navbar from "../Components/navbar";
 import 'scrollable-component';
 import ShopItem from "../Components/shopitems";
-import ShowError from "../Components/showError";
+import Item from "../api/Item";
+import Pet from "../api/Pet"
 
 function Shop(){
     return(
@@ -10,19 +11,19 @@ function Shop(){
             <Navbar curPage={2}/>
             <div className="shopDisplay">
                 <div>
-                    <div className="avatar"></div>
+                    {/* <Pet/> */}
+                    {/* <div className="avatar"></div>
                     <h1 className="shopText">Current Balance:</h1>
-                    <h1 className="shopText">$2400</h1>
+                    <h1 className="shopText">$2400</h1> */}
                 </div>
 
                 <div>
-                    <ShopItem/>
+                    <Item/>
                     <div className="manageFlex">
                         <p>Equip</p>
                         <p>|</p>
                         <p>Reset</p>
                     </div>
-                    <ShowError error={"Not enough money"}/>
 
                 </div>
 
