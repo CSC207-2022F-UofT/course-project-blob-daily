@@ -3,7 +3,6 @@ package com.backend.entities.criteria;
 
 import com.backend.entities.criteria.conditions.CriteriaExpression;
 
-import backend.entities.criteria.conditions.CriteriaExpression;
 
 import java.util.ArrayList;
 import java.util.HashMap;
