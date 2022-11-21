@@ -132,7 +132,6 @@ public class ProtectedAccountTest {
     @Test
     public void testInvalidTimestamp() {
         // Expected values
-        String expectedUsername = "ShaanP22*";
         String expectedTimestamp = "jdnajdna,:djnad:d ad /da/";
 
         // Action (included in assert statement)
@@ -142,9 +141,7 @@ public class ProtectedAccountTest {
                 expectedTimestamp);
 
         // Asserts
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            Timestamp.valueOf(expectedTimestamp);
-        }, invalidTimestampMessage);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Timestamp.valueOf(expectedTimestamp), invalidTimestampMessage);
     }
 
     @Test

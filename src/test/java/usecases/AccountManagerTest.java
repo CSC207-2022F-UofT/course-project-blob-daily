@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
+import java.util.Objects;
 
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountManagerTest {
@@ -30,9 +31,9 @@ public class AccountManagerTest {
         ResponseEntity<Object> register = AccountManager.registerAccount(this.username, this.password);
 
         if (!(register.getStatusCode() == HttpStatus.OK)){
-            sessionID = new SessionID((String) ((JSONObject) AccountManager.loginAccount(this.username, this.password).getBody()).get("sessionID"));
+            sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(AccountManager.loginAccount(this.username, this.password).getBody())).get("sessionID"));
         } else  {
-            sessionID = new SessionID((String) ((JSONObject) register.getBody()).get("sessionID"));
+            sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(register.getBody())).get("sessionID"));
         }
 
     }
@@ -47,7 +48,7 @@ public class AccountManagerTest {
     @Test
     public void verifySessionTest() {
         // Action
-        String actualAccountID = AccountManager.verifySession(this.sessionID).getID();
+        String actualAccountID = Objects.requireNonNull(AccountManager.verifySession(this.sessionID)).getID();
 
         // Assertion Message
         String verifySessionMessage = String.format("The given valid ID returned an unexpected accountID '%s'",
@@ -60,7 +61,7 @@ public class AccountManagerTest {
     @Test
     public void verifySessionInvalidTest() {
         // Values
-        String invalidSessionID = "dmal28hdjk";
+        String invalidSessionID = "deal28check";
 
         // Action
         Object actual = AccountManager.verifySession(new SessionID(invalidSessionID));
@@ -76,7 +77,6 @@ public class AccountManagerTest {
     @Test
     public void verifyAccountInfoProtectedAccountTest() {
         // Values
-        String username = "username";
         Date timestamp = new Date(System.currentTimeMillis());
 
         ProtectedAccount protectedAccount = new ProtectedAccount(username, timestamp);
@@ -95,9 +95,6 @@ public class AccountManagerTest {
     public void verifyAccountInfoAccountByAccountIDTest() {
         // Values
         AccountID accountID = new AccountID("9XlRk9W&Bc3ulLe2TlKl");
-
-        String username = "username";
-        String password = "abc123!";
 
         Date timestamp = new Date(System.currentTimeMillis());
 
@@ -119,9 +116,6 @@ public class AccountManagerTest {
         // Values
         SessionID sessionID = new SessionID("0lAi3uAw1MPe1SDk");
 
-        String username = "username";
-        String password = "abc123!";
-
         Account accountBySessionID = new Account(sessionID, username, password);
         accountBySessionID.getAccountIDObject().generateID();
         accountBySessionID.getSessionIDObject().generateID();
@@ -139,7 +133,6 @@ public class AccountManagerTest {
     @Test
     public void verifyInvalidAccountInfoProtectedAccountTest() {
         // Values
-        String username = "username";
 
         ProtectedAccount protectedAccount = new ProtectedAccount(username, null);
 
@@ -157,9 +150,6 @@ public class AccountManagerTest {
     public void verifyInvalidAccountInfoAccountByAccountIDTest() {
         // Values
         AccountID accountID = new AccountID("9XlRk9W&");
-
-        String username = "username";
-        String password = "abc123!";
 
         Date timestamp = new Date(System.currentTimeMillis());
 
@@ -180,9 +170,6 @@ public class AccountManagerTest {
     public void verifyInvalidAccountInfoAccountBySessionIDTest() {
         // Values
         SessionID sessionID = new SessionID("0lAi3uAw1M");
-
-        String username = "username";
-        String password = "abc123!";
 
         Account accountBySessionID = new Account(sessionID, username, password);
         accountBySessionID.getAccountIDObject().generateID();
@@ -226,6 +213,7 @@ public class AccountManagerTest {
         String accountInfoMessage = "The given accountID didn't yield the corresponding account information";
 
         // Assertion Statement
+        assert actualAccount != null;
         Assertions.assertEquals(expectedAccount.getUsername(), actualAccount.getUsername(), accountInfoMessage);
     }
 
@@ -241,6 +229,7 @@ public class AccountManagerTest {
         String accountInfoMessage = "The given accountID didn't yield the corresponding account information";
 
         // Assertion Statement
+        assert actualAccount != null;
         Assertions.assertEquals(expectedAccount.getUsername(), actualAccount.getUsername(), accountInfoMessage);
     }
 
@@ -251,13 +240,13 @@ public class AccountManagerTest {
 
         // Action
         ResponseEntity<Object> responseEntity = AccountManager.registerAccount(username, password);
-        sessionID = new SessionID(((JSONObject) responseEntity.getBody()).get("sessionID").toString());
+        sessionID = new SessionID(((JSONObject) Objects.requireNonNull(responseEntity.getBody())).get("sessionID").toString());
 
         // Assertion Message
         String registerMessage = "Could not register an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertTrue(AccountController.accountsRepo.existsById(AccountManager.verifySession(sessionID).getID()), registerMessage);
+        Assertions.assertTrue(AccountController.accountsRepo.existsById(Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID()), registerMessage);
     }
 
     @Test
@@ -295,13 +284,13 @@ public class AccountManagerTest {
 
         // Action
         ResponseEntity<Object> responseEntity = AccountManager.loginAccount(username, password);
-        sessionID = new SessionID(((JSONObject) responseEntity.getBody()).get("sessionID").toString());
+        sessionID = new SessionID(((JSONObject) Objects.requireNonNull(responseEntity.getBody())).get("sessionID").toString());
 
         // Assertion Message
         String loginMessage = "Could not login an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertTrue(AccountController.accountsRepo.existsById(AccountManager.verifySession(sessionID).getID()), loginMessage);
+        Assertions.assertTrue(AccountController.accountsRepo.existsById(Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID()), loginMessage);
     }
 
     @Test
@@ -351,7 +340,7 @@ public class AccountManagerTest {
         // Setup (not Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(sessionID);
+        AccountManager.logoutAccount(sessionID);
 
         // Assertion Message
         String logoutMessage = "Could not logout an account with valid credentials";
@@ -408,7 +397,7 @@ public class AccountManagerTest {
         // Setup (not Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.deleteAccount(sessionID);
+        AccountManager.deleteAccount(sessionID);
 
         // Assertion Message
         String deleteMessage = "Could not delete an account with valid credentials";
@@ -458,5 +447,36 @@ public class AccountManagerTest {
 
         // Assertion Statement
         Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, deleteMessage);
+    }
+
+    @Test
+    public void getAccountIDByUsernameTest() {
+        // Setup
+        AccountID expectedAccountID = AccountManager.verifySession(sessionID);
+
+        // Action
+        AccountID actualAccountID = AccountManager.getAccountIDByUsername(username);
+
+        // Assertion Message
+        String getAccountIDMessage = "The actual AccountID did not match the expected AccountID";
+
+        // Assertion Statement
+        assert expectedAccountID != null;
+        assert actualAccountID != null;
+        Assertions.assertEquals(expectedAccountID.getID(), actualAccountID.getID(), getAccountIDMessage);
+    }
+
+    @Test
+    public void getAccountIDByInvalidUsernameTest() {
+        // Setup (Not required)
+
+        // Action
+        AccountID actualAccountID = AccountManager.getAccountIDByUsername("9");
+
+        // Assertion Message
+        String getAccountIDMessage = "The actual AccountID did not match the expected AccountID";
+
+        // Assertion Statement
+        Assertions.assertNull(actualAccountID, getAccountIDMessage);
     }
 }

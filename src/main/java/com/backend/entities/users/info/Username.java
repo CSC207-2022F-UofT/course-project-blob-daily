@@ -9,6 +9,9 @@ import com.backend.entities.criteria.generatable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a Username Entity (username string, validity, generation, etc).
+ */
 public class Username implements generatable {
     // Instance Variables
     public static final Criteria criteria = new Criteria(new ArrayList<>(List.of(
@@ -28,19 +31,35 @@ public class Username implements generatable {
         }
     }
 
+    /**
+     * Format the string representation for this Object class
+     * @return the username string variable
+     */
     @Override
     public String toString() {
         return this.username;
     }
 
+    /**
+     * Generate a new username (and set to current) with the implicitly defined criteria of a username
+     */
     public void generateUsername() {
         this.username = this.generate(criteria);
     }
 
+    /**
+     * Generate and return a new username based on the implicitly defined criteria of a username
+     * @return a new username based on the implicitly defined criteria of a username
+     */
+    @SuppressWarnings("unused")
     public String suggestUsername() {
         return this.generate(criteria);
     }
 
+    /**
+     * Check if the current username stored in this object is valid based on the implicitly defined criteria of a username
+     * @return Whether the current username is a valid username
+     */
     public boolean isValid() {
         return this.isValid(this.username, criteria);
     }

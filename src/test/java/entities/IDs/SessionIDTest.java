@@ -156,11 +156,10 @@ public class SessionIDTest {
 
     @Test
     public void testGenerateSessionID() {
-        // Expected values
-        String expectedDefaultID = null;
+        // Expected values (Not Required)
 
         // Action
-        sessionID = new SessionID(expectedDefaultID);
+        sessionID = new SessionID(null);
         sessionID.generateID();
 
         // Assert messages

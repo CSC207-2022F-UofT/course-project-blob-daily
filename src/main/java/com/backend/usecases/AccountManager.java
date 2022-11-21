@@ -65,6 +65,22 @@ public class AccountManager {
     }
 
     /**
+     * Find a corresponding AccountID given the parameter (username)
+     * @param username of type String to reference corresponding AccountID
+     * @return the associated AccountID if exists
+     */
+    @SuppressWarnings("unused")
+    public static AccountID getAccountIDByUsername(String username) {
+        // Make DB call to find account based on username
+        Account account = AccountController.accountsRepo.findByUsername(username);
+
+        // Check if found
+        if (account == null) return null;
+
+        return account.getAccountIDObject();
+    }
+
+    /**
      * Hash the given string using the SHA-256 algorithm
      * @param string of type String to be hash by the function
      * @return a new String value corresponding to the hashed string parameter
@@ -104,7 +120,7 @@ public class AccountManager {
         }
 
         if(id instanceof AccountID) {
-            // Make DB call to find account based on id (check if exists aswell)
+            // Make DB call to find account based on id (check if exists as well)
             if (!AccountController.accountsRepo.existsById(id.toString())) return LogHandler.logError(new IDException("Could not find account from given ID"), HttpStatus.NOT_FOUND);
 
             Account foundAccount = AccountController.accountsRepo.findByAccountID(id.toString());
