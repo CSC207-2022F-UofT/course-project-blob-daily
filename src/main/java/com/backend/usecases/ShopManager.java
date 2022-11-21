@@ -7,10 +7,14 @@ import com.backend.entities.Pet;
 import com.backend.entities.ShopItem;
 import com.backend.repositories.PetRepo;
 import com.backend.repositories.ShopItemRepo;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+@Service
+@Configurable
 public class ShopManager {
     public static ShopItemRepo shopRepo;
     public static PetRepo petRepo;
