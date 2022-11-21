@@ -1,8 +1,6 @@
 package usecases;
 
 import com.backend.QuestPetsApplication;
-
-import com.backend.controller.AccountController;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.users.Account;
@@ -19,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
 import java.util.Objects;
-
 
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountManagerTest {
@@ -57,7 +54,7 @@ public class AccountManagerTest {
                 actualAccountID);
 
         // Assertion Statement
-        Assertions.assertTrue(AccountController.accountsRepo.existsById(actualAccountID), verifySessionMessage);
+        Assertions.assertTrue(AccountManager.accountsRepo.existsById(actualAccountID), verifySessionMessage);
     }
 
     @Test
@@ -248,7 +245,7 @@ public class AccountManagerTest {
         String registerMessage = "Could not register an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertTrue(AccountController.accountsRepo.existsById(Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID()), registerMessage);
+        Assertions.assertTrue(AccountManager.accountsRepo.existsById(Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID()), registerMessage);
     }
 
     @Test
@@ -292,7 +289,7 @@ public class AccountManagerTest {
         String loginMessage = "Could not login an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertTrue(AccountController.accountsRepo.existsById(Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID()), loginMessage);
+        Assertions.assertTrue(AccountManager.accountsRepo.existsById(Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID()), loginMessage);
     }
 
     @Test
@@ -348,7 +345,7 @@ public class AccountManagerTest {
         String logoutMessage = "Could not logout an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertNull(AccountController.accountsRepo.findBySessionID(sessionID.getID()), logoutMessage);
+        Assertions.assertNull(AccountManager.accountsRepo.findBySessionID(sessionID.getID()), logoutMessage);
     }
 
     @Test
@@ -405,7 +402,7 @@ public class AccountManagerTest {
         String deleteMessage = "Could not delete an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertNull(AccountController.accountsRepo.findBySessionID(sessionID.getID()), deleteMessage);
+        Assertions.assertNull(AccountManager.accountsRepo.findBySessionID(sessionID.getID()), deleteMessage);
     }
 
     @Test
@@ -480,6 +477,5 @@ public class AccountManagerTest {
 
         // Assertion Statement
         Assertions.assertNull(actualAccountID, getAccountIDMessage);
-
     }
 }
