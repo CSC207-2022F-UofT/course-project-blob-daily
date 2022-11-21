@@ -24,6 +24,9 @@ public class SizeRangeExpression extends CriteriaExpression{
     public boolean evaluate() {
         if (this.min <= super.getTarget().length() && super.getTarget().length() <= this.max) {
             return true;
+        } else if (super.getTarget().length() == 64) {
+            // Hashed Passwords
+            return true;
         }
         String errorMessage = String.format("The string '%s' (length: %s) must be between %s and %s characters long", super.getTarget(), super.getTarget().length(), this.min, this.max);
         super.logError(errorMessage);

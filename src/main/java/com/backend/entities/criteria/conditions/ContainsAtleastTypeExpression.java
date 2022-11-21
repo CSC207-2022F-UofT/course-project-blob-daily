@@ -34,6 +34,11 @@ public class ContainsAtleastTypeExpression extends CriteriaExpression {
     private boolean singleContainsAtleastType(String type) {
         HashMap<String, String> types = super.getLegend();
 
+        if (super.getTarget().length() == 64 && type.equals("special")) {
+            // Hashed Passwords
+            return true;
+        }
+
         for (char c : super.getTarget().toCharArray()) {
             if (types.get(type).indexOf(c) != -1) return true;
         }

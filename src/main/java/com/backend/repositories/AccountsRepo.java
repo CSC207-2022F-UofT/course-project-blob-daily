@@ -4,6 +4,9 @@ import com.backend.entities.users.Account;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+/**
+ * Mongo Repository for custom queries on the Account Collection
+ */
 public interface AccountsRepo extends MongoRepository<com.backend.entities.users.Account, String> {
     /**
      * Find the associated Account with the given parameter (by AccountID)
