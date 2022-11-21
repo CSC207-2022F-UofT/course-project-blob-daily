@@ -8,13 +8,8 @@ import java.util.logging.LogRecord;
 public class LogFormatter extends Formatter {
     // ANSI escape code
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[0;91m";
-    public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001b[33;1m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_GREY = "\u001B[37m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
@@ -35,8 +30,14 @@ public class LogFormatter extends Formatter {
 
         builder.append(" [");
         switch (record.getLevel().getName()) {
-            case "WARNING" : builder.append(ANSI_YELLOW);
-            case "SEVERE" : builder.append(ANSI_RED);
+            case "WARNING" : {
+                builder.append(ANSI_YELLOW);
+                break;
+            }
+            case "SEVERE" : {
+                builder.append(ANSI_RED);
+                break;
+            }
             default : builder.append(ANSI_GREY);
         }
 
