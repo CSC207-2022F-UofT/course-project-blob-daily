@@ -22,7 +22,7 @@ import java.util.Random;
  * Task related use cases
  */
 public class TaskManager {
-    //repository calls
+    //database calls
     /**
      * Gets all tasks from the database
      * @return a list of all tasks from the database
@@ -113,7 +113,7 @@ public class TaskManager {
         saveComplete(completeTask);
 
         //update the balance with the reward
-        //ShopManager.updateBalance(reward);
+//        ShopManager.updateBalance(reward);
         return new ResponseEntity<>(completeTask, HttpStatus.OK);
     }
 
