@@ -61,9 +61,9 @@ public class PetController {
 
     @PostMapping("/purchaseItems")
     public ResponseEntity<Object> purchaseItem(@RequestParam String sessionID, String itemId){
-        ShopManager.purchaseItem(itemId, sessionID);
+        boolean successful = ShopManager.purchaseItem(itemId, sessionID);
 
-        return new ResponseEntity<>("Item purchased", HttpStatus.OK);
+        return new ResponseEntity<>(successful, HttpStatus.OK);
     }
 
 
