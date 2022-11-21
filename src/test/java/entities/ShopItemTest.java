@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ShopItemTest {
+    private final ShopItem shopItem = new ShopItem("1234567890", 19.90, "Pants", "Classic pair of white pants");
 
     @BeforeEach
     public void setUp() {
@@ -20,15 +21,23 @@ public class ShopItemTest {
     }
 
     @Test
-    public void testShopItem() {
-        ShopItem shopItem = new ShopItem("1234567890", 19.90, "Pants", "Classic pair of white pants");
-
+    public void testShopItemID() {
         Assertions.assertEquals(shopItem.getID(), "1234567890");
-        Assertions.assertEquals(shopItem.getCost(), 19.90, 0);
-        Assertions.assertEquals(shopItem.getName(), "Pants");
-        Assertions.assertEquals(shopItem.getDescription(), "Classic pair of white pants");
     }
 
+    @Test
+    public void testShopItemCost() {
+        Assertions.assertEquals(shopItem.getCost(), 19.90, 0);
+    }
 
+    @Test
+    public void testShopItemName() {
+        Assertions.assertEquals(shopItem.getName(), "Pants");
+    }
+
+    @Test
+    public void testShopItemDescription() {
+        Assertions.assertEquals(shopItem.getDescription(), "Classic pair of white pants");
+    }
 }
 

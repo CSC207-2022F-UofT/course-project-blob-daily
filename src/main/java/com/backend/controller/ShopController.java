@@ -21,6 +21,10 @@ public class ShopController {
         ShopController.shopRepo = shopRepo;
     }
 
+    /**
+     * Get request to getShopItem with the sessionID from the database
+     *
+     */
     @GetMapping("/shopItems")
     public ResponseEntity<Object> shopItems(){
 

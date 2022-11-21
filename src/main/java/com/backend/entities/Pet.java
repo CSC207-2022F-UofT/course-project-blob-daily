@@ -18,7 +18,6 @@ public class Pet {
     private final ArrayList<ShopItem> inventory;
     private final ArrayList<ShopItem> currentOutfit;
 
-
     // Contructor
     public Pet(String ID, Double health, Double balance, ArrayList<ShopItem> inventory, ArrayList<ShopItem> currentOutfit){
         this.accountID = new AccountID(ID);
@@ -28,13 +27,10 @@ public class Pet {
         this.inventory = inventory;
         this.currentOutfit = currentOutfit;
     }
-
     // Getters
     public String getID(){
         return ID;
     }
-
-
 
     public double getHealth(){
         return this.health;

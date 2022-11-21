@@ -6,17 +6,13 @@ import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Pet;
 import com.backend.entities.ShopItem;
-import com.backend.error.handlers.LogHandler;
-import org.apache.juli.logging.Log;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class ShopManager {
-
-
     /**
-     * Adds the default pet for an account onto the database
+     * Adds the default pet for an account
      * @param id AccountId string that represents the pet linking to the account
      */
     public static Pet addPet(String id){
@@ -28,7 +24,7 @@ public class ShopManager {
     }
 
     /**
-     * Get request to get all shop items from the database
+     * Get request to get all shop items
      *
      */
     public static ArrayList<ShopItem> getShopItems() {
@@ -36,7 +32,7 @@ public class ShopManager {
     }
 
     /**
-     * Get request to return the pet object and it's attributes from the database
+     * Get request to return the pet object and it's attributes
      * @param sessionID string that represents the current session and verifies the action
      */
     public static Optional<Pet> getPet(String sessionID){
@@ -49,7 +45,7 @@ public class ShopManager {
     }
 
     /**
-     * Post request of the pet object after modifiying it with the newOutfit to the database
+     * Post request of the pet object after modifying it with the newOutfit
      * @param sessionID string that represents the current session and verifies the action
      * @param newOutfit ArrayList of shopItem that would represent which items the pet is wearing
      */
@@ -86,7 +82,7 @@ public class ShopManager {
     }
 
     /**
-     * Post request of balance added with the parameter amount from the database through the pet object
+     * Post request of balance added with the parameter amount
      * @param sessionID string that represents the current session and verifies the action
      * @param amount the double that represents the amount added to the pet's balance
      */
@@ -118,7 +114,7 @@ public class ShopManager {
 
 
     /**
-     * Post request of the pet owning the item and subtracting from its balance the cost of the item to the database
+     * Post request of the pet owning the item and subtracting from its balance the cost of the item
      * @param sessionID string that represents the current session and verifies the action
      * @param itemID string that represents which item the pet is attempting to access
      */

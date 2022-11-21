@@ -17,8 +17,6 @@ public class ShopItem {
     private final String name;
     private final String description;
 
-
-
     // Contructor
     @PersistenceCreator
     public ShopItem(String ID, Double cost, String name, String description){
@@ -28,7 +26,6 @@ public class ShopItem {
         this.name = name;
         this.description = description;
     }
-
 
     // Getters
     public String getID(){
@@ -46,5 +43,4 @@ public class ShopItem {
     public String getDescription(){
         return description;
     }
-
 }
