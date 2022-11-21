@@ -1,7 +1,5 @@
 package com.backend.entities.criteria;
 
-
-
 import com.backend.entities.criteria.conditions.CriteriaExpression;
 import com.backend.entities.criteria.conditions.SizeExpression;
 import com.backend.entities.criteria.conditions.SizeRangeExpression;

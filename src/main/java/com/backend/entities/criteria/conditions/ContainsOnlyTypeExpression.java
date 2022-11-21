@@ -1,4 +1,5 @@
 package com.backend.entities.criteria.conditions;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

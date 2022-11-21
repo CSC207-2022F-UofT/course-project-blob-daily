@@ -1,6 +1,8 @@
 package com.backend.error.handlers;
 
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.xml.sax.ErrorHandler;
 
 import java.util.HashMap;
 import java.util.logging.ConsoleHandler;
@@ -13,7 +15,7 @@ public class LogHandler {
 
     private static final HashMap<String, Level> levelConverter = new HashMap<>();
 
-    public static boolean DEPRECATED = false;
+    public static boolean DEPRECATED = true;
 
     static {
         levelConverter.put("INFO", Level.INFO);
@@ -51,14 +53,20 @@ public class LogHandler {
 
     public static void logError(Exception e) {
         if (!DEPRECATED) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            if (e.getMessage() != null) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            } else {
+                LOGGER.log(Level.SEVERE, e.getClass().getName(), e);
+            }
+
             e.printStackTrace();
         } else {
             logInfo(e.getMessage());
         }
     }
 
-    public static void main(String[] args) {
-        logWarning("hey this may be important");
+    public static ResponseEntity<Object> logError(Exception e, HttpStatus status) {
+        logError(e);
+        return ResponseHandler.packageErrorResponse(e, status);
     }
 }

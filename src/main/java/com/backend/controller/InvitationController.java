@@ -1,12 +1,7 @@
 package com.backend.controller;
 
-import com.backend.entities.Invitation;
-import com.backend.entities.users.DBAccount;
-import com.backend.error.exceptions.ConditionException;
-import com.backend.error.exceptions.CriteriaException;
 import com.backend.repositories.InvitationsRepo;
 import com.backend.usecases.InvitationsManager;
-import net.minidev.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +17,11 @@ public class InvitationController {
 
     // create a get request to get invitations for a specific user
     @GetMapping("/friends/getInvite")
-    public JSONObject getInvitations(@RequestParam String username, @RequestParam String sessionID) {
+    public ResponseEntity<Object> getInvitations(@RequestParam String username, @RequestParam String sessionID) {
         // get sessionID from request
         // call getInvitations method from InvitationsManager
         // return response
-        return InvitationsManager.getInvitations(username);
-
+        return InvitationsManager.getInvitations(username, sessionID);
     }
 
     // create a post request to send an invitation

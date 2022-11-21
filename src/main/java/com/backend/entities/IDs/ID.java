@@ -32,8 +32,16 @@ public class ID implements generatable {
         return this.criteria;
     }
 
+    public boolean isValid() {
+        return this.isValid(this.ID, this.criteria);
+    }
+
     @Override
     public String toString() {
         return this.ID;
+    }
+
+    public void setID(String newID) {
+        this.ID = newID;
     }
 }

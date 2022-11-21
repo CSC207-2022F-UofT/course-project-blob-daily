@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Password implements generatable {
     // Instance Variables
-    private static final Criteria criteria = new Criteria(new ArrayList<>(List.of(
+    public static final Criteria criteria = new Criteria(new ArrayList<>(List.of(
             new SizeRangeExpression(5, 20, null),
             new ContainsOnlyTypeExpression(new ArrayList<>(List.of("number", "letter", "special")), null),
             new ContainsAtleastTypeExpression(new ArrayList<>(List.of("number", "letter", "special")), null)

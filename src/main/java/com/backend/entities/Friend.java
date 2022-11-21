@@ -8,6 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a Friend Entity (accountID, friendsList)
+ */
 @Document(collection = "FriendsCollection")
 public class Friend {
     @Transient
@@ -31,13 +34,18 @@ public class Friend {
         this.friends = friends;
     }
 
+    /**
+     * Retrieve the AccountID as String for this given instance
+     * @return the AccountID as String for this given instance
+     */
     public String getAccountID() { return this.accountID; }
+
+    /**
+     * Retrieves an array of the user's friends
+     * @return an array of the user's friends
+     */
     public ArrayList<String> getFriends() {
         return this.friends;
-    }
-
-    public void setFriends(ArrayList<String> friends) {
-        this.friends = friends;
     }
 
 }
