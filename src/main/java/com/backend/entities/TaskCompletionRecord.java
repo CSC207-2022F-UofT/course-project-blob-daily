@@ -1,6 +1,5 @@
 package com.backend.entities;
 
-
 import com.backend.entities.IDs.AccountID;
 
 import java.sql.Timestamp;

@@ -1,6 +1,5 @@
 package com.backend.entities;
 
-
 import com.backend.entities.IDs.ItemID;
 
 import java.sql.Blob;

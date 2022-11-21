@@ -1,6 +1,5 @@
 package com.backend.entities;
 
-
 import com.backend.entities.users.ProtectedAccount;
 
 public class FeedItem {

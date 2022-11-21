@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.session:spring-session-core'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
