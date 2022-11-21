@@ -1,8 +1,5 @@
 package com.backend.usecases;
 
-import com.backend.controller.TaskActiveController;
-import com.backend.controller.TaskCompletionController;
-import com.backend.controller.TaskController;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Task;
@@ -10,8 +7,13 @@ import com.backend.entities.TaskActive;
 import com.backend.entities.TaskCompletionRecord;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
+import com.backend.repositories.TaskActiveRepo;
+import com.backend.repositories.TaskCompletionRepo;
+import com.backend.repositories.TaskRepo;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,21 +23,37 @@ import java.util.Random;
 /**
  * Task related use cases
  */
+@Service
+@Configurable
 public class TaskManager {
+    /**
+     * database connection
+     */
+    private static TaskRepo taskRepo;
+    private static TaskActiveRepo activeRepo;
+    private static TaskCompletionRepo completeRepo;
+
+
+    public TaskManager(TaskRepo taskRepo, TaskActiveRepo activeRepo, TaskCompletionRepo completeRepo){
+        TaskManager.taskRepo = taskRepo;
+        TaskManager.activeRepo = activeRepo;
+        TaskManager.completeRepo = completeRepo;
+    }
+
     //database calls
     /**
      * Gets all tasks from the database
      * @return a list of all tasks from the database
      */
     public static List<Task> getTaskList() {
-        return TaskController.taskRepo.findAll();
+        return TaskManager.taskRepo.findAll();
     }
 
     /**
      * Deletes all active tasks in the database
      */
     public static void deleteActiveList() {
-        TaskActiveController.activeRepo.deleteAll();
+        TaskManager.activeRepo.deleteAll();
     }
 
     /**
@@ -43,7 +61,7 @@ public class TaskManager {
      * @return a list of all active tasks from the database
      */
     public static List<TaskActive> getActiveList() {
-        return TaskActiveController.activeRepo.findAll();
+        return TaskManager.activeRepo.findAll();
     }
 
     /**
@@ -51,7 +69,7 @@ public class TaskManager {
      * @param activeTask of type TaskActive, an active task to save
      */
     public static void saveActive(TaskActive activeTask) {
-        TaskActiveController.activeRepo.save(activeTask);
+        TaskManager.activeRepo.save(activeTask);
     }
 
     /**
@@ -59,7 +77,7 @@ public class TaskManager {
      * @param completeTask of type TaskCompletionRecord, a completed task to save
      */
     public static void saveComplete(TaskCompletionRecord completeTask) {
-        TaskCompletionController.completeRepo.save(completeTask);
+        TaskManager.completeRepo.save(completeTask);
     }
 
     /**
@@ -68,7 +86,7 @@ public class TaskManager {
      * @return a list of all tasks completed by accountID
      */
     public static List<TaskCompletionRecord> getRecord(AccountID account) {
-        return TaskCompletionController.completeRepo.findAllByAccountID(account.getID());
+        return TaskManager.completeRepo.findAllByAccountID(account.getID());
     }
 
     /**
@@ -76,7 +94,7 @@ public class TaskManager {
      * @param ID of type string, a unique ID associated to a record
      */
     public static void deleteRecord(String ID) {
-        TaskCompletionController.completeRepo.deleteById(ID);
+        TaskManager.completeRepo.deleteById(ID);
     }
 
     /**

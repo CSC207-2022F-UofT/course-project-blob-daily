@@ -13,13 +13,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 public class TaskActiveController {
-    //database connection
-    public static TaskActiveRepo activeRepo;
-    @Autowired
-    public TaskActiveController(TaskActiveRepo activeRepo){
-        TaskActiveController.activeRepo = activeRepo;
-    }
-
     /**
      * Get request to get the current uncompleted active tasks based on sessionID
      * @param sessionID of type String, sessionID references an associated account

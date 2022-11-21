@@ -12,13 +12,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 public class TaskCompletionController {
-    //database connection
-    public static TaskCompletionRepo completeRepo;
-    @Autowired
-    public TaskCompletionController(TaskCompletionRepo completeRepo){
-        TaskCompletionController.completeRepo = completeRepo;
-    }
-
     /**
      * Post request to save a TaskCompletionRecord to the database
      * @param sessionID of type String, sessionID references an associated account

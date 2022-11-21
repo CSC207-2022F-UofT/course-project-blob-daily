@@ -9,10 +9,4 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 public class TaskController {
-    //database connection
-    public static TaskRepo taskRepo;
-    @Autowired
-    public TaskController(TaskRepo taskRepo){
-        TaskController.taskRepo = taskRepo;
-    }
 }
