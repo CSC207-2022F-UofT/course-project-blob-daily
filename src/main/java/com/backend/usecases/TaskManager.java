@@ -8,38 +8,169 @@ import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Task;
 import com.backend.entities.TaskActive;
 import com.backend.entities.TaskCompletionRecord;
+import com.backend.error.exceptions.SessionException;
+import com.backend.error.handlers.LogHandler;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Task related use cases
+ */
 public class TaskManager {
+    //repository calls
+    /**
+     * Gets all tasks from the database
+     * @return a list of all tasks from the database
+     */
     public static List<Task> getTaskList() {
         return TaskController.taskRepo.findAll();
     }
 
-    private static AccountID verifySession(String sessionID) {
-        return new AccountID("asdasd");
+    /**
+     * Deletes all active tasks in the database
+     */
+    public static void deleteActiveList() {
+        TaskActiveController.activeRepo.deleteAll();
     }
 
     /**
-     *
-     * @param sessionID
-     * @param task
-     * @param image
+     * Gets all active tasks from the database
+     * @return a list of all active tasks from the database
      */
-    public static void postCompletedTask(String sessionID, String task, String image){
-        TaskCompletionController.completeRepo.save(new TaskCompletionRecord(
-                verifySession(sessionID), new Timestamp(System.currentTimeMillis()).toString(), task, image
-        ));
+    public static List<TaskActive> getActiveList() {
+        return TaskActiveController.activeRepo.findAll();
     }
 
-    //create an array of the new active tasks
+    /**
+     * Saves an active task to the database
+     * @param activeTask of type TaskActive, an active task to save
+     */
+    public static void saveActive(TaskActive activeTask) {
+        TaskActiveController.activeRepo.save(activeTask);
+    }
+
+    /**
+     * Saves a task completion record to the database
+     * @param completeTask of type TaskCompletionRecord, a completed task to save
+     */
+    public static void saveComplete(TaskCompletionRecord completeTask) {
+        TaskCompletionController.completeRepo.save(completeTask);
+    }
+
+    /**
+     * Gets all completed tasks completed by sessionID
+     * @param account of type AccountID, references the account
+     * @return a list of all tasks completed by sessionID
+     */
+    public static List<TaskCompletionRecord> getRecord(AccountID account) {
+        return TaskCompletionController.completeRepo.findAllByAccountID(account.getID());
+    }
+
+    /**
+     * Deletes a TaskCompletionRecord based on unique ID
+     * @param ID of type string, a unique ID associated to a record
+     */
+    public static void deleteRecord(String ID) {
+        TaskCompletionController.completeRepo.deleteById(ID);
+    }
+
+    /**
+     * Post request to create a TaskCompletionRecord in the database
+     * @param sessionID of type SessionID, sessionID references an associated account
+     * @param task of type String, the name of the task
+     * @param image of type String, the URL link of the image
+     * @param reward of type double, the reward given when completing a specific task
+     * @return a response entity detailing successful completion or an associated error
+     */
+    public static ResponseEntity<?> postCompletedTask(SessionID sessionID, String task, String image, double reward){
+        //verify the sessionID
+        AccountID account = AccountManager.verifySession(sessionID);
+        if (account == null) {
+            return LogHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
+        }
+
+        //get a list of completed tasks by accountID
+        List <TaskCompletionRecord> complete = getRecord(account);
+        String today = new Timestamp(System.currentTimeMillis()).toString().substring(0,10);
+
+        //check if the task has been completed today
+        for (TaskCompletionRecord current : complete) {
+            String date = current.getTimestamp().substring(0, 10);
+            if (date.equals(today)) {
+                //if so, return a bad request
+                return LogHandler.logError(new Exception("Record already exists"), HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        //create a new task completion record to be saved and save it to the database
+        TaskCompletionRecord completeTask = new TaskCompletionRecord(
+                account.getID(), new Timestamp(System.currentTimeMillis()).toString(), task, image);
+        saveComplete(completeTask);
+
+        //update the balance with the reward
+        //ShopManager.updateBalance(reward);
+        return new ResponseEntity<>(completeTask, HttpStatus.OK);
+    }
+
+    /**
+     * Delete all correlated TaskCompletionRecords when a user deletes their account
+     * @param sessionID of type SessionID, sessionID references an associated account
+     * @return a response entity detailing successful completion or an associated error
+     */
+    public static ResponseEntity<?> deleteAllCorrelatedCompletions(SessionID sessionID) {
+        //verify the sessionID
+        AccountID account = AccountManager.verifySession(sessionID);
+        if (account == null) {
+            return LogHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
+        }
+
+        //get all the records completed by account and delete them
+        List<TaskCompletionRecord> complete = getRecord(account);
+        for (TaskCompletionRecord current : complete) {
+            deleteRecord(current.getID());
+        }
+        return new ResponseEntity<>("Successfully deleted all correlated records", HttpStatus.OK);
+    }
+
+    /**
+     * Gets all active tasks that have not yet been completed by sessionID
+     * @param sessionID of type SessionID, sessionID references an associated account
+     * @return a response entity, if successful a list is returned, else an associated error
+     */
+    public static ResponseEntity<?> getActiveTasks(SessionID sessionID) {
+        //verify the sessionID
+        AccountID account = AccountManager.verifySession(sessionID);
+        if (account == null) {
+            return LogHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
+        }
+
+        //check the current day and the day the active tasks were updated
+        List<TaskActive> active = getActiveList();
+        String today = new Timestamp(System.currentTimeMillis()).toString().substring(0,10);
+        String recent = active.get(0).getTimestamp().substring(0,10);
+
+        if (!recent.equals(today)) {
+            //if the day has changed, set new active tasks
+            newActiveTasks();
+        } else {
+            //otherwise, update the active tasks removing those that have been completed today
+            updateActiveTasks(account, active, today);
+        }
+        return new ResponseEntity<>(active, HttpStatus.OK);
+    }
+
+    /** getActiveTasks() helper method
+     * Creates a new set of active tasks and saves it to the database
+     */
     public static void newActiveTasks() {
         //empty active tasks in order to replace them
         List<Task> tasks = getTaskList();
-        TaskActiveController.activeRepo.deleteAll();
+        deleteActiveList();
 
         //making sure there's no overlap between tasks
         Random rand = new Random();
@@ -49,30 +180,34 @@ public class TaskManager {
         while (prev.size() < 3) {
             int num = rand.nextInt(tasks.size()) + 1;
             if (!prev.contains(num)) {
-                Task t = tasks.get(num);
+                Task task = tasks.get(num);
 
                 //create active task from task
-                TaskActive tas = new TaskActive(t.getName(), t.getReward(), new Timestamp(System.currentTimeMillis()).toString());
+                TaskActive activeTask = new TaskActive(task.getName(), task.getReward(),
+                        new Timestamp(System.currentTimeMillis()).toString());
                 prev.add(num);
 
                 //add the task to the database
-                TaskActiveController.activeRepo.save(tas);
+                saveActive(activeTask);
             }
         }
     }
 
-    //update active tasks to remove the completed ones for today
-    public static void updateActiveTasks(String sessionID, List<TaskActive> active, int today) {
+    /** getActiveTasks() helper method
+     * Updates the active tasks to reflect the tasks that have not yet been completed today
+     * @param account of type AccountID, references the account
+     * @param active of type List of TaskActive, active references the current active tasks
+     * @param today of type String, today references the date today in form yyyy-mm-dd
+     */
+    public static void updateActiveTasks(AccountID account, List<TaskActive> active, String today) {
         //find completed tasks in order to remove them from active tasks
-        AccountID account = AccountManager.verifySession(new SessionID(sessionID));
-
         List<String> names = new ArrayList<>();
-        List<TaskCompletionRecord> complete = TaskCompletionController.completeRepo.findAllByAccountID(account.getID());
+        List<TaskCompletionRecord> complete = getRecord(account);
 
-        //look through the taskcompletionrecords to see which task names have been completed today
+        //look through the completed tasks to see which task names have been completed today
         for (TaskCompletionRecord current : complete) {
-            int date = Integer.parseInt(current.getTimestamp().substring(8, 10));
-            if (date == today) {
+            String date = current.getTimestamp().substring(0, 10);
+            if (date.equals(today)) {
                 names.add(current.getTask());
             }
         }
@@ -86,22 +221,5 @@ public class TaskManager {
                 }
             }
         }
-    }
-
-    //get active tasks based on accountID and only return the tasks not yet completed
-    public static List<TaskActive> getActiveTasks(String sessionID) {
-        //check the current day and the day the active tasks were updated
-        List<TaskActive> active = TaskActiveController.activeRepo.findAll();
-        int today = Integer.parseInt(new Timestamp(System.currentTimeMillis()).toString().substring(8,10));
-        int recent = Integer.parseInt(active.get(0).getTimestamp().substring(8,10));
-
-        if (recent != today) {
-            //if the day has changed, set new active tasks
-            newActiveTasks();
-        } else {
-            //otherwise, update the active tasks removing the completed ones
-            updateActiveTasks(sessionID, active, today);
-        }
-        return active;
     }
 }
