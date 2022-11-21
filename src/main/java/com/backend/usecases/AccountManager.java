@@ -12,6 +12,7 @@ import com.backend.error.exceptions.IDException;
 import com.backend.error.exceptions.AccountInfoException;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
+import java.util.Map;
 
 @Service
 @Configurable
@@ -120,7 +122,9 @@ public class AccountManager {
         // Save to DB
         AccountController.accountsRepo.save(newAccount);
 
-        return new ResponseEntity<Object>(newAccount.getSessionIDObject().getID(), HttpStatus.OK);
+        JSONObject returnObject = new JSONObject(Map.of("sessionID", newAccount.getSessionIDObject().getID()));
+
+        return new ResponseEntity<Object>(returnObject, HttpStatus.OK);
     }
 
     public static ResponseEntity<Object> loginAccount(String username, String password) {
@@ -148,7 +152,9 @@ public class AccountManager {
 
         AccountController.accountsRepo.save(account);
 
-        return new ResponseEntity<Object>(newSessionID.getID(), HttpStatus.OK);
+        JSONObject returnObject = new JSONObject(Map.of("sessionID", newSessionID.getID()));
+
+        return new ResponseEntity<Object>(returnObject, HttpStatus.OK);
     }
 
     public static ResponseEntity<Object> logoutAccount(SessionID sessionID) {
@@ -190,6 +196,22 @@ public class AccountManager {
         AccountController.accountsRepo.save(updatedAccount);
 
         return true;
+    }
+
+    /**
+     * Find a corresponding AccountID given the parameter (username)
+     * @param username of type String to reference corresponding AccountID
+     * @return the associated AccountID if exists
+     */
+    @SuppressWarnings("unused")
+    public static AccountID getAccountIDByUsername(String username) {
+        // Make DB call to find account based on username
+        Account account = AccountController.accountsRepo.findByUsername(username);
+
+        // Check if found
+        if (account == null) return null;
+
+        return account.getAccountIDObject();
     }
 
 }

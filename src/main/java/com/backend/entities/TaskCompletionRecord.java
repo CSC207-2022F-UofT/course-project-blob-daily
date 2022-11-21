@@ -1,27 +1,41 @@
 package com.backend.entities;
 
-import com.backend.entities.IDs.AccountID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
+@Document(collection = "TaskCompletedCollections")
 public class TaskCompletionRecord {
-    private final AccountID accountID;
-    private final Timestamp timestamp;
+    @JsonIgnore
+    private final String accountID;
+    private final String username;
+    private final Date timestamp;
     private final String taskName;
 
-    public TaskCompletionRecord(AccountID accountID, Timestamp timestamp, String taskName){
+    @PersistenceCreator
+    public TaskCompletionRecord(String accountID, String username, String taskName, Date timestamp){
         this.accountID = accountID;
+        this.username = username;
         this.timestamp = timestamp;
         this.taskName = taskName;
     }
 
-    public AccountID getAccountID(){
+    @JsonIgnore
+    public String getAccountID(){
         return this.accountID;
     }
-    public Timestamp getTimestamp(){
+    public Date getTimestamp(){
         return this.timestamp;
     }
     public String getTaskName(){
         return this.taskName;
+    }
+    public String getUsername() {
+        return this.username;
     }
 }
