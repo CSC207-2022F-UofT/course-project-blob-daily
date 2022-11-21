@@ -1,21 +1,12 @@
 package com.backend.controller;
 
 import com.backend.entities.IDs.SessionID;
-import com.backend.repositories.AccountsRepo;
 import com.backend.usecases.AccountManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AccountController {
-
-    // Database connection
-    public static AccountsRepo accountsRepo;
-
-    public AccountController(AccountsRepo accountsRepo) {
-        AccountController.accountsRepo = accountsRepo;
-    }
-
     /**
      * Post request to log in with the given credentials
      * @param username of type String, username to reference associated account

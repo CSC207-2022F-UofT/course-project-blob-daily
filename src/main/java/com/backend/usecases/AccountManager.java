@@ -1,6 +1,5 @@
 package com.backend.usecases;
 
-import com.backend.controller.AccountController;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.ID;
 import com.backend.entities.IDs.SessionID;
@@ -8,10 +7,11 @@ import com.backend.entities.users.Account;
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.entities.users.info.Password;
 import com.backend.entities.users.info.Username;
-import com.backend.error.exceptions.IDException;
 import com.backend.error.exceptions.AccountInfoException;
+import com.backend.error.exceptions.IDException;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
+import com.backend.repositories.AccountsRepo;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
@@ -27,6 +27,13 @@ import java.util.Map;
 @Service
 @Configurable
 public class AccountManager {
+    // Database Connection
+    public static AccountsRepo accountsRepo;
+
+    public AccountManager(AccountsRepo accountsRepo) {
+        AccountManager.accountsRepo = accountsRepo;
+    }
+
     /**
      * Verify the given account based on the implicit criteria provided within the account's criteria expressions
      * @param account of type ProtectedAccount to be verified of implicit validity
@@ -55,13 +62,13 @@ public class AccountManager {
      */
     public static AccountID verifySession(SessionID sessionID) {
         // Make DB call to find account based on id
-        Account account = AccountController.accountsRepo.findBySessionID(sessionID.getID());
+        Account account = accountsRepo.findBySessionID(sessionID.getID());
 
         // Check if found
         if (account == null) return null;
 
         // Return
-        return new AccountID(AccountController.accountsRepo.findBySessionID(sessionID.getID()).getAccountID());
+        return new AccountID(accountsRepo.findBySessionID(sessionID.getID()).getAccountID());
     }
 
     /**
@@ -72,7 +79,7 @@ public class AccountManager {
     @SuppressWarnings("unused")
     public static AccountID getAccountIDByUsername(String username) {
         // Make DB call to find account based on username
-        Account account = AccountController.accountsRepo.findByUsername(username);
+        Account account = accountsRepo.findByUsername(username);
 
         // Check if found
         if (account == null) return null;
@@ -121,9 +128,9 @@ public class AccountManager {
 
         if(id instanceof AccountID) {
             // Make DB call to find account based on id (check if exists as well)
-            if (!AccountController.accountsRepo.existsById(id.toString())) return LogHandler.logError(new IDException("Could not find account from given ID"), HttpStatus.NOT_FOUND);
+            if (!accountsRepo.existsById(id.toString())) return LogHandler.logError(new IDException("Could not find account from given ID"), HttpStatus.NOT_FOUND);
 
-            Account foundAccount = AccountController.accountsRepo.findByAccountID(id.toString());
+            Account foundAccount = accountsRepo.findByAccountID(id.toString());
 
             // package data into account instance
             return new ResponseEntity<>(new ProtectedAccount(foundAccount.getUsername(), foundAccount.getTimestamp()), HttpStatus.OK);
@@ -157,10 +164,10 @@ public class AccountManager {
 
         newAccount.updateData();
 
-        if (AccountController.accountsRepo.findByUsername(username) != null) return LogHandler.logError(new AccountInfoException("The given account already exists!"), HttpStatus.BAD_REQUEST);
+        if (accountsRepo.findByUsername(username) != null) return LogHandler.logError(new AccountInfoException("The given account already exists!"), HttpStatus.BAD_REQUEST);
 
         // Save to DB
-        AccountController.accountsRepo.save(newAccount);
+        accountsRepo.save(newAccount);
 
         JSONObject returnObject = new JSONObject(Map.of("sessionID", newAccount.getSessionIDObject().getID()));
 
@@ -183,7 +190,7 @@ public class AccountManager {
         password = AccountManager.hash(password);
 
         // Get accountID
-        Account account = AccountController.accountsRepo.findByCredentials(username, password);
+        Account account = accountsRepo.findByCredentials(username, password);
 
         // Check if the account could be found
         if (account == null) return LogHandler.logError(new AccountInfoException("Could not find matching account"), HttpStatus.NOT_FOUND);
@@ -196,7 +203,7 @@ public class AccountManager {
 
         account.updateData();
 
-        AccountController.accountsRepo.save(account);
+        accountsRepo.save(account);
 
         JSONObject returnObject = new JSONObject(Map.of("sessionID", newSessionID.getID()));
 
@@ -216,12 +223,12 @@ public class AccountManager {
         if (accountID == null) return LogHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
 
         // Delete account by the accountID
-        Account account = AccountController.accountsRepo.findByAccountID(accountID.getID());
+        Account account = accountsRepo.findByAccountID(accountID.getID());
         account.getSessionIDObject().setID(null);
 
         account.updateData();
 
-        AccountController.accountsRepo.save(account);
+        accountsRepo.save(account);
 
         return new ResponseEntity<>("Successfully Logged out!", HttpStatus.OK);
     }
@@ -239,7 +246,7 @@ public class AccountManager {
         if (accountID == null ) return LogHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
 
         // Delete account by the accountID
-        AccountController.accountsRepo.deleteById(accountID.getID());
+        accountsRepo.deleteById(accountID.getID());
 
         return new ResponseEntity<>("Successfully Deleted Account!", HttpStatus.OK);
     }
@@ -252,10 +259,10 @@ public class AccountManager {
     @Deprecated
     public boolean updateAccount(Account updatedAccount) {
         // verify updated account
-        if (!AccountManager.verifyAccountInfo(updatedAccount) && AccountController.accountsRepo.existsById(updatedAccount.getAccountIDObject().getID())) return false;
+        if (!AccountManager.verifyAccountInfo(updatedAccount) && accountsRepo.existsById(updatedAccount.getAccountIDObject().getID())) return false;
 
         // Delete account by the accountID
-        AccountController.accountsRepo.save(updatedAccount);
+        accountsRepo.save(updatedAccount);
 
         return true;
     }
