@@ -1,14 +1,16 @@
 import { Component } from "react";
 
 class Friend extends Component{
-    state = {
-        friends: []
-    };
+    constructor(props) {
+        super(props);
+        this.state = {friends: []};
+        // this.remove = this.remove.bind(this);
+        // this.handleBuy = this.handleBuy.bind(this);
+    }
 
 
     async componentDidMount() {
-        const session = ""
-        const response = await fetch(`http://localhost:8080/getFriend?sessionID=${session}`);
+        const response = await fetch(`http://localhost:8080/getFriend?sessionID=${(this.props.sessionId)}`);
         const body = await response.json();
         
         if (response.status === 200) {

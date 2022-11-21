@@ -3,14 +3,14 @@ import React, { useState} from "react";
 import "./Friends.css"
 import Friend from "../api/Friend"
 import Invitation from "../api/Invitation";
+import ShowError from "../Components/showError";
 
-function Friends(){
+function Friends(props){
 
     const [addFriend, setAddFriend] = useState("");
     const [removeFriend, setRemoveFriend] = useState("");
 
-    const session = "";
-    const addReq = `http://localhost:8080/sendInvite?sessionID=${session}&friendUsername=${addFriend}`;
+    const addReq = `http://localhost:8080/sendInvite?sessionID=${props.sessionId}&friendUsername=${addFriend}`;
 
     function handleAddClick() {
         fetch(addReq, {
@@ -36,7 +36,7 @@ function Friends(){
             <Navbar curPage={1}/>
             <div className="FriendsMain">
                 <div className="Friends">
-                    <Friend />
+                    <Friend sessionId={props.sessionId}/>
                     {/* <h3>Friends</h3>
                     <p>@KurtisLaw</p>
                     <p>@KurtisLaw</p>
@@ -47,22 +47,19 @@ function Friends(){
                     <h3 className="requestTitle">Request</h3>
                     <div className="Request">
                         <Invitation />
-                        {/* <div className="RequstUser">
+                        <div className="RequestUser">
                             <p>@TonyKim</p>
-                            <p>@TonyKim</p>
                         </div>
-                        <div className="RequestAccept">
-                            <p className="accept">Accept</p>
-                            <p className="accept">Accept</p>
-                        </div>
-                        <div>
-                            <p className="blue">/</p>
-                            <p className="blue">/</p>
-                        </div>
-                        <div>
-                            <p className="decline">Decline</p>
-                            <p className="decline">Decline</p>
-                        </div> */}
+                        {/*<div className="RequestAccept">*/}
+                        {/*    <p className="accept">Accept</p>*/}
+                        {/*</div>*/}
+                        {/*<div>*/}
+                        {/*    <p className="blue">/</p>*/}
+                        {/*</div>*/}
+                        {/*<div>*/}
+                        {/*    <p className="decline">Decline</p>*/}
+                        {/*</div>*/}
+                        <ShowError error={"Friend no longer doesn't work"}/>
 
                     </div>
                 </div>
@@ -86,6 +83,7 @@ function Friends(){
                         />
                         <button className="blue" onClick={handleRemoveClick}>Submit</button>
                     </div>
+                    <ShowError error={"Friend doesn't exist"}/>
                 </div>
             </div>
         </div>

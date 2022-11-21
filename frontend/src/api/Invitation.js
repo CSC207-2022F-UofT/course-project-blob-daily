@@ -1,6 +1,5 @@
 import { Component } from "react";
 
-var session = "";
 class Invitation extends Component{
     constructor(props) {
         super(props);
@@ -8,9 +7,9 @@ class Invitation extends Component{
         // this.remove = this.remove.bind(this);
         // this.handleBuy = this.handleBuy.bind(this);
     }
-    
+
     async componentDidMount() {
-        const response = await fetch(`http://localhost:8080/friends/getInvite?sessionID=${session}&isReceiver=true`);
+        const response = await fetch(`http://localhost:8080/friends/getInvite?sessionID=${(this.props.sessionId)}&isReceiver=true`);
         const body = await response.json();
         
         if (response.status === 200) {
@@ -19,11 +18,11 @@ class Invitation extends Component{
     }
 
     async handleAccept(id) {
-        const response = await fetch(`http://localhost:8080/acceptInvite?senderID=${id}&receiverID=${session}`)
+        const response = await fetch(`http://localhost:8080/acceptInvite?senderID=${id}&receiverID=${(this.props.sessionId)}`)
     }
 
     async handleDecline(id) {
-        const response = await fetch(`http://localhost:8080/declineInvite?senderID=${id}&recieverID=${session}`)
+        const response = await fetch(`http://localhost:8080/declineInvite?senderID=${id}&recieverID=${(this.props.sessionId)}`)
     }
 
     render() {

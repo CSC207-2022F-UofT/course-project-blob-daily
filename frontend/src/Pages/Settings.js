@@ -2,17 +2,18 @@ import './Settings.css'
 import Navbar from "../Components/navbar";
 import React, {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import ses from './Login'
+import ShowError from "../Components/showError";
 
-function Settings(){
+
+function Settings(props){
     const [username, setUsername] = useState("new username ...");
     const [password, setPassword] = useState("new password ...");
-    const session = ses;
-    console.log(session);
+
+    console.log(props.sessionId);
 
     const navigate = useNavigate();
-    const logoutReq = `http://localhost:8080/logout?sessionID=${session}`
-    const deleteReq = `http://localhost:8080/delete?sessionID=${session}`
+    const logoutReq = `http://localhost:8080/logout?sessionID=${props.sessionId}`
+    const deleteReq = `http://localhost:8080/delete?sessionID=${props.sessionId}`
 
     function handleLogoutClick(){
         fetch(logoutReq, {
@@ -51,8 +52,11 @@ function Settings(){
                     />
                     <p className="blue">Send</p>
                 </div>
+                <div className="errorTextSettings">
+                    <ShowError error={"Invalid Username"}/>
+                </div>
 
-                <div className="settingsForm space">
+                <div className="settingsForm">
                     <input
                         className="answerBox"
                         value={password}
@@ -60,6 +64,9 @@ function Settings(){
                     />
                     <p className="blue">Send</p>
                 </div>
+            <div className="errorTextSettings space">
+                <ShowError error={"Invalid Password"}/>
+            </div>
 
                 
                 <div>

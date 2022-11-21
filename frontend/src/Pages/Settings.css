@@ -32,6 +32,9 @@
 
 .account {
     color: red;
-    padding-left: 100px;
+    margin-left: 100px;
 }
 
+.errorTextSettings {
+    padding-left: 100px;
+}

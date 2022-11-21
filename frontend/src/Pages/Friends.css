@@ -11,11 +11,20 @@
 
 .Request {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .Request p {
     padding: 5px;
+}
+
+.RequestUser{
+    display: flex;
+    flex-direction: row;
+}
+
+.RequestUser p {
+    margin-bottom: 0px;
 }
 
 .requestTitle {

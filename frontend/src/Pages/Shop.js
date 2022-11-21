@@ -4,6 +4,7 @@ import 'scrollable-component';
 import ShopItem from "../Components/shopitems";
 import Item from "../api/Item";
 import Pet from "../api/Pet"
+import ShowError from "../Components/showError";
 
 function Shop(){
     return(
@@ -24,6 +25,7 @@ function Shop(){
                         <p>|</p>
                         <p>Reset</p>
                     </div>
+                    <ShowError error={"Not enough money"}/>
 
                 </div>
 
