@@ -1,39 +1,86 @@
-# Project Template
+# Backend for QuestPets
 
-This is a template repository for CSC 207 projects. 
-This repository contains starter code for a gradle project.
-It also contains workflow documents that give instructions on how to manage your Github repository and how to use Github Projects for efficient collaboration.
+# Running
 
-## Checklist For Your Project
-- [x] Verify the correct settings for your project repository
-- [x] Set up Github Projects
-- [x] Create the implementation plan using issues and Github Projects
-- [x] Create deveopment branches for your features
-- [ ] Use pull requests to merge finished features into main branch
-- [ ] Conduct code reviews
+1. Ensure your java version is set to 11 (or higher. Tested on Java 11.0.12)
+2. Navigate to `src/main/resources/application.properties` and add the key-values for the database connection as follows (If it doesn’t exist, create it):
 
-**If your team has trouble with any of these steps, please ask on Piazza. For example, with how GitHub Classroom works, your team *may* not have permissions to do some of the first few steps, in which case we'll post alternative instructions as needed.**
+```
+spring.data.mongodb.uri=mongodb+srv://QuestPets:8UwDqweavCFwA9FF@questpets.dbvntgm.mongodb.net/test
+spring.data.mongodb.database=EntitiesDB
+server.error.whitelabel.enabled=true
+```
 
-## Workflow Documents
+1. Navigate to the src/main/java/com/backend folder from a terminal
+2. Ensure the port `8080` is free and open for the backend to use
+3. Run the command `command_place_holder` on MacOS or `command_place_holder` on Windows
+    - You could use your IDE as well to run the QuestPetsApplication.java
+4. The API is accessible at `[http://localhost:8080/](http://localhost:8080/)` The root route is a test route to ensure the service is active (HelloWorld)
 
-* Github Workflow: Please refer to the workflow that was introduced in the first lab. You should follow this when working on your code. The following document provides additional details too.
+# Testing
 
-* [Project Planning and Development Guide](project_plan_dev.md): This document helps you to understand how to create and maintain a project plan for your class project. **This document helps you to complete the Implementation Plan Milestone.**
+-   Navigate to the `src/test/java` file and run the desired class to be tested using your IDE.
+-   This will setup a Spring environment and establish the database connections required for the rest of the test files to work properly.
 
-## Gradle Project
-Import this project into your Intellij editor. It should automatically recognise this as a gradle repository.
-The starter code was built using SDK version 11.0.1. Ensure that you are using this version for this project. (You can, of course, change the SDK version as per your requirement if your team has all agreed to use a different version)
+# Contributing
 
-You have been provided with two starter files for demonstration: HelloWorld and HelloWorldTest.
+-   Open the backend directory in your IDE (not the project root folder) as otherwise your IDE may have trouble downloading the Gradle dependencies
+-   Follow the pre-existing naming convention (camelCase)
 
-You will find HelloWorld in `src/main/java/tutorial` directory. Right click on the HelloWorld file and click on `Run HelloWorld.main()`.
-This should run the program and print on your console.
+# Debugging
 
-You will find HelloWorldTest in `src/test/java/tutorial` directory. Right click on the HelloWorldTest file and click on `Run HelloWorldTest`.
-All tests should pass. Your team can remove this sample of how testing works once you start adding your project code to the repo.
+-   An error during the run command is usually either due to the wrong java version or blocked port
+-   Debugging information can be traced through logged messaged and following error stackTrace (LogHandler Deprecation disable)
+-   The “Whitelabel error” / “Error handling this Response” means you are missing imports specific to Spring or have misconfigured routes in your application
 
-Moving forward, we expect you to maintain this project structure. You *should* use Gradle as the build environment, but it is fine if your team prefers to use something else -- just remove the gradle files and push your preferred project setup. Assuming you stick with Gradle, your source code should go into `src/main/java` (you can keep creating more subdirectories as per your project requirement). Every source class can auto-generate a test file for you. For example, open HelloWorld.java file and click on the `HelloWorld` variable as shown in the image below. You should see an option `Generate` and on clicking this your should see an option `Test`. Clicking on this will generate a JUnit test file for `HelloWorld` class. This was used to generate the `HelloWorldTest`.
+# How It’s Designed
 
-![image](https://user-images.githubusercontent.com/5333020/196066655-d3c97bf4-fdbd-46b0-b6ae-aeb8dbcf351d.png)
+There are 4 packages to note here:
 
-You can create another simple class and try generating a test for this class.
+1. `com.ouieat.controllers`
+2. `com.ouieat.entities`
+3. `com.ouieat.repositories`
+4. `com.ouieat.usecases`
+
+Also to note the directory `error` that provides a statically accessible logger method for the Backend through a custom built logger.
+
+# Flow of Data
+
+```mermaid
+flowchart TD
+  client(Client) <--> controller(Controller)
+	controller <--> manager(Use Case)
+	manager <--> model(Entity)
+	repository <--> model
+	model --> repository(Repository)
+	exceptionHandler(LogHandler)
+	controller <--> exceptionHandler
+	manager --> exceptionHandler
+
+
+```
+
+## Entities
+
+- Data Transfer Objects
+- Perform Validation
+- Perform Generation
+
+## Controllers
+
+- Interactor for the API
+- Handles API calls from frontend (or client)
+- Contracts appropriate manager to complete request
+
+## Repositories
+
+- Handles database connection
+- Custom queries
+- Saving and deleting data
+
+## Use Cases
+
+- Handles use case requests
+- Package raw data to entities
+- Contact repositories when needed
+- Check for error handling (with LogHandler)
