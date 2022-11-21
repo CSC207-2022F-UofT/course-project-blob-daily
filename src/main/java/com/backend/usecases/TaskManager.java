@@ -9,7 +9,6 @@ import com.backend.entities.Task;
 import com.backend.entities.TaskActive;
 import com.backend.entities.TaskCompletionRecord;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +23,13 @@ public class TaskManager {
         return new AccountID("asdasd");
     }
 
-    //complete a task
-    public static void postCompletedTask(String sessionID,  String task, String image){
+    /**
+     *
+     * @param sessionID
+     * @param task
+     * @param image
+     */
+    public static void postCompletedTask(String sessionID, String task, String image){
         TaskCompletionController.completeRepo.save(new TaskCompletionRecord(
                 verifySession(sessionID), new Timestamp(System.currentTimeMillis()).toString(), task, image
         ));
