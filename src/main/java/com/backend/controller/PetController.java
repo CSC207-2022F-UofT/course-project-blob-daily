@@ -17,14 +17,6 @@ import java.util.Optional;
 
 @RestController
 public class PetController {
-
-    public static PetRepo petRepo;
-
-    public PetController(PetRepo petRepo) {
-        PetController.petRepo = petRepo;
-    }
-
-
     /**
      * Get request to getPet with the sessionID from the database
      * @param sessionID string that represents the current session and verifies the action

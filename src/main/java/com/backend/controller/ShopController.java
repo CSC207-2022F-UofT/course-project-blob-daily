@@ -14,16 +14,8 @@ import java.util.ArrayList;
 
 @RestController
 public class ShopController {
-
-    public static ShopItemRepo shopRepo;
-
-    public ShopController(ShopItemRepo shopRepo) {
-        ShopController.shopRepo = shopRepo;
-    }
-
     /**
      * Get request to getShopItem with the sessionID from the database
-     *
      */
     @GetMapping("/shopItems")
     public ResponseEntity<Object> shopItems(){
@@ -32,7 +24,4 @@ public class ShopController {
 
         return new ResponseEntity<>(shopItems, HttpStatus.OK);
     }
-
-
-
 }

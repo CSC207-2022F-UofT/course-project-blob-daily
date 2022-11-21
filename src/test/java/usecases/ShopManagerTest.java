@@ -2,7 +2,6 @@ package usecases;
 
 
 import com.backend.QuestPetsApplication;
-import com.backend.controller.PetController;
 import com.backend.entities.Pet;
 import com.backend.entities.ShopItem;
 import com.backend.usecases.ShopManager;
@@ -23,7 +22,7 @@ public class ShopManagerTest {
         ArrayList<ShopItem> curInventory = new ArrayList<>();
         curInventory.add(new ShopItem("124", 59.90, "hoodie", "provides warmth"));
         Pet pet = new Pet("9U;Kk6E`Zf9M`Lm2c}Am", 85.00, 25.4, curInventory, new ArrayList<>());
-        PetController.petRepo.save(pet);
+        ShopManager.petRepo.save(pet);
     }
 
 

@@ -1,16 +1,24 @@
 package com.backend.usecases;
 
 import com.backend.controller.PetController;
-import com.backend.controller.ShopController;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Pet;
 import com.backend.entities.ShopItem;
+import com.backend.repositories.PetRepo;
+import com.backend.repositories.ShopItemRepo;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class ShopManager {
+    public static ShopItemRepo shopRepo;
+    public static PetRepo petRepo;
+    public ShopManager(ShopItemRepo shopRepo, PetRepo petRepo) {
+        ShopManager.shopRepo = shopRepo;
+        ShopManager.petRepo = petRepo;
+    }
+
     /**
      * Adds the default pet for an account
      * @param id AccountId string that represents the pet linking to the account
@@ -19,7 +27,7 @@ public class ShopManager {
         ArrayList<ShopItem> curInventory = new ArrayList<>();
         curInventory.add(new ShopItem("124", 59.90, "hoodie", "provides warmth"));
         Pet pet = new Pet(id, 85.00, 0.0, curInventory, new ArrayList<>());
-        PetController.petRepo.save(pet);
+        ShopManager.petRepo.save(pet);
         return pet;
     }
 
@@ -28,7 +36,7 @@ public class ShopManager {
      *
      */
     public static ArrayList<ShopItem> getShopItems() {
-        return (ArrayList<ShopItem>) ShopController.shopRepo.findAll();
+        return (ArrayList<ShopItem>) ShopManager.shopRepo.findAll();
     }
 
     /**
@@ -41,7 +49,7 @@ public class ShopManager {
         if (curAccount == null){
             return Optional.empty();
         }
-        return PetController.petRepo.findById(curAccount.getID());
+        return ShopManager.petRepo.findById(curAccount.getID());
     }
 
     /**
@@ -54,13 +62,13 @@ public class ShopManager {
         if (curAccount == null){
             return false;
         }
-        Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
+        Optional<Pet> pet = ShopManager.petRepo.findById(curAccount.getID());
         if (pet.isEmpty()){
             return false;
         }
 
         Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), 0.0, pet.get().getInventory(), newOutfit);
-        PetController.petRepo.save(updatedPet);
+        ShopManager.petRepo.save(updatedPet);
         return true;
     }
 
@@ -75,7 +83,7 @@ public class ShopManager {
             return Optional.empty();
         }
 
-        Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
+        Optional<Pet> pet = ShopManager.petRepo.findById(curAccount.getID());
 
         return pet.map(Pet::getBalance);
 
@@ -91,7 +99,7 @@ public class ShopManager {
         if (curAccount == null){
             return false;
         }
-        Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
+        Optional<Pet> pet = ShopManager.petRepo.findById(curAccount.getID());
         if (pet.isEmpty()) {
             return false;
         }
@@ -99,7 +107,7 @@ public class ShopManager {
         double updatedBalance = pet.get().getBalance() + amount;
 
         Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), updatedBalance, pet.get().getInventory(), pet.get().getCurrentOutfit());
-        PetController.petRepo.save(updatedPet);
+        ShopManager.petRepo.save(updatedPet);
         return true;
     }
 
@@ -109,7 +117,7 @@ public class ShopManager {
      *
      */
     public static void deleteAccount(AccountID curAccount){
-        PetController.petRepo.deleteById(curAccount.getID());
+        ShopManager.petRepo.deleteById(curAccount.getID());
     }
 
 
@@ -123,12 +131,12 @@ public class ShopManager {
         if (curAccount == null){
             return false;
         }
-        Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
+        Optional<Pet> pet = ShopManager.petRepo.findById(curAccount.getID());
         if (pet.isEmpty()){
             return false;
         }
 
-        Optional<ShopItem> shopItem = ShopController.shopRepo.findById(itemID);
+        Optional<ShopItem> shopItem = ShopManager.shopRepo.findById(itemID);
         if (shopItem.isEmpty()){
             return false;
         }
@@ -144,7 +152,7 @@ public class ShopManager {
 
 
         Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), updatedBalance, updatedInventory, pet.get().getCurrentOutfit());
-        PetController.petRepo.save(updatedPet);
+        ShopManager.petRepo.save(updatedPet);
 
         return true;
 
