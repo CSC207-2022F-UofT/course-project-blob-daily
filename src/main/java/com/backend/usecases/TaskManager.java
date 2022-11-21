@@ -119,18 +119,12 @@ public class TaskManager {
 
     /**
      * Delete all correlated TaskCompletionRecords when a user deletes their account
-     * @param sessionID of type SessionID, sessionID references an associated account
+     * @param accountID of type AccountID, accountID references associated account
      * @return a response entity detailing successful completion or an associated error
      */
-    public static ResponseEntity<?> deleteAllCorrelatedCompletions(SessionID sessionID) {
-        //verify the sessionID
-        AccountID account = AccountManager.verifySession(sessionID);
-        if (account == null) {
-            return LogHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
-        }
-
+    public static ResponseEntity<?> deleteAllCorrelatedCompletions(AccountID accountID) {
         //get all the records completed by account and delete them
-        List<TaskCompletionRecord> complete = getRecord(account);
+        List<TaskCompletionRecord> complete = getRecord(accountID);
         for (TaskCompletionRecord current : complete) {
             deleteRecord(current.getID());
         }
