@@ -35,8 +35,14 @@ public class LogFormatter extends Formatter {
 
         builder.append(" [");
         switch (record.getLevel().getName()) {
-            case "WARNING" : builder.append(ANSI_YELLOW);
-            case "SEVERE" : builder.append(ANSI_RED);
+            case "WARNING" : {
+                builder.append(ANSI_YELLOW);
+                break;
+            }
+            case "SEVERE" : {
+                builder.append(ANSI_RED);
+                break;
+            }
             default : builder.append(ANSI_GREY);
         }
 

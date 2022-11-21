@@ -1,6 +1,5 @@
 package com.backend.entities;
 
-
 import com.backend.entities.IDs.AccountID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;

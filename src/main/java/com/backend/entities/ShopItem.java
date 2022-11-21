@@ -1,6 +1,5 @@
 package com.backend.entities;
 
-
 import com.backend.entities.IDs.ItemID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
