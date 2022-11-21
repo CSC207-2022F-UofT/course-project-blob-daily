@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @Document(collection = "FriendsCollection")
 public class Friend {
     @Transient
-    private AccountID accountIDObject;
+    private final AccountID accountIDObject;
     @Id
     private String accountID;
 
@@ -31,6 +31,7 @@ public class Friend {
         this.friends = friends;
     }
 
+    public String getAccountID() { return this.accountID; }
     public ArrayList<String> getFriends() {
         return this.friends;
     }
