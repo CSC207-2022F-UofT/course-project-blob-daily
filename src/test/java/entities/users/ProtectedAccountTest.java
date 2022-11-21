@@ -37,7 +37,7 @@ public class ProtectedAccountTest {
                 protectedAccount.getUsernameObject(), expectedUsername);
 
         // Asserts
-        Assertions.assertNull(protectedAccount.getTimestamp(), timestampMessage);
+        Assertions.assertNotNull(protectedAccount.getTimestamp(), timestampMessage);
         Assertions.assertEquals(expectedUsername, protectedAccount.getUsernameObject().toString(), usernameMessage);
     }
 

@@ -1,12 +1,17 @@
 package usecases;
 
 import com.backend.QuestPetsApplication;
+import com.backend.controller.AccountController;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.users.Account;
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.usecases.AccountManager;
-import org.junit.jupiter.api.*;
+import net.minidev.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,40 +22,39 @@ import java.util.Date;
 public class AccountManagerTest {
 
     private SessionID sessionID;
-    private String username = "username";
-    private String password = "abc123!";
+    private final String username = "username";
+    private final String password = "abc123!";
 
     @BeforeEach
     public void setup() {
         ResponseEntity<Object> register = AccountManager.registerAccount(this.username, this.password);
 
         if (!(register.getStatusCode() == HttpStatus.OK)){
-            sessionID = new SessionID((String) AccountManager.loginAccount(this.username, this.password).getBody());
+            sessionID = new SessionID((String) ((JSONObject) AccountManager.loginAccount(this.username, this.password).getBody()).get("sessionID"));
         } else  {
-            sessionID = new SessionID((String) register.getBody());
+            sessionID = new SessionID((String) ((JSONObject) register.getBody()).get("sessionID"));
         }
 
     }
 
     @AfterEach
     public void tearDown() {
-        AccountManager.logoutAccount(this.sessionID);
+        if (sessionID != null) {
+            AccountManager.logoutAccount(this.sessionID);
+        }
     }
 
     @Test
     public void verifySessionTest() {
-        // Values
-        String expectedAccountID = "1d_Ra5h^Xx7V}Bl6R?Du";
-
         // Action
         String actualAccountID = AccountManager.verifySession(this.sessionID).getID();
 
         // Assertion Message
-        String verifySessionMessage = String.format("The given valid ID '%s' returned an unexpected accountID '%s'",
-                expectedAccountID, actualAccountID);
+        String verifySessionMessage = String.format("The given valid ID returned an unexpected accountID '%s'",
+                actualAccountID);
 
         // Assertion Statement
-        Assertions.assertEquals(expectedAccountID, actualAccountID, verifySessionMessage);
+        Assertions.assertTrue(AccountController.accountsRepo.existsById(actualAccountID), verifySessionMessage);
     }
 
     @Test
@@ -238,5 +242,221 @@ public class AccountManagerTest {
 
         // Assertion Statement
         Assertions.assertEquals(expectedAccount.getUsername(), actualAccount.getUsername(), accountInfoMessage);
+    }
+
+    @Test
+    public void registerTest() {
+        // Setup
+        AccountManager.deleteAccount(sessionID);
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.registerAccount(username, password);
+        sessionID = new SessionID(((JSONObject) responseEntity.getBody()).get("sessionID").toString());
+
+        // Assertion Message
+        String registerMessage = "Could not register an account with valid credentials";
+
+        // Assertion Statement
+        Assertions.assertTrue(AccountController.accountsRepo.existsById(AccountManager.verifySession(sessionID).getID()), registerMessage);
+    }
+
+    @Test
+    public void registerAlreadyExistsTest() {
+        // Setup (Non Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.registerAccount(username, password);
+
+        // Assertion Message
+        String registerMessage = "Account was unexpectedly 'created' when given existing credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, registerMessage);
+    }
+
+    @Test
+    public void registerInvalidInfoTest() {
+        // Setup (Non Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.registerAccount(username, "");
+
+        // Assertion Message
+        String registerMessage = "Account was unexpectedly 'created' when given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, registerMessage);
+    }
+
+    @Test
+    public void loginTest() {
+        // Setup
+        AccountManager.logoutAccount(sessionID);
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.loginAccount(username, password);
+        sessionID = new SessionID(((JSONObject) responseEntity.getBody()).get("sessionID").toString());
+
+        // Assertion Message
+        String loginMessage = "Could not login an account with valid credentials";
+
+        // Assertion Statement
+        Assertions.assertTrue(AccountController.accountsRepo.existsById(AccountManager.verifySession(sessionID).getID()), loginMessage);
+    }
+
+    @Test
+    public void loginAlreadyLoggedInTest() {
+        // Setup (Non Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.loginAccount(username, password);
+
+        // Assertion Message
+        String loginMessage = "Account was unexpectedly 'logged in' when given credentials of an already logged in account";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.UNAUTHORIZED, loginMessage);
+    }
+
+    @Test
+    public void loginInvalidInfoTest() {
+        // Setup (Non Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.loginAccount(username, "");
+
+        // Assertion Message
+        String loginMessage = "Account was unexpectedly 'logged in' when given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, loginMessage);
+    }
+
+    @Test
+    public void loginAccountDoesNotExistTest() {
+        // Setup (Non Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.loginAccount("notUsername", password);
+
+        // Assertion Message
+        String loginMessage = "Account was unexpectedly 'logged in' when given credentials of account that doesn't exist";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.NOT_FOUND, loginMessage);
+    }
+
+    @Test
+    public void logoutTest() {
+        // Setup (not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(sessionID);
+
+        // Assertion Message
+        String logoutMessage = "Could not logout an account with valid credentials";
+
+        // Assertion Statement
+        Assertions.assertNull(AccountController.accountsRepo.findBySessionID(sessionID.getID()), logoutMessage);
+    }
+
+    @Test
+    public void logoutAlreadyLoggedOutTest() {
+        // Setup
+        AccountManager.logoutAccount(sessionID);
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(sessionID);
+
+        // Assertion Message
+        String logoutMessage = "Account was unexpectedly 'logged out' when given credentials of an already logged in account";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, logoutMessage);
+    }
+
+    @Test
+    public void logoutInvalidInfoTest() {
+        // Setup (Non Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID(null));
+
+        // Assertion Message
+        String logoutMessage = "Account was unexpectedly 'logged out' when given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, logoutMessage);
+    }
+
+    @Test
+    public void logoutAccountDoesNotExistTest() {
+        // Setup (Not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID("diajmdlanmdln80"));
+
+        // Assertion Message
+        String logoutMessage = "Account was unexpectedly 'logged in' when given credentials of account that doesn't exist";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, logoutMessage);
+    }
+
+    @Test
+    public void deleteTest() {
+        // Setup (not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.deleteAccount(sessionID);
+
+        // Assertion Message
+        String deleteMessage = "Could not delete an account with valid credentials";
+
+        // Assertion Statement
+        Assertions.assertNull(AccountController.accountsRepo.findBySessionID(sessionID.getID()), deleteMessage);
+    }
+
+    @Test
+    public void deleteUnauthorizedTest() {
+        // Setup
+        AccountManager.logoutAccount(sessionID);
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.deleteAccount(sessionID);
+
+        // Assertion Message
+        String deleteMessage = "Account was unexpectedly 'deleted' when given unauthorized credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, deleteMessage);
+    }
+
+    @Test
+    public void deleteInvalidInfoTest() {
+        // Setup (Non Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID(null));
+
+        // Assertion Message
+        String deleteMessage = "Account was unexpectedly 'deleted' when given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, deleteMessage);
+    }
+
+    @Test
+    public void deleteAccountDoesNotExistTest() {
+        // Setup (Not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID("diajmdlanmdln80"));
+
+        // Assertion Message
+        String deleteMessage = "Account was unexpectedly 'delete' when given credentials of account that doesn't exist";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, deleteMessage);
     }
 }
