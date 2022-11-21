@@ -7,6 +7,7 @@ import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Pet;
 import com.backend.entities.ShopItem;
 import com.backend.error.handlers.LogHandler;
+import org.apache.juli.logging.Log;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -41,7 +42,9 @@ public class ShopManager {
     public static Optional<Pet> getPet(String sessionID){
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
 
-        assert curAccount != null;
+        if (curAccount == null){
+            return Optional.empty();
+        }
         return PetController.petRepo.findById(curAccount.getID());
     }
 
@@ -52,9 +55,13 @@ public class ShopManager {
      */
     public static boolean updateCurrentOutfit(String sessionID, ArrayList<ShopItem> newOutfit){
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
-        assert curAccount != null;
+        if (curAccount == null){
+            return false;
+        }
         Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
-        assert pet.isPresent();
+        if (pet.isEmpty()){
+            return false;
+        }
 
         Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), 0.0, pet.get().getInventory(), newOutfit);
         PetController.petRepo.save(updatedPet);
@@ -66,18 +73,15 @@ public class ShopManager {
      * @param sessionID string that represents the current session and verifies the action
      *
      */
-    public static double getBalance(String sessionID){
+    public static Optional<Double> getBalance(String sessionID){
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
-        assert curAccount != null;
+        if (curAccount == null){
+            return Optional.empty();
+        }
+
         Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
 
-        if (pet.isPresent())
-        {
-            return pet.get().getBalance();
-        }else{
-            LogHandler.logError(new Exception("pet does not exist"));
-            return 0;
-        }
+        return pet.map(Pet::getBalance);
 
     }
 
@@ -86,17 +90,21 @@ public class ShopManager {
      * @param sessionID string that represents the current session and verifies the action
      * @param amount the double that represents the amount added to the pet's balance
      */
-    public static void addBalance(String sessionID, double amount){
+    public static boolean addBalance(String sessionID, double amount){
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
-        assert curAccount != null;
+        if (curAccount == null){
+            return false;
+        }
         Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
-        assert pet.isPresent();
+        if (pet.isEmpty()) {
+            return false;
+        }
 
         double updatedBalance = pet.get().getBalance() + amount;
 
         Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), updatedBalance, pet.get().getInventory(), pet.get().getCurrentOutfit());
         PetController.petRepo.save(updatedPet);
-
+        return true;
     }
 
     /**
@@ -116,12 +124,18 @@ public class ShopManager {
      */
     public static boolean purchaseItem(String itemID, String sessionID) {
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
-        assert curAccount != null;
+        if (curAccount == null){
+            return false;
+        }
         Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
-        assert pet.isPresent();
+        if (pet.isEmpty()){
+            return false;
+        }
 
         Optional<ShopItem> shopItem = ShopController.shopRepo.findById(itemID);
-        assert shopItem.isPresent();
+        if (shopItem.isEmpty()){
+            return false;
+        }
 
         if(pet.get().getInventory().contains(shopItem.get()) || pet.get().getBalance() < shopItem.get().getCost()){
             return false;

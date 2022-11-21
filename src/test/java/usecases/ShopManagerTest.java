@@ -3,19 +3,13 @@ package usecases;
 
 import com.backend.QuestPetsApplication;
 import com.backend.controller.PetController;
-import com.backend.entities.IDs.AccountID;
-import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Pet;
 import com.backend.entities.ShopItem;
-import com.backend.usecases.AccountManager;
 import com.backend.usecases.ShopManager;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -69,13 +63,15 @@ public class ShopManagerTest {
         newOutfit.add(new ShopItem("2468135790", 19.90, "Boots", "Classic pair of white boots"));
         ShopManager.updateCurrentOutfit(sessionID, newOutfit);
         Optional<Pet> pet = ShopManager.getPet(sessionID);
+        Assertions.assertTrue(pet.isPresent());
         Assertions.assertEquals(pet.get().getCurrentOutfit().get(0).getID(), "2468135790");
 
     }
 
     @Test
     public void getBalanceTest(){
-        double balance = ShopManager.getBalance(sessionID);
+        Assertions.assertTrue(ShopManager.getBalance(sessionID).isPresent());
+        double balance = ShopManager.getBalance(sessionID).get();
         Assertions.assertEquals(balance, 25.4, 0);
 
     }
@@ -83,7 +79,8 @@ public class ShopManagerTest {
     @Test
     public void addBalanceTest(){
         ShopManager.addBalance(sessionID, 10);
-        double updatedBalance = ShopManager.getBalance(sessionID);
+        Assertions.assertTrue(ShopManager.getBalance(sessionID).isPresent());
+        double updatedBalance = ShopManager.getBalance(sessionID).get();
         ShopManager.addBalance(sessionID, -10);
         Assertions.assertEquals(updatedBalance, 35.4, 0.0001);
     }
@@ -91,11 +88,13 @@ public class ShopManagerTest {
     @Test
     public void purchaseTest(){
         ShopManager.purchaseItem("9679464033", sessionID);
-        double updatedBalance = ShopManager.getBalance(sessionID);
+        Assertions.assertTrue(ShopManager.getBalance(sessionID).isPresent());
+        double updatedBalance = ShopManager.getBalance(sessionID).get();
         Optional<Pet> updatedPet = ShopManager.getPet(sessionID);
 
         ShopManager.addBalance(sessionID, 19.9);
 
+        Assertions.assertTrue(updatedPet.isPresent());
         Assertions.assertEquals(updatedPet.get().getInventory().get(1).getName(), "white pants");
         Assertions.assertEquals(updatedBalance, 5.5, 0.0001);
 
