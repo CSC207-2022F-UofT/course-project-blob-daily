@@ -63,9 +63,9 @@ public class TaskManager {
     }
 
     /**
-     * Gets all completed tasks completed by sessionID
+     * Gets all completed tasks completed by accountID
      * @param account of type AccountID, references the account
-     * @return a list of all tasks completed by sessionID
+     * @return a list of all tasks completed by accountID
      */
     public static List<TaskCompletionRecord> getRecord(AccountID account) {
         return TaskCompletionController.completeRepo.findAllByAccountID(account.getID());
