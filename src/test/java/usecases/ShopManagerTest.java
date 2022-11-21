@@ -28,7 +28,6 @@ public class ShopManagerTest {
 
     @Test
     public void getShopItemsTest() {
-
         ArrayList<ShopItem> shopItems = ShopManager.getShopItems();
         ShopItem shopItem = shopItems.get(0);
 
@@ -53,7 +52,6 @@ public class ShopManagerTest {
         pet.ifPresent(value -> Assertions.assertEquals(value.getBalance(), 25.4, 0));
         pet.ifPresent(value -> Assertions.assertEquals(value.getInventory().get(0).getName(), "hoodie"));
         pet.ifPresent(value -> Assertions.assertEquals(value.getInventory().get(0).getCost(), 59.9, 0));
-
     }
 
     @Test
@@ -64,7 +62,6 @@ public class ShopManagerTest {
         Optional<Pet> pet = ShopManager.getPet(sessionID);
         Assertions.assertTrue(pet.isPresent());
         Assertions.assertEquals(pet.get().getCurrentOutfit().get(0).getID(), "2468135790");
-
     }
 
     @Test
@@ -96,8 +93,6 @@ public class ShopManagerTest {
         Assertions.assertTrue(updatedPet.isPresent());
         Assertions.assertEquals(updatedPet.get().getInventory().get(1).getName(), "white pants");
         Assertions.assertEquals(updatedBalance, 5.5, 0.0001);
-
-
     }
 
 }
