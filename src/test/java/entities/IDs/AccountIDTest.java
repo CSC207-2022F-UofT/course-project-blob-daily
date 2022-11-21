@@ -156,11 +156,10 @@ public class AccountIDTest {
 
     @Test
     public void testGenerateAccountID() {
-        // Expected values
-        String expectedDefaultID = null;
+        // Expected values (Not Required)
 
         // Action
-        accountID = new AccountID(expectedDefaultID);
+        accountID = new AccountID(null);
         accountID.generateID();
 
         // Assert messages

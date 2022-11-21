@@ -143,7 +143,7 @@ public class PasswordTest {
 
         // Action
         password = new Password(expectedPassword);
-        expectedCriteria = Password.getCriteria();
+        expectedCriteria = Password.criteria;
         Criteria actualCriteria = Password.criteria;
 
         // Assert messages
@@ -156,11 +156,10 @@ public class PasswordTest {
 
     @Test
     public void testGeneratePassword() {
-        // Expected values
-        String expectedPassword = null;
+        // Expected values (Not Required)
 
         // Action
-        password = new Password(expectedPassword);
+        password = new Password(null);
         password.generatePassword();
 
         // Assert messages
