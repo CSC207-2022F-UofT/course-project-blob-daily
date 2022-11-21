@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Document(collection = "PetsCollection")
 public class Pet {
@@ -15,12 +15,12 @@ public class Pet {
     private final String ID;
     private final Double health;
     private final Double balance;
-    private final List<ShopItem> inventory;
-    private final List<ShopItem> currentOutfit;
+    private final ArrayList<ShopItem> inventory;
+    private final ArrayList<ShopItem> currentOutfit;
 
 
     // Contructor
-    public Pet(String ID, Double health, Double balance, List<ShopItem> inventory, List<ShopItem> currentOutfit){
+    public Pet(String ID, Double health, Double balance, ArrayList<ShopItem> inventory, ArrayList<ShopItem> currentOutfit){
         this.accountID = new AccountID(ID);
         this.ID = ID;
         this.health = health;
@@ -44,11 +44,11 @@ public class Pet {
         return this.balance;
     }
 
-    public List<ShopItem> getInventory(){
+    public ArrayList<ShopItem> getInventory(){
         return this.inventory;
     }
 
-    public List<ShopItem> getCurrentOutfit(){
+    public ArrayList<ShopItem> getCurrentOutfit(){
         return currentOutfit;
     }
 }

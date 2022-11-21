@@ -32,6 +32,7 @@ public class ShopManager {
         PetController.petRepo.save(pet);
     }
 
+
     public static ArrayList<ShopItem> getShopItems() {
         return (ArrayList<ShopItem>) ShopController.shopRepo.findAll();
     }
@@ -46,7 +47,7 @@ public class ShopManager {
         return PetController.petRepo.findById(curAccount.getID());
     }
 
-    public static boolean updateCurrentOutfit(String sessionID, List<ShopItem> newOutfit){
+    public static boolean updateCurrentOutfit(String sessionID, ArrayList<ShopItem> newOutfit){
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
         assert curAccount != null;
         Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
@@ -73,16 +74,32 @@ public class ShopManager {
 
     }
 
+    public static void addBalance(String sessionID, double amount){
+        AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
+        assert curAccount != null;
+        Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
+
+        double updatedBalance = pet.get().getBalance() + amount;
+
+        Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), updatedBalance, pet.get().getInventory(), pet.get().getCurrentOutfit());
+        PetController.petRepo.save(updatedPet);
+
+    }
+
     public static boolean purchaseItem(String itemID, String sessionID) {
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
         assert curAccount != null;
         Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
 
-        Optional<ShopItem> item = ShopController.shopRepo.findById(itemID);
+        Optional<ShopItem> shopItem = ShopController.shopRepo.findById(itemID);
 
-        double updatedBalance = pet.get().getBalance() - item.get().getCost();
+        double updatedBalance = pet.get().getBalance() - shopItem.get().getCost();
+        ArrayList<ShopItem> updatedInventory = pet.get().getInventory();
 
-        Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), updatedBalance, pet.get().getInventory(), pet.get().getCurrentOutfit());
+        updatedInventory.add(shopItem.get());
+
+
+        Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), updatedBalance, updatedInventory, pet.get().getCurrentOutfit());
         PetController.petRepo.save(updatedPet);
 
         return true;
