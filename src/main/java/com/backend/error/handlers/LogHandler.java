@@ -1,8 +1,10 @@
 package com.backend.error.handlers;
 
+
+import net.minidev.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.xml.sax.ErrorHandler;
+
 
 import java.util.HashMap;
 import java.util.logging.ConsoleHandler;
@@ -67,6 +69,14 @@ public class LogHandler {
 
     public static ResponseEntity<Object> logError(Exception e, HttpStatus status) {
         logError(e);
-        return ResponseHandler.packageErrorResponse(e, status);
+
+
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("Error", e.getClass().getName());
+        jsonObject.put("Message", e.getMessage());
+
+        return new ResponseEntity<Object>(jsonObject, status);
+
     }
 }
