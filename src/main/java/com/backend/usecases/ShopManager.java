@@ -2,10 +2,13 @@ package com.backend.usecases;
 
 import com.backend.controller.PetController;
 import com.backend.controller.ShopController;
+import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.ItemID;
+import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Pet;
 import com.backend.entities.ShopItem;
 import com.backend.error.handlers.LogHandler;
+import org.apache.juli.logging.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,45 +37,54 @@ public class ShopManager {
     }
 
     public static Optional<Pet> getPet(String sessionID){
-        String curAccount = "9j(Gc5g)Id0G#Pt9s?De";
-        Optional<Pet> pet = PetController.petRepo.findById(curAccount);
-//        if (pet == null){
+        AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
+
+        //        if (pet == null){
 //            LogHandler.logError(new Exception("pet is null"));
 //        }
-        return pet;
+        assert curAccount != null;
+        return PetController.petRepo.findById(curAccount.getID());
     }
 
     public static boolean updateCurrentOutfit(String sessionID, List<ShopItem> newOutfit){
-        String curAccount = "9j(Gc5g)Id0G#Pt9s?De";
-        Optional<Pet> pet = PetController.petRepo.findById(curAccount);
+        AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
+        assert curAccount != null;
+        Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
 //        if (pet == null){
 //            LogHandler.logError(new Exception("pet is null"));
 //        }
-        Pet updatedPet = new Pet(curAccount, pet.get().getHealth(), 0.0, pet.get().getInventory(), newOutfit);
+        Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), 0.0, pet.get().getInventory(), newOutfit);
         PetController.petRepo.save(updatedPet);
         return true;
     }
 
     public static double getBalance(String sessionID){
-        String curAccount = "9j(Gc5g)Id0G#Pt9s?De";
-        Optional<Pet> pet = PetController.petRepo.findById(curAccount);
-//        if (pet == null){
-//            LogHandler.logError(new Exception("pet is null"));
-//        }
+        AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
+        assert curAccount != null;
+        Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
 
-        return pet.get().getBalance();
+        if (pet.isPresent())
+        {
+            return pet.get().getBalance();
+        }else{
+            LogHandler.logError(new Exception("pet does not exist"));
+            return 0;
+        }
+
     }
 
     public static boolean purchaseItem(String itemID, String sessionID) {
-        String curAccount = "9j(Gc5g)Id0G#Pt9s?De";
-        Optional<Pet> pet = PetController.petRepo.findById(curAccount);
-//        if (pet == null){
-//            LogHandler.logError(new Exception("pet is null"));
-//        }
+        AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
+        assert curAccount != null;
+        Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
+
         Optional<ShopItem> item = ShopController.shopRepo.findById(itemID);
-//        if (item == null){
-//            LogHandler.logError(new Exception("item is null"));
-//        }
+
+        double updatedBalance = pet.get().getBalance() - item.get().getCost();
+
+        Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), updatedBalance, pet.get().getInventory(), pet.get().getCurrentOutfit());
+        PetController.petRepo.save(updatedPet);
+
         return true;
     }
 }
