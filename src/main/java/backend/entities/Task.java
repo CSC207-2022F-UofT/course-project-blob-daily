@@ -1,21 +1,19 @@
 package backend.entities;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "TasksCollection")
 public class Task {
-    private final String taskName;
-    private final String description;
+    private final String task;
     private final double reward;
 
-    public Task(String taskName, String description, double reward){
-        this.taskName = taskName;
-        this.description = description;
+    public Task(String task, double reward){
+        this.task = task;
         this.reward = reward;
     }
 
-    public String getTaskName(){
-        return this.taskName;
-    }
-    public String getDescription(){
-        return this.description;
+    public String getName(){
+        return this.task;
     }
     public double getReward(){
         return this.reward;
