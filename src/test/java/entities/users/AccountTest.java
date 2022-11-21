@@ -65,7 +65,6 @@ public class AccountTest {
         Assertions.assertEquals(expectedSessionID, account.getSessionIDObject(), getConstructorMessage);
         Assertions.assertEquals(expectedUsername, account.getUsername(), getConstructorMessage);
         Assertions.assertEquals(expectedPassword, account.getPassword(), getConstructorMessage);
-        Assertions.assertNull(account.getTimestamp(), getConstructorMessage);
         Assertions.assertNull(account.getAccountID(), getConstructorMessage);
     }
 

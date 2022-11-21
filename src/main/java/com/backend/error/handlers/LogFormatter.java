@@ -14,7 +14,11 @@ public class LogFormatter extends Formatter {
     public static final String ANSI_WHITE = "\u001B[37m";
 
 
-
+    /**
+     * Format log message to appeal to developers when debugging/testing
+     * @param record the log record to be formatted
+     * @return the formatted log message
+     */
     @Override
     public String format(LogRecord record) {
         StringBuilder builder = new StringBuilder();
@@ -74,6 +78,11 @@ public class LogFormatter extends Formatter {
         return builder.toString();
     }
 
+    /**
+     * Calculate the date in the format of year-month-day hour:minute:second from the given LONG parameter
+     * @param milliseconds of type long, milliseconds representation of date as a long
+     * @return the date in the above stated format
+     */
     private String calcDate(long milliseconds) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date resultDate = new Date(milliseconds);

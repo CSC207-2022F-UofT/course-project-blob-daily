@@ -156,11 +156,10 @@ public class UsernameTest {
 
     @Test
     public void testGenerateUsername() {
-        // Expected values
-        String expectedUsername = null;
+        // Expected values (Not required)
 
         // Action
-        username = new Username(expectedUsername);
+        username = new Username(null);
         username.generateUsername();
 
         // Assert messages
