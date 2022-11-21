@@ -1,4 +1,4 @@
-package backend;
+package com.backend;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;

@@ -1,7 +1,7 @@
-package backend.entities;
+package com.backend.entities;
 
 
-import backend.entities.IDs.AccountID;
+import com.backend.entities.IDs.AccountID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 
 @Document(collection = "TaskCompletedCollection")
 public class TaskCompletionRecord {
-    @Id
     private AccountID accountID;
     private String timestamp;
     private String task;

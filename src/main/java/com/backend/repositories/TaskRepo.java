@@ -1,6 +1,6 @@
-package backend.repositories;
+package com.backend.repositories;
 
-import backend.entities.Task;
+import com.backend.entities.Task;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

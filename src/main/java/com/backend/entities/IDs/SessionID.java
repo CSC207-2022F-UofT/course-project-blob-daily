@@ -1,12 +1,12 @@
-package backend.entities.IDs;
+package com.backend.entities.IDs;
 
-import backend.entities.criteria.Criteria;
-import backend.entities.criteria.CriteriaExpression;
+import com.backend.entities.criteria.Criteria;
+import com.backend.entities.criteria.CriteriaExpression;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SessionID extends backend.entities.IDs.ID {
+public class SessionID extends com.backend.entities.IDs.ID {
     public SessionID(String defaultID) {
         super(defaultID, new Criteria(new ArrayList<CriteriaExpression>(List.of(
                 new CriteriaExpression("16", "size", defaultID),

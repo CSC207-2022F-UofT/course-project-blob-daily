@@ -1,4 +1,4 @@
-package backend.entities.criteria;
+package com.backend.entities.criteria;
 
 import java.util.ArrayList;
 import java.util.List;

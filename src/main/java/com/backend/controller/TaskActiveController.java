@@ -1,8 +1,8 @@
-package backend.controller;
+package com.backend.controller;
 
-import backend.entities.TaskActive;
-import backend.repositories.TaskActiveRepo;
-import backend.usecases.TaskManager;
+import com.backend.entities.TaskActive;
+import com.backend.repositories.TaskActiveRepo;
+import com.backend.usecases.TaskManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class TaskActiveController {
     }
 
     @GetMapping("/activetasks")
-    public List<TaskActive> getActiveTasks() {
-        return TaskManager.getActiveTasks();
+    public List<TaskActive> getActiveTasks(@RequestParam String sessionID) {
+        return TaskManager.getActiveTasks(sessionID);
     }
 }

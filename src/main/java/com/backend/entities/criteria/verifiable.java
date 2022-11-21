@@ -1,4 +1,4 @@
-package backend.entities.criteria;
+package com.backend.entities.criteria;
 
 public interface verifiable {
     default boolean isValid(String input, Criteria criteria){

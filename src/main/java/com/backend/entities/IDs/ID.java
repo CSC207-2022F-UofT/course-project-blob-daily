@@ -1,7 +1,7 @@
-package backend.entities.IDs;
+package com.backend.entities.IDs;
 
-import backend.entities.criteria.Criteria;
-import backend.entities.criteria.verifiable;
+import com.backend.entities.criteria.Criteria;
+import com.backend.entities.criteria.verifiable;
 
 public class ID implements verifiable {
     // Instance Variables
