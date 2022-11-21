@@ -1,10 +1,15 @@
 package com.backend.entities.criteria;
 
+import com.backend.entities.criteria.conditions.CriteriaExpression;
+
 public interface verifiable {
     default boolean isValid(String input, Criteria criteria){
         for (CriteriaExpression expression : criteria.getExpressions()) {
-            if (!expression.evaluate(null, null)) {
-                System.out.printf("The given ID %s is not valid by the given criteria: %s%n", input, expression.getExpression());
+            expression.setTarget(input);
+            if (input == null){
+                return false;
+            }
+            if (!expression.evaluate()) {
                 return false;
             }
         }

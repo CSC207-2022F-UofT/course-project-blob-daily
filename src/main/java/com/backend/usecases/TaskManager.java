@@ -58,12 +58,12 @@ public class TaskManager {
     }
 
     //update active tasks to remove the completed ones for today
-    public static void updateActiveTasks(List<TaskActive> active, int today) {
+    public static void updateActiveTasks(String sessionID, List<TaskActive> active, int today) {
         //find completed tasks in order to remove them from active tasks
-//        AccountID account = verifySession(sessionID);
+        AccountID account = AccountManager.verifySession(new SessionID(sessionID));
 
         List<String> names = new ArrayList<>();
-        List<TaskCompletionRecord> complete = TaskCompletionController.completeRepo.findAllByAccountID(account);
+        List<TaskCompletionRecord> complete = TaskCompletionController.completeRepo.findAllByAccountID(account.getID());
 
         //look through the taskcompletionrecords to see which task names have been completed today
         for (TaskCompletionRecord current : complete) {
@@ -96,7 +96,7 @@ public class TaskManager {
             newActiveTasks();
         } else {
             //otherwise, update the active tasks removing the completed ones
-            updateActiveTasks(active, today);
+            updateActiveTasks(sessionID, active, today);
         }
         return active;
     }
