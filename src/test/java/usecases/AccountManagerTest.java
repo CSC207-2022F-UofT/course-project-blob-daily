@@ -10,9 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountManagerTest {
 
-    @Autowired
-    private AccountManager accountManager;
-
     @Test
     public void testLoginValid(){
         Assertions.assertTrue(true);
