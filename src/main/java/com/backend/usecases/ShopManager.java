@@ -100,6 +100,16 @@ public class ShopManager {
     }
 
     /**
+     * Delete the account associated with the account ID
+     * @param curAccount an AccountID entity such that it identifies the pet with the corresponding id
+     *
+     */
+    public static void deleteAccount(AccountID curAccount){
+        PetController.petRepo.deleteById(curAccount.getID());
+    }
+
+
+    /**
      * Post request of the pet owning the item and subtracting from its balance the cost of the item to the database
      * @param sessionID string that represents the current session and verifies the action
      * @param itemID string that represents which item the pet is attempting to access
