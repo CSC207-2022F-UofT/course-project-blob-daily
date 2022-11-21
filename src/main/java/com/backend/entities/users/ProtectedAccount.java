@@ -36,7 +36,7 @@ public class ProtectedAccount {
     public ProtectedAccount(String username) {
         this.usernameObject = new Username(username);
         this.username = this.usernameObject.toString();
-        this.timestamp = null;
+        this.timestamp = new Date(System.currentTimeMillis());
     }
 
     // Getters

@@ -26,7 +26,7 @@ public class Account extends ProtectedAccount{
     private String password;
 
     // Constructors
-    public Account(AccountID accountID, String username, String password, Timestamp timestamp) {
+    public Account(AccountID accountID, String username, String password, Date timestamp) {
         super(username, timestamp);
 
         this.accountIDObject = accountID;

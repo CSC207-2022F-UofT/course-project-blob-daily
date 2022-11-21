@@ -6,6 +6,9 @@ public interface verifiable {
     default boolean isValid(String input, Criteria criteria){
         for (CriteriaExpression expression : criteria.getExpressions()) {
             expression.setTarget(input);
+            if (input == null){
+                return false;
+            }
             if (!expression.evaluate()) {
                 return false;
             }
