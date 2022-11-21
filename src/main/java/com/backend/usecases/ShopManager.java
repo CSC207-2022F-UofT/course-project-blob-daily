@@ -16,20 +16,18 @@ import java.util.Optional;
 
 public class ShopManager {
 
-    public static void addShopItem(){
+    private static void addShopItem(ShopItem shopItem){
 
-        ItemID ID = new ItemID(null);
-        ID.generateID();
-        ShopItem shopItem = new ShopItem(ID.getID(), 29.90, "brown boots", "a pair of boots that protects you from the snow");
         ShopController.shopRepo.save(shopItem);
 
     }
 
-    public static void addPet(){
+    public static Pet addPet(String id){
         ArrayList<ShopItem> curInventory = new ArrayList<>();
         curInventory.add(new ShopItem("124", 59.90, "hoodie", "provides warmth"));
-        Pet pet = new Pet("9j(Gc5g)Id0G#Pt9s?De", 85.00, 0.0, curInventory, new ArrayList<>());
+        Pet pet = new Pet(id, 85.00, 0.0, curInventory, new ArrayList<>());
         PetController.petRepo.save(pet);
+        return pet;
     }
 
 
@@ -40,9 +38,6 @@ public class ShopManager {
     public static Optional<Pet> getPet(String sessionID){
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
 
-        //        if (pet == null){
-//            LogHandler.logError(new Exception("pet is null"));
-//        }
         assert curAccount != null;
         return PetController.petRepo.findById(curAccount.getID());
     }
@@ -51,9 +46,7 @@ public class ShopManager {
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
         assert curAccount != null;
         Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
-//        if (pet == null){
-//            LogHandler.logError(new Exception("pet is null"));
-//        }
+
         Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), 0.0, pet.get().getInventory(), newOutfit);
         PetController.petRepo.save(updatedPet);
         return true;
@@ -86,7 +79,7 @@ public class ShopManager {
 
     }
 
-    public static boolean purchaseItem(String itemID, String sessionID) {
+    public static void purchaseItem(String itemID, String sessionID) {
         AccountID curAccount = AccountManager.verifySession(new SessionID(sessionID));
         assert curAccount != null;
         Optional<Pet> pet = PetController.petRepo.findById(curAccount.getID());
@@ -102,6 +95,6 @@ public class ShopManager {
         Pet updatedPet = new Pet(curAccount.getID(), pet.get().getHealth(), updatedBalance, updatedInventory, pet.get().getCurrentOutfit());
         PetController.petRepo.save(updatedPet);
 
-        return true;
+
     }
 }
