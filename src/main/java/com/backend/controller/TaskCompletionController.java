@@ -21,6 +21,6 @@ public class TaskCompletionController {
     @PostMapping("/completetask")
     public ResponseEntity<?> postCompletedTask(@RequestParam String task, String sessionID, String image){
         TaskManager.postCompletedTask(sessionID, task, image);
-    return new ResponseEntity<TaskCompletionRecord>(HttpStatus.OK);
+        return new ResponseEntity<TaskCompletionRecord>(HttpStatus.OK);
     }
 }
