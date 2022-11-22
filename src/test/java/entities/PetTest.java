@@ -31,26 +31,74 @@ public class PetTest {
 
     @Test
     public void testPetGetID() {
-        Assertions.assertEquals(pet.getID(), "1234567890");
+        //Value
+        double expected = 19.90;
+
+        // Action
+        double actual = pet.getHealth();
+
+        // Assertion Message
+        String verifyTestID= "The given invalid id is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(pet.getID(), "1234567890", verifyTestID);
     }
 
     @Test
     public void testPetHealth() {
-        Assertions.assertEquals(pet.getHealth(), 19.90, 0);
+        //Value
+        double expected = 19.90;
+
+        // Action
+        double actual = pet.getHealth();
+
+        // Assertion Message
+        String verifyTestHealth = "The given invalid health is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(expected, actual, verifyTestHealth);
     }
 
     @Test
     public void testPetBalance() {
-        Assertions.assertEquals(pet.getBalance(), 59.90, 0);
+        //Value
+        double expected = 59.90;
+
+        // Action
+        double actual = pet.getBalance();
+
+        // Assertion Message
+        String verifyTestBalance = "The given invalid balance is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(expected, actual, verifyTestBalance);
     }
 
     @Test
     public void testPetInventory() {
-        Assertions.assertEquals(pet.getInventory(), itemList);
+        // Setup (Not required)
+
+        // Action
+        ArrayList<ShopItem> actual = pet.getInventory();
+
+        // Assertion Message
+        String verifyTestInventory = "The given inventory is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(itemList, actual, verifyTestInventory);
     }
 
     @Test
     public void testPetCurrentOutfit() {
-        Assertions.assertEquals(pet.getCurrentOutfit(), itemList);
+        // Setup (Not required)
+
+        // Action
+        ArrayList<ShopItem> actual = pet.getCurrentOutfit();
+
+        // Assertion Message
+        String verifyTestOutfit = "The given current Outfit is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(itemList, actual, verifyTestOutfit);
     }
 }

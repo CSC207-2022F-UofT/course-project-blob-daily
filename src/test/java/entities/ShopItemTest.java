@@ -22,22 +22,62 @@ public class ShopItemTest {
 
     @Test
     public void testShopItemID() {
-        Assertions.assertEquals(shopItem.getID(), "1234567890");
+        //Value
+        String expected = "1234567890";
+
+        // Action
+        String actual = shopItem.getID();
+
+        // Assertion Message
+        String verifyShopItemID = "The given invalid balance is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(shopItem.getID(), "1234567890", verifyShopItemID );
     }
 
     @Test
     public void testShopItemCost() {
+        //Value
+        String expected = "1234567890";
+
+        // Action
+        String actual = shopItem.getID();
+
+        // Assertion Message
+        String verifyShopItemID = "The given invalid balance is invalid";
+
+        // Assertion Statement
         Assertions.assertEquals(shopItem.getCost(), 19.90, 0);
     }
 
     @Test
     public void testShopItemName() {
-        Assertions.assertEquals(shopItem.getName(), "Pants");
+        //Value
+        String expected = "Pants";
+
+        // Action
+        String actual = shopItem.getName();
+
+        // Assertion Message
+        String verifyShopItemName = "The given Item Name is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(expected, actual, verifyShopItemName);
     }
 
     @Test
     public void testShopItemDescription() {
-        Assertions.assertEquals(shopItem.getDescription(), "Classic pair of white pants");
+        //Value
+        String expected = "Classic pair of white pants";
+
+        // Action
+        String actual = shopItem.getDescription();
+
+        // Assertion Message
+        String verifyShopDescription = "The given invalid description is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(expected, actual, verifyShopDescription);
     }
 }
 
