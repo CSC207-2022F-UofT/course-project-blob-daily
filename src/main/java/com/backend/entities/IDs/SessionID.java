@@ -8,6 +8,9 @@ import com.backend.entities.criteria.conditions.SizeExpression;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representation of a SessionID Entity (ID, validity, generation, etc)
+ */
 public class SessionID extends ID {
     public static Criteria criteria = new Criteria(new ArrayList<>(List.of(
             new SizeExpression(16, null),

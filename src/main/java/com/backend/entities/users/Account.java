@@ -8,9 +8,11 @@ import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+ * Represents an Account Entity (secure information, password and ID information).
+ */
 @Document(collection = "AccountsCollection")
 public class Account extends ProtectedAccount{
     // Instance Variables
@@ -20,9 +22,11 @@ public class Account extends ProtectedAccount{
     private String accountID;
     @Transient
     private final SessionID sessionIDObject;
+    @SuppressWarnings("unused")
     private String sessionID;
     @Transient
     private final Password passwordObject;
+    @SuppressWarnings("unused")
     private String password;
 
     // Constructors
@@ -40,6 +44,7 @@ public class Account extends ProtectedAccount{
     }
 
     @PersistenceCreator
+    @SuppressWarnings("unused")
     public Account(String accountID, String sessionID, String username, String password, Date timestamp) {
         super(username, timestamp);
 
@@ -67,37 +72,71 @@ public class Account extends ProtectedAccount{
     }
 
     // Getters
+
+    /**
+     * Retrieve the AccountID Object for this given instance
+     * @return the AccountID instance for this given instance
+     */
     @Transient
     public AccountID getAccountIDObject() {
         return this.accountIDObject;
     }
 
+    /**
+     * Retrieve the AccountID string for this given instance
+     * @return the AccountID string representation for this given instance
+     */
     public String getAccountID() {
         return this.accountIDObject.getID();
     }
 
+    /**
+     * Retrieve the SessionID Object for this given instance
+     * @return the SessionID instance for this given instance
+     */
     @Transient
     public SessionID getSessionIDObject() {
         return this.sessionIDObject;
     }
 
+    /**
+     * Retrieve the SessionID string for this given instance
+     * @return the SessionID string representation for this given instance
+     */
     public String getSessionID() {
         return this.sessionIDObject.getID();
     }
 
+    /**
+     * Retrieve the Password Object for this given instance
+     * @return the Password instance for this given instance
+     */
     @Transient
     public Password getPasswordObject() {
         return this.passwordObject;
     }
 
+    /**
+     * Retrieve the Password string for this given instance
+     * @return the Password string representation for this given instance
+     */
     public String getPassword() {
         return this.passwordObject.toString();
     }
 
+    // Setter
+
+    /**
+     * Set the current password to the given parameter
+     * @param newPassword of type String, newPassword to set the current password to
+     */
     public void setPassword(String newPassword) {
         this.passwordObject.setPassword(newPassword);
     }
 
+    /**
+     * Update the current data type for Mongo Repository
+     */
     public void updateData() {
         this.sessionID = this.sessionIDObject.getID();
         this.accountID = this.accountIDObject.getID();
