@@ -3,6 +3,7 @@ package usecases;
 import com.backend.QuestPetsApplication;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
+import com.backend.entities.TaskActive;
 import com.backend.entities.TaskCompletionRecord;
 import com.backend.usecases.AccountManager;
 import com.backend.usecases.TaskManager;
@@ -21,15 +22,19 @@ import java.util.Objects;
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TaskManagerTest {
     private SessionID sessionID;
-    private final String task = "attend lecture";
+    private String task;
     private final String image = "https://www.saycampuslife.com/wp-content/uploads/2017/10/collegelectures-800x500_c.jpg";
-    private final double reward = 100;
+    private double reward;
 
     @BeforeEach
     public void setup() {
         String username = "username";
         String password = "abc123!";
+        TaskActive active = TaskManager.activeRepo.findAll().get(0);
+
         sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(AccountManager.loginAccount(username, password).getBody())).get("sessionID"));
+        task = active.getName();
+        reward = active.getReward();
     }
 
     @AfterEach
@@ -75,6 +80,20 @@ public class TaskManagerTest {
 
         //assertion message
         String completeTaskMessage = "Unable finish task as it does not exist";
+
+        //assertion statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, completeTaskMessage);
+    }
+
+    @Test
+    public void postCompletedTaskInvalidRewardTest(){
+        //action
+        ResponseEntity<?> responseEntity = TaskManager.postCompletedTask(
+                sessionID, task, image, 10000
+        );
+
+        //assertion message
+        String completeTaskMessage = "Unable finish task as reward does not match";
 
         //assertion statement
         Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, completeTaskMessage);
