@@ -1,9 +1,7 @@
 package com.backend.controller;
 
 import com.backend.entities.IDs.SessionID;
-import com.backend.repositories.TaskActiveRepo;
 import com.backend.usecases.TaskManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +16,7 @@ public class TaskActiveController {
      * @param sessionID of type String, sessionID references an associated account
      * @return a response entity detailing successful completion or an associated error
      */
+    @SuppressWarnings("unused")
     @GetMapping("/activeTasks")
     public ResponseEntity<?> getActiveTasks(@RequestParam String sessionID) {
         return TaskManager.getActiveTasks(new SessionID(sessionID));

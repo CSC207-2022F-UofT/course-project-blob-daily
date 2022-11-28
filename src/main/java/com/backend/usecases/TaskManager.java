@@ -29,72 +29,15 @@ public class TaskManager {
     /**
      * database connection
      */
-    private static TaskRepo taskRepo;
-    private static TaskActiveRepo activeRepo;
-    private static TaskCompletionRepo completeRepo;
+    public static TaskRepo taskRepo;
+    public static TaskActiveRepo activeRepo;
+    public static TaskCompletionRepo completeRepo;
 
 
     public TaskManager(TaskRepo taskRepo, TaskActiveRepo activeRepo, TaskCompletionRepo completeRepo){
         TaskManager.taskRepo = taskRepo;
         TaskManager.activeRepo = activeRepo;
         TaskManager.completeRepo = completeRepo;
-    }
-
-    //database calls
-    /**
-     * Gets all tasks from the database
-     * @return a list of all tasks from the database
-     */
-    public static List<Task> getTaskList() {
-        return TaskManager.taskRepo.findAll();
-    }
-
-    /**
-     * Deletes all active tasks in the database
-     */
-    public static void deleteActiveList() {
-        TaskManager.activeRepo.deleteAll();
-    }
-
-    /**
-     * Gets all active tasks from the database
-     * @return a list of all active tasks from the database
-     */
-    public static List<TaskActive> getActiveList() {
-        return TaskManager.activeRepo.findAll();
-    }
-
-    /**
-     * Saves an active task to the database
-     * @param activeTask of type TaskActive, an active task to save
-     */
-    public static void saveActive(TaskActive activeTask) {
-        TaskManager.activeRepo.save(activeTask);
-    }
-
-    /**
-     * Saves a task completion record to the database
-     * @param completeTask of type TaskCompletionRecord, a completed task to save
-     */
-    public static void saveComplete(TaskCompletionRecord completeTask) {
-        TaskManager.completeRepo.save(completeTask);
-    }
-
-    /**
-     * Gets all completed tasks completed by accountID
-     * @param account of type AccountID, references the account
-     * @return a list of all tasks completed by accountID
-     */
-    public static List<TaskCompletionRecord> getRecord(AccountID account) {
-        return TaskManager.completeRepo.findAllByAccountID(account.getID());
-    }
-
-    /**
-     * Deletes a TaskCompletionRecord based on unique ID
-     * @param ID of type string, a unique ID associated to a record
-     */
-    public static void deleteRecord(String ID) {
-        TaskManager.completeRepo.deleteById(ID);
     }
 
     /**
@@ -119,7 +62,7 @@ public class TaskManager {
         //check if the task has been completed today
         for (TaskCompletionRecord current : complete) {
             String date = current.getTimestamp().substring(0, 10);
-            if (date.equals(today)) {
+            if (date.equals(today) && current.getTask().equals(task)) {
                 //if so, return a bad request
                 return LogHandler.logError(new Exception("Record already exists"), HttpStatus.BAD_REQUEST);
             }
@@ -128,10 +71,10 @@ public class TaskManager {
         //create a new task completion record to be saved and save it to the database
         TaskCompletionRecord completeTask = new TaskCompletionRecord(
                 account.getID(), new Timestamp(System.currentTimeMillis()).toString(), task, image);
-        saveComplete(completeTask);
+        TaskManager.completeRepo.save(completeTask);
 
         //update the balance with the reward
-//        ShopManager.updateBalance(reward);
+        ShopManager.addBalance(sessionID.toString(), reward);
         return new ResponseEntity<>(completeTask, HttpStatus.OK);
     }
 
@@ -144,7 +87,7 @@ public class TaskManager {
         //get all the records completed by account and delete them
         List<TaskCompletionRecord> complete = getRecord(accountID);
         for (TaskCompletionRecord current : complete) {
-            deleteRecord(current.getID());
+            TaskManager.completeRepo.deleteById(current.getID());
         }
         return new ResponseEntity<>("Successfully deleted all correlated records", HttpStatus.OK);
     }
@@ -162,7 +105,7 @@ public class TaskManager {
         }
 
         //check the current day and the day the active tasks were updated
-        List<TaskActive> active = getActiveList();
+        List<TaskActive> active = TaskManager.activeRepo.findAll();
         String today = new Timestamp(System.currentTimeMillis()).toString().substring(0,10);
         String recent = active.get(0).getTimestamp().substring(0,10);
 
@@ -176,13 +119,22 @@ public class TaskManager {
         return new ResponseEntity<>(active, HttpStatus.OK);
     }
 
+    /** helper method
+     * Gets all completed tasks completed by accountID
+     * @param account of type AccountID, references the account
+     * @return a list of all tasks completed by accountID
+     */
+    public static List<TaskCompletionRecord> getRecord(AccountID account) {
+        return TaskManager.completeRepo.findAllByAccountID(account.getID());
+    }
+
     /** getActiveTasks() helper method
      * Creates a new set of active tasks and saves it to the database
      */
     public static void newActiveTasks() {
         //empty active tasks in order to replace them
-        List<Task> tasks = getTaskList();
-        deleteActiveList();
+        List<Task> tasks = TaskManager.taskRepo.findAll();
+        TaskManager.activeRepo.deleteAll();
 
         //making sure there's no overlap between tasks
         Random rand = new Random();
@@ -190,7 +142,7 @@ public class TaskManager {
 
         //choosing random tasks, changing them into active tasks, and adding them to the array
         while (prev.size() < 3) {
-            int num = rand.nextInt(tasks.size()) + 1;
+            int num = rand.nextInt(tasks.size());
             if (!prev.contains(num)) {
                 Task task = tasks.get(num);
 
@@ -200,7 +152,7 @@ public class TaskManager {
                 prev.add(num);
 
                 //add the task to the database
-                saveActive(activeTask);
+                TaskManager.activeRepo.save(activeTask);
             }
         }
     }

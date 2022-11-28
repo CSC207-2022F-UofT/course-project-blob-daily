@@ -21,5 +21,5 @@ public class TaskActive extends Task{
      * gets the timestamp
      * @return a string of the timestamp
      */
-    public String getTimestamp() {return this.timestamp;}
+    public String getTimestamp() { return this.timestamp; }
 }

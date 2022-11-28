@@ -1,9 +1,7 @@
 package com.backend.controller;
 
 import com.backend.entities.IDs.SessionID;
-import com.backend.repositories.TaskCompletionRepo;
 import com.backend.usecases.TaskManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +18,8 @@ public class TaskCompletionController {
      * @param reward of type double, the amount of the task reward
      * @return a response entity detailing successful completion or an associated error
      */
-    @PostMapping("/completeTasks")
+    @SuppressWarnings("unused")
+    @PostMapping("/completeTask")
     public ResponseEntity<?> postCompletedTask(@RequestParam String sessionID, String task, String image, double reward){
         return TaskManager.postCompletedTask(new SessionID(sessionID), task, image, reward);
     }
