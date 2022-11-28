@@ -55,6 +55,14 @@ public class TaskManager {
             return LogHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
         }
 
+        //check if the task is part of active tasks
+        List <TaskActive> active = TaskManager.activeRepo.findAll();
+        for (TaskActive select : active) {
+            if (!select.getName().equals(task)) {
+                return LogHandler.logError(new Exception("Task does not exist"), HttpStatus.BAD_REQUEST);
+            }
+        }
+
         //get a list of completed tasks by accountID
         List <TaskCompletionRecord> complete = getRecord(account);
         String today = new Timestamp(System.currentTimeMillis()).toString().substring(0,10);

@@ -67,6 +67,20 @@ public class TaskManagerTest {
     }
 
     @Test
+    public void postCompletedTaskInvalidTaskTest(){
+        //action
+        ResponseEntity<?> responseEntity = TaskManager.postCompletedTask(
+                sessionID, "not a task", image, reward
+        );
+
+        //assertion message
+        String completeTaskMessage = "Unable finish task as it does not exist";
+
+        //assertion statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, completeTaskMessage);
+    }
+
+    @Test
     public void postCompletedTaskAlreadyCompleteTest(){
         //setup
         TaskManager.postCompletedTask(
