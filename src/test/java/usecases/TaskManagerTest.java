@@ -159,7 +159,6 @@ public class TaskManagerTest {
     public void getRecordTest() {
         //setup
         TaskManager.postCompletedTask(sessionID, task, image, reward);
-        TaskManager.postCompletedTask(sessionID, "another task", image, reward);
 
         //actions
         List<TaskCompletionRecord> records = TaskManager.getRecord(Objects.requireNonNull(AccountManager.verifySession(sessionID)));
@@ -168,6 +167,6 @@ public class TaskManagerTest {
         String getRecordMessage = "invalid account provided for given accountID";
 
         //assertion statements
-        Assertions.assertEquals(2, records.size(), getRecordMessage);
+        Assertions.assertEquals(1, records.size(), getRecordMessage);
     }
 }
