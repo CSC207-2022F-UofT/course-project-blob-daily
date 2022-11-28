@@ -5,7 +5,7 @@ import com.backend.entities.criteria.conditions.CriteriaExpression;
 /**
  * Interface to support verifying a string for a given criteria
  */
-public interface verifiable {
+public interface Verifiable {
     /**
      * Check if the given input is valid based on the given criteria
      * @param input of type String, input to be checked for validity

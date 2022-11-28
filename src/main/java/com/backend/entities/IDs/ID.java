@@ -1,12 +1,12 @@
 package com.backend.entities.IDs;
 
 import com.backend.entities.criteria.Criteria;
-import com.backend.entities.criteria.generatable;
+import com.backend.entities.criteria.Generatable;
 
 /**
  * Representation of an ID Entity (ID, validity, generation, etc)
  */
-public class ID implements generatable {
+public class ID implements Generatable {
     // Instance Variables
     private String ID;
     private final Criteria criteria;

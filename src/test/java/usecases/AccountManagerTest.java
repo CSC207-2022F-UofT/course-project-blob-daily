@@ -368,7 +368,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID(null));
+        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID("invalidID"));
 
         // Assertion Message
         String logoutMessage = "Account was unexpectedly 'logged out' when given invalid credentials";
@@ -425,7 +425,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID(null));
+        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID("invalidID"));
 
         // Assertion Message
         String deleteMessage = "Account was unexpectedly 'deleted' when given invalid credentials";

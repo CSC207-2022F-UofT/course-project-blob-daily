@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Interface to support generating a string for a given criteria
  */
-public interface generatable extends verifiable{
+public interface Generatable extends Verifiable {
     /**
      * Generate a new string given a criteria
      * @param criteria of type Criteria, criteria to generate a new valid string with
