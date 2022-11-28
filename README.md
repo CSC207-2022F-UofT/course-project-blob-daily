@@ -37,10 +37,10 @@ server.error.whitelabel.enabled=true
 
 There are 4 packages to note here:
 
-1. `com.ouieat.controllers`
-2. `com.ouieat.entities`
-3. `com.ouieat.repositories`
-4. `com.ouieat.usecases`
+1. `com.backend.controllers`
+2. `com.backend.entities`
+3. `com.backend.repositories`
+4. `com.backend.usecases`
 
 Also to note the directory `error` that provides a statically accessible logger method for the Backend through a custom built logger.
 
