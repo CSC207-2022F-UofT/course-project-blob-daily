@@ -19,6 +19,7 @@ import java.util.Objects;
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TaskActiveControllerTest {
 
+    @SuppressWarnings("unused")
     @Autowired
     TaskActiveController activeController;
     private SessionID sessionID;

@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "TaskCompletedCollection")
 public class TaskCompletionRecord {
     //instance variables
+    @SuppressWarnings("unused")
     @Id
     private String ID;
     @Transient

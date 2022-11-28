@@ -17,6 +17,7 @@ public interface TaskCompletionRepo extends MongoRepository<TaskCompletionRecord
      * @param accountID of type String, references the account
      * @return a list of completion records by the account
      */
+    @SuppressWarnings("unused")
     @Query("{ 'accountID': ?0 }")
     List<TaskCompletionRecord> findAllByAccountID(String accountID);
 

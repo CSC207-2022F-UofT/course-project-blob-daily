@@ -33,7 +33,7 @@ public class TaskManager {
     public static TaskActiveRepo activeRepo;
     public static TaskCompletionRepo completeRepo;
 
-
+    @SuppressWarnings("unused")
     public TaskManager(TaskRepo taskRepo, TaskActiveRepo activeRepo, TaskCompletionRepo completeRepo){
         TaskManager.taskRepo = taskRepo;
         TaskManager.activeRepo = activeRepo;

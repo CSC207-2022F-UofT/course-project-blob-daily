@@ -20,6 +20,7 @@ import java.util.Objects;
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TaskCompletionRepoTest {
 
+    @SuppressWarnings("unused")
     @Autowired
     TaskCompletionRepo completionRepo;
     private SessionID sessionID;
