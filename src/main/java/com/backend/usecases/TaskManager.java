@@ -57,12 +57,17 @@ public class TaskManager {
 
         //check if the task is part of active tasks and reward is correct
         List <TaskActive> active = TaskManager.activeRepo.findAll();
-        for (TaskActive select : active) {
-            if (!select.getName().equals(task)) {
-                return LogHandler.logError(new Exception("Task does not exist"), HttpStatus.BAD_REQUEST);
-            } else if (select.getReward() != reward) {
-                return LogHandler.logError(new Exception("Reward does not match"), HttpStatus.BAD_REQUEST);
+        TaskActive select = null;
+        for (TaskActive sel : active) {
+            if (sel.getName().equals(task)){
+                select = sel;
             }
+        }
+
+        if (select == null) {
+            return LogHandler.logError(new Exception("Task does not exist"), HttpStatus.BAD_REQUEST);
+        } else if (select.getReward() != reward) {
+            return LogHandler.logError(new Exception("Reward does not match"), HttpStatus.BAD_REQUEST);
         }
 
         //get a list of completed tasks by accountID
