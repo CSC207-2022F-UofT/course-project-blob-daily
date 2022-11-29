@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class ProtectedAccountTest {
     ProtectedAccount protectedAccount;
@@ -165,11 +166,11 @@ public class ProtectedAccountTest {
     public void testGetTimestamp() {
         // Expected values
         String expectedUsername = "ShaanP22";
-        Timestamp expectedTimestamp = new Timestamp(System.currentTimeMillis());
+        Date expectedTimestamp = new Date(System.currentTimeMillis());
 
         // Action
         protectedAccount = new ProtectedAccount(expectedUsername, expectedTimestamp);
-        Timestamp actualTimestamp = protectedAccount.getTimestamp();
+        Date actualTimestamp = protectedAccount.getTimestamp();
 
         // Assert messages
         String getTimestampMessage = String.format("The given timestamp %s was return instead of the expect %s",

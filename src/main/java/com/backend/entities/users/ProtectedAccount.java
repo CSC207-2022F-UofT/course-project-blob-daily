@@ -6,7 +6,6 @@ import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -23,17 +22,11 @@ public class ProtectedAccount {
     private final Date timestamp;
 
     // Constructors
-    public ProtectedAccount(String username, Timestamp timestamp) {
-        this.usernameObject = new Username(username);
-        this.username = this.usernameObject.toString();
-        this.timestamp = timestamp;
-    }
-
     @PersistenceCreator
     public ProtectedAccount(String username, Date timestamp) {
         this.usernameObject = new Username(username);
         this.username = this.usernameObject.toString();
-        this.timestamp = new Timestamp(timestamp.getTime());
+        this.timestamp = timestamp;
     }
 
     public ProtectedAccount(String username) {
@@ -65,8 +58,7 @@ public class ProtectedAccount {
      * Retrieve the timestamp for this given instance
      * @return the timestamp for this given instance
      */
-    public Timestamp getTimestamp() {
-        if (this.timestamp == null) return null;
-        return new Timestamp(timestamp.getTime());
+    public Date getTimestamp() {
+        return this.timestamp;
     }
 }
