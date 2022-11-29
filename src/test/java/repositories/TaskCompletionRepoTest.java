@@ -2,6 +2,7 @@ package repositories;
 
 import com.backend.QuestPetsApplication;
 import com.backend.entities.IDs.SessionID;
+import com.backend.entities.TaskActive;
 import com.backend.entities.TaskCompletionRecord;
 import com.backend.repositories.TaskCompletionRepo;
 import com.backend.usecases.AccountManager;
@@ -41,10 +42,11 @@ public class TaskCompletionRepoTest {
     @Test
     public void findByAccountIDTest() {
         //values
+        TaskActive active = TaskManager.activeRepo.findAll().get(0);
         int expectedSize = 1;
-        String expectedTask = "Eat some food";
+        String expectedTask = active.getName();
         String expectedImage = "https://cdn.eftm.com/wp-content/uploads/2019/10/Screen-Shot-2019-10-15-at-2.13.23-pm.png";
-        int expectedReward = 100;
+        double expectedReward = active.getReward();
         String expectedAccountID = Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID();
 
         //actions

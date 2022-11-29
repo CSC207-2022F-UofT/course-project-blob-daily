@@ -3,6 +3,7 @@ package controller;
 import com.backend.QuestPetsApplication;
 import com.backend.controller.TaskCompletionController;
 import com.backend.entities.IDs.SessionID;
+import com.backend.entities.TaskActive;
 import com.backend.usecases.AccountManager;
 import com.backend.usecases.TaskManager;
 import net.minidev.json.JSONObject;
@@ -24,15 +25,19 @@ public class TaskCompletionControllerTest {
     @Autowired
     TaskCompletionController completionController;
     private SessionID sessionID;
-    private final String task = "attend lecture";
+    private String task;
     private final String image = "https://www.saycampuslife.com/wp-content/uploads/2017/10/collegelectures-800x500_c.jpg";
-    private final double reward = 100;
+    private double reward;
 
     @BeforeEach
     public void setup() {
         String username = "username";
         String password = "abc123!";
+        TaskActive active = TaskManager.activeRepo.findAll().get(0);
+
         sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(AccountManager.loginAccount(username, password).getBody())).get("sessionID"));
+        task = active.getName();
+        reward = active.getReward();
     }
 
     @AfterEach
