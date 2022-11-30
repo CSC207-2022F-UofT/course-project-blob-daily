@@ -51,7 +51,7 @@ public class Invitation {
         this.receiverIDObject = new AccountID(receiverID);
         this.senderID = this.senderIDObject.toString();
         this.receiverID = this.receiverIDObject.toString();
-        this.timestamp = new Timestamp(timestamp.getTime());
+        this.timestamp = timestamp;
     }
 
     /**
@@ -79,14 +79,22 @@ public class Invitation {
         return this.senderID;
     }
 
+    /**
+     * Retrive the String of the receiver for this given instance
+     * @return the String of the receiver for this given instance
+     */
     public String getReceiverID(){
         return this.receiverID;
     }
 
-    public Timestamp getTimestamp() {
+    /**
+     * Retrive the java.util.Date of the invitation
+     * @return the java.u
+     */
+    public Date getTimestamp() {
         if(timestamp == null) {
             return null;
         }
-        return new Timestamp(timestamp.getTime());
+        return this.timestamp;
     }
 }

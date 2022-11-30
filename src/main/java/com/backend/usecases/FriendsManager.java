@@ -1,16 +1,16 @@
 package com.backend.usecases;
 
-import com.backend.controller.AccountController;
-import com.backend.controller.FriendController;
 import com.backend.entities.Friend;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
-import com.backend.entities.users.Account;
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
+import com.backend.repositories.FriendsRepo;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NoSuchFileException;
@@ -19,8 +19,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class FriendsManager {
 
+@Service
+@Configurable
+public class FriendsManager {
+    private static FriendsRepo friendsRepo;
+    public FriendsManager(FriendsRepo friendsRepo) {
+        FriendsManager.friendsRepo = friendsRepo;
+    }
     // helper functions
     public static ResponseEntity<Object> getFriends(String userName, String sessionID) {
 
@@ -33,7 +39,7 @@ public class FriendsManager {
 
         AccountID userID = AccountManager.getAccountIDByUsername(userName);
         assert userID != null;
-        Optional<Friend> friendList = FriendController.friendsRepo.findById(userID.getID());
+        Optional<Friend> friendList = friendsRepo.findById(userID.getID());
         if (friendList.isPresent()) {
             return new ResponseEntity<>(friendList.get().getFriends(), HttpStatus.OK);
         }
@@ -43,7 +49,7 @@ public class FriendsManager {
     public static ArrayList<String> getFriends(String userName) {
         AccountID userID = AccountManager.getAccountIDByUsername(userName);
         assert userID != null;
-        Optional<Friend> friendList = FriendController.friendsRepo.findById(userID.getID());
+        Optional<Friend> friendList = friendsRepo.findById(userID.getID());
         if (friendList.isPresent()) {
             return friendList.get().getFriends();
         }
@@ -51,8 +57,8 @@ public class FriendsManager {
     }
 
     public static boolean areFriends(String senderID, String receiverID) {
-        Optional<Friend> sender = FriendController.friendsRepo.findById(senderID);
-        Optional<Friend> receiver = FriendController.friendsRepo.findById(receiverID);
+        Optional<Friend> sender = friendsRepo.findById(senderID);
+        Optional<Friend> receiver = friendsRepo.findById(receiverID);
         if (sender.isPresent() && receiver.isPresent()) {
             return sender.get().getFriends().contains(receiverID) && receiver.get().getFriends().contains(senderID);
         }
@@ -62,13 +68,14 @@ public class FriendsManager {
     // Use cases
     @SuppressWarnings("unchecked")
     public static ResponseEntity<Object> addFriend(String userName, String friendUsername, String sessionID) {
-        Account userAccount = AccountController.accountsRepo.findByUsername(userName);
-        String userID = userAccount.getAccountID();
-        Account friendAccount = AccountController.accountsRepo.findByUsername(friendUsername);
-        String friendID = friendAccount.getAccountID();
+        AccountID userAccount = AccountManager.getAccountIDByUsername(userName);
+        assert userAccount != null;
+        String userID = userAccount.getID();
+        AccountID friendAccount = AccountManager.getAccountIDByUsername(friendUsername);
+        assert friendAccount != null;
+        String friendID = friendAccount.getID();
 
-        if (FriendController.friendsRepo.existsById(userID)) {
-            System.out.println("does it get to here baby?");
+        if (friendsRepo.existsById(userID)) {
             ResponseEntity<Object> verification = FriendsManager.getFriends(userID, sessionID);
             if (!(verification.getBody() instanceof ArrayList)) return verification;
 
@@ -78,25 +85,27 @@ public class FriendsManager {
                 return LogHandler.logError(new FileAlreadyExistsException("Friend already exists!"), HttpStatus.CONFLICT);
             } else {
                 friendsList.add(friendID);
-                FriendController.friendsRepo.save(new Friend(userID, friendsList));
+                friendsRepo.save(new Friend(userID, friendsList));
 
             }
         } else {
             ArrayList<String> friendsList = new ArrayList<>();
             friendsList.add(friendID);
-            FriendController.friendsRepo.save(new Friend(userID, friendsList));
+            friendsRepo.save(new Friend(userID, friendsList));
         }
         return new ResponseEntity<>("Friend successfully added! for both sides!", HttpStatus.OK);
     }
 
     // Overloading method
     public static ResponseEntity<Object> addFriend(String userName, String friendUsername) {
-        Account userAccount = AccountController.accountsRepo.findByUsername(userName);
-        String userID = userAccount.getAccountID();
-        Account friendAccount = AccountController.accountsRepo.findByUsername(friendUsername);
-        String friendID = friendAccount.getAccountID();
+        AccountID userAccount = AccountManager.getAccountIDByUsername(userName);
+        assert userAccount != null;
+        String userID = userAccount.getID();
+        AccountID friendAccount = AccountManager.getAccountIDByUsername(friendUsername);
+        assert friendAccount != null;
+        String friendID = friendAccount.getID();
 
-        if (FriendController.friendsRepo.existsById(userID)) {
+        if (friendsRepo.existsById(userID)) {
 
             ArrayList<String> friendsList = FriendsManager.getFriends(userID);
 
@@ -104,13 +113,13 @@ public class FriendsManager {
                 return LogHandler.logError(new FileAlreadyExistsException("Friend already exists!"), HttpStatus.CONFLICT);
             } else {
                 friendsList.add(friendID);
-                FriendController.friendsRepo.save(new Friend(userID, friendsList));
+                friendsRepo.save(new Friend(userID, friendsList));
 
             }
         } else {
             ArrayList<String> friendsList = new ArrayList<>();
             friendsList.add(friendID);
-            FriendController.friendsRepo.save(new Friend(userID, friendsList));
+            friendsRepo.save(new Friend(userID, friendsList));
         }
         return new ResponseEntity<>("Friend successfully added for both sides!", HttpStatus.OK);
     }
@@ -128,10 +137,10 @@ public class FriendsManager {
         }
 
         // Find each user and friend's accountID
-        String userID = AccountController.accountsRepo.findByUsername(userName).getAccountID();
-        String friendID = AccountController.accountsRepo.findByUsername(friendUsername).getAccountID();
+        String userID = Objects.requireNonNull(AccountManager.getAccountIDByUsername(userName)).getID();
+        String friendID = Objects.requireNonNull(AccountManager.getAccountIDByUsername(friendUsername)).getID();
 
-        if (FriendController.friendsRepo.existsById(userID) && FriendController.friendsRepo.existsById(friendID)) {
+        if (friendsRepo.existsById(userID) && friendsRepo.existsById(friendID)) {
 
             // retrieve user and friend's friendList
             ArrayList<String> userList = FriendsManager.getFriends(userID);
@@ -143,7 +152,7 @@ public class FriendsManager {
             } else {
                 if (userList.contains(friendID)) {
                     userList.remove(friendID);
-                    FriendController.friendsRepo.save(new Friend(userID, userList));
+                    friendsRepo.save(new Friend(userID, userList));
                 } else {
                     return LogHandler.logError(new NoSuchFileException("Friend does not exist in user's list!"), HttpStatus.NOT_FOUND);
                 }
@@ -153,7 +162,7 @@ public class FriendsManager {
             } else {
                 if (friendList.contains(userID)) {
                     friendList.remove(userID);
-                    FriendController.friendsRepo.save(new Friend(friendID, friendList));
+                    friendsRepo.save(new Friend(friendID, friendList));
                 }
             }
             return new ResponseEntity<>("Successfully removed users from each other's friendList!", HttpStatus.OK);
@@ -162,7 +171,7 @@ public class FriendsManager {
         }
     }
 
-
+    // used by deleteAccount in AccountManager
     public static ResponseEntity<Object> deleteAllCorrelatedFriends(String userName, String sessionID) {
 
         // Check if valid session
@@ -175,9 +184,9 @@ public class FriendsManager {
         }
 
         // Delete the user in Friends DB
-        FriendController.friendsRepo.deleteById(accountID.getID());
+        friendsRepo.deleteById(accountID.getID());
 
-        List<Friend> friends = FriendController.friendsRepo.findAllContainingUserID(accountID.getID());
+        List<Friend> friends = friendsRepo.findAllContainingUserID(accountID.getID());
 
         System.out.println(friends.size());
 
@@ -185,7 +194,7 @@ public class FriendsManager {
         for (Friend friend : friends) {
             ArrayList<String> updatedList = friend.getFriends();
             updatedList.remove(accountID.getID());
-            FriendController.friendsRepo.save(new Friend(friend.getAccountID(), updatedList));
+            friendsRepo.save(new Friend(friend.getAccountID(), updatedList));
         }
         return new ResponseEntity<>("This is what it returned", HttpStatus.OK);
     }

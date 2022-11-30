@@ -8,20 +8,31 @@ import com.backend.entities.users.Account;
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
+import com.backend.repositories.InvitationsRepo;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NoSuchFileException;
 import java.security.InvalidParameterException;
 import java.util.*;
 
+@Service
+@Configurable
 public class InvitationsManager {
+    private static InvitationsRepo invitationsRepo;
+
+    public InvitationsManager(InvitationsRepo invitationsRepo) {
+        InvitationsManager.invitationsRepo = invitationsRepo;
+    }
     // check if invitation exists
     public static boolean invitationExists(String senderID, String receiverID) {
-        return InvitationController.invitationsRepo.findBySenderIDAndReceiverID(senderID, receiverID) != null;
+        return invitationsRepo.findBySenderIDAndReceiverID(senderID, receiverID) != null;
     }
     public static ResponseEntity<Object> checkUsersExist(AccountID sender, AccountID receiver) {
         if (sender == null && receiver == null) {
@@ -74,11 +85,11 @@ public class InvitationsManager {
         }
 
         assert accountID != null;
-        List<Invitation> invitationsAsSender = InvitationController.invitationsRepo.findAllByReceiverID(accountID.getID());
-        List<Invitation> invitationsAsReceiver = InvitationController.invitationsRepo.findAllByReceiverID(accountID.getID());
+        List<Invitation> invitationsAsSender = invitationsRepo.findAllByReceiverID(accountID.getID());
+        List<Invitation> invitationsAsReceiver = invitationsRepo.findAllByReceiverID(accountID.getID());
 
-        InvitationController.invitationsRepo.deleteAllByReceiverID(invitationsAsReceiver);
-        InvitationController.invitationsRepo.deleteAllBySenderID(invitationsAsSender);
+        invitationsRepo.deleteAllByReceiverID(invitationsAsReceiver);
+        invitationsRepo.deleteAllBySenderID(invitationsAsSender);
 
         return new ResponseEntity<>("Correlated Invitations all successfully delete!", HttpStatus.OK);
     }
@@ -109,7 +120,7 @@ public class InvitationsManager {
         Invitation invitation = new Invitation(senderID, receiverID, new Date(System.currentTimeMillis()));
 
         // Save invitation to DB
-        InvitationController.invitationsRepo.save(invitation);
+        invitationsRepo.save(invitation);
         return new ResponseEntity<>("Invitation successfully sent!", HttpStatus.CREATED);
 
     }
@@ -144,7 +155,7 @@ public class InvitationsManager {
 
     // delete invitation from the database
     public static ResponseEntity<Object> deleteInvitation(String senderID, String receiverID) {
-        InvitationController.invitationsRepo.deleteById(senderID + receiverID);
+        invitationsRepo.deleteById(senderID + receiverID);
         return new ResponseEntity<>("Invitation successfully deleted!", HttpStatus.OK);
     }
 
@@ -188,7 +199,7 @@ public class InvitationsManager {
         JSONObject invites = new JSONObject();
 
         assert userID != null;
-        List<Invitation> accounts = InvitationController.invitationsRepo.findAllByReceiverID(userID.getID());
+        List<Invitation> accounts = invitationsRepo.findAllByReceiverID(userID.getID());
         JSONArray users = new JSONArray();
 
         for (Invitation account : accounts) {

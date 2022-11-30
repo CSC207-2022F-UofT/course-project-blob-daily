@@ -8,11 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class FriendController {
-    public static FriendsRepo friendsRepo;
-
-    public FriendController(FriendsRepo friendsRepo) {
-        FriendController.friendsRepo = friendsRepo;
-    }
 
     @GetMapping("/friends/getFriends")
     public ResponseEntity<Object> getFriends(@RequestParam String userName, @RequestParam String sessionID) {

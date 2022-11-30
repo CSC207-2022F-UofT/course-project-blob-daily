@@ -9,11 +9,6 @@ import java.util.List;
 
 @RestController
 public class InvitationController {
-    public static InvitationsRepo invitationsRepo;
-
-    public InvitationController(InvitationsRepo invitationsRepo) {
-        InvitationController.invitationsRepo = invitationsRepo;
-    }
 
     // create a get request to get invitations for a specific user
     @GetMapping("/friends/getInvite")
