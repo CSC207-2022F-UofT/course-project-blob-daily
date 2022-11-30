@@ -144,8 +144,7 @@ public class InvitationsManager {
         // Check invitation exists in DB
         if(InvitationsManager.invitationExists(senderID, receiverID)) {
             // delete invitation
-            deleteInvitation(senderID, receiverID);
-            return new ResponseEntity<>("Invitation successfully withdrawn!", HttpStatus.OK);
+            return deleteInvitation(senderID, receiverID);
         } else {
             return LogHandler.logError(new Exception("Invitation does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }

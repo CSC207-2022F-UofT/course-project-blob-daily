@@ -3,6 +3,7 @@ package com.backend.usecases;
 import com.backend.entities.Friend;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
+import com.backend.entities.users.ProtectedAccount;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
 import com.backend.repositories.FriendsRepo;
@@ -34,8 +35,18 @@ public class FriendsManager {
             return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        Optional<Friend> friendList = friendsRepo.findById(userID.getID());
-        return friendList.map(friend -> new ResponseEntity<Object>(friend.getFriends(), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK));
+        Optional<Friend> friendIDs = friendsRepo.findById(userID.getID());
+
+        if(friendIDs.isPresent()) {
+            ArrayList<String> tempFriends = friendIDs.get().getFriends();
+            ArrayList<String> friendList = new ArrayList<>();
+            for(String friendID: tempFriends) {
+                String friendUsername = ((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(new AccountID(friendID)).getBody())).getUsername();
+                friendList.add(friendUsername);
+            }
+            return new ResponseEntity<>(friendList, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 
     private static ArrayList<String> getFriends(String username) {

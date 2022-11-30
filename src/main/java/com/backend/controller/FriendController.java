@@ -1,7 +1,6 @@
 package com.backend.controller;
 
 
-import com.backend.repositories.FriendsRepo;
 import com.backend.usecases.FriendsManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
