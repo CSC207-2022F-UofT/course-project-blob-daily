@@ -55,15 +55,8 @@ public class TaskManager {
             return LogHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
         }
 
-        //check if the task is part of active tasks and reward is correct
-        List <TaskActive> active = TaskManager.activeRepo.findAll();
-        TaskActive select = null;
-        for (TaskActive sel : active) {
-            if (sel.getName().equals(task)){
-                select = sel;
-            }
-        }
-
+        //verify task exists and reward is correct
+        TaskActive select = checkTask(task);
         if (select == null) {
             return LogHandler.logError(new Exception("Task does not exist"), HttpStatus.BAD_REQUEST);
         } else if (select.getReward() != reward) {
@@ -72,15 +65,11 @@ public class TaskManager {
 
         //get a list of completed tasks by accountID
         List <TaskCompletionRecord> complete = getRecord(account);
-        String today = new Timestamp(System.currentTimeMillis()).toString().substring(0,10);
 
         //check if the task has been completed today
-        for (TaskCompletionRecord current : complete) {
-            String date = current.getTimestamp().substring(0, 10);
-            if (date.equals(today) && current.getTask().equals(task)) {
-                //if so, return a bad request
-                return LogHandler.logError(new Exception("Record already exists"), HttpStatus.BAD_REQUEST);
-            }
+        if (checkCompleted(complete, task)) {
+            //if so, return a bad request
+            return LogHandler.logError(new Exception("Record already exists"), HttpStatus.BAD_REQUEST);
         }
 
         //create a new task completion record to be saved and save it to the database
@@ -134,13 +123,49 @@ public class TaskManager {
         return new ResponseEntity<>(active, HttpStatus.OK);
     }
 
-    /** helper method
+    /**
      * Gets all completed tasks completed by accountID
      * @param account of type AccountID, references the account
      * @return a list of all tasks completed by accountID
      */
     public static List<TaskCompletionRecord> getRecord(AccountID account) {
         return TaskManager.completeRepo.findAllByAccountID(account.getID());
+    }
+
+    /** postCompletedTask() helper method
+     * Checks if the given task is an active task within the database
+     * @param task of type string, the task name that is trying to be completed
+     * @return null if it does not exist in the database or the TaskActive task found
+     */
+    public static TaskActive checkTask(String task) {
+        //check if the task is part of active tasks and reward is correct
+        List <TaskActive> active = TaskManager.activeRepo.findAll();
+        TaskActive select = null;
+        for (TaskActive sel : active) {
+            if (sel.getName().equals(task)){
+                select = sel;
+            }
+        }
+        return select;
+    }
+
+    /** postCompletedTask() helper method
+     * Checks if the task has already been completed today
+     * @param complete of type List, a list of TaskCompletionRecords completed by the account
+     * @param task of type string, the task name that is trying to be completed
+     * @return a boolean that says if the task has already been completed today
+     */
+    public static boolean checkCompleted(List <TaskCompletionRecord> complete, String task) {
+        String today = new Timestamp(System.currentTimeMillis()).toString().substring(0,10);
+
+        //check if the task has been completed today
+        for (TaskCompletionRecord current : complete) {
+            String date = current.getTimestamp().substring(0, 10);
+            if (date.equals(today) && current.getTask().equals(task)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** getActiveTasks() helper method
