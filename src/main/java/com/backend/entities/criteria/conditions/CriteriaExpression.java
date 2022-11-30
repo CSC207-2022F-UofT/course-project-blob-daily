@@ -1,16 +1,15 @@
 package com.backend.entities.criteria.conditions;
 
 import com.backend.error.exceptions.ConditionException;
-import com.backend.error.handlers.LogHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * Abstract class (Builder Design Pattern) to support the general structure for a Criteria Expression
+ * Abstract class to support the general structure for a Criteria Expression
  */
-public abstract class CriteriaExpression {
+public abstract class CriteriaExpression implements IConditionHandler {
     // Instance Variables
     private final String value;
     private final List<String> typeList;
@@ -41,7 +40,7 @@ public abstract class CriteriaExpression {
         this.target = target;
         this.typeList = typeList;
         
-        if (!this.checkTypes(typeList)) LogHandler.logWarning("Illegal type may cause an unexpected error!");
+        if (!this.checkTypes(typeList)) this.logWarning("Illegal type may cause an unexpected error!");
     }
 
     /**
@@ -52,7 +51,7 @@ public abstract class CriteriaExpression {
     public boolean checkTypes(List<String> typeList) {
         for (String type : typeList) {
             if (!legend.containsKey(type)) {
-                LogHandler.logError(new ConditionException(String.format("The type: %s is not a valid type%n", type)));
+                this.logError(new ConditionException(String.format("The type: %s is not a valid type%n", type)));
                 return false;
             }
         }
@@ -64,7 +63,7 @@ public abstract class CriteriaExpression {
      * @param message of type String, message to be logged
      */
     protected void logError(String message) {
-        LogHandler.logError(new ConditionException(message));
+        this.logError(new ConditionException(message));
     }
 
     // Getters
