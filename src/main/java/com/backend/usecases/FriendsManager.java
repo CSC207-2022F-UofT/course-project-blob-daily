@@ -3,7 +3,6 @@ package com.backend.usecases;
 import com.backend.entities.Friend;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
-import com.backend.entities.users.ProtectedAccount;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
 import com.backend.repositories.FriendsRepo;
@@ -28,26 +27,19 @@ public class FriendsManager {
         FriendsManager.friendsRepo = friendsRepo;
     }
     // helper functions
-    public static ResponseEntity<Object> getFriends(String userName, String sessionID) {
+    public static ResponseEntity<Object> getUserFriends(String sessionID) {
 
-        AccountID accountID = AccountManager.verifySession(new SessionID(sessionID));
-        if (accountID == null) {
+        AccountID userID = AccountManager.verifySession(new SessionID(sessionID));
+        if (userID == null) {
             return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (!((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(accountID).getBody())).getUsername().equals(userName)) {
-            return LogHandler.logError(new SessionException("Invalid session!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        AccountID userID = AccountManager.getAccountIDByUsername(userName);
-        assert userID != null;
         Optional<Friend> friendList = friendsRepo.findById(userID.getID());
-        if (friendList.isPresent()) {
-            return new ResponseEntity<>(friendList.get().getFriends(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        return friendList.map(friend -> new ResponseEntity<Object>(friend.getFriends(), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK));
     }
 
-    public static ArrayList<String> getFriends(String userName) {
-        AccountID userID = AccountManager.getAccountIDByUsername(userName);
+    private static ArrayList<String> getFriends(String username) {
+        AccountID userID = AccountManager.getAccountIDByUsername(username);
         assert userID != null;
         Optional<Friend> friendList = friendsRepo.findById(userID.getID());
         if (friendList.isPresent()) {
@@ -67,8 +59,8 @@ public class FriendsManager {
 
     // Use cases
     @SuppressWarnings("unchecked")
-    public static ResponseEntity<Object> addFriend(String userName, String friendUsername, String sessionID) {
-        AccountID userAccount = AccountManager.getAccountIDByUsername(userName);
+    public static ResponseEntity<Object> addFriend(String username, String friendUsername, String sessionID) {
+        AccountID userAccount = AccountManager.getAccountIDByUsername(username);
         assert userAccount != null;
         String userID = userAccount.getID();
         AccountID friendAccount = AccountManager.getAccountIDByUsername(friendUsername);
@@ -76,7 +68,7 @@ public class FriendsManager {
         String friendID = friendAccount.getID();
 
         if (friendsRepo.existsById(userID)) {
-            ResponseEntity<Object> verification = FriendsManager.getFriends(userID, sessionID);
+            ResponseEntity<Object> verification = FriendsManager.getUserFriends(sessionID);
             if (!(verification.getBody() instanceof ArrayList)) return verification;
 
             ArrayList<String> friendsList = (ArrayList<String>) verification.getBody();
@@ -97,8 +89,8 @@ public class FriendsManager {
     }
 
     // Overloading method
-    public static ResponseEntity<Object> addFriend(String userName, String friendUsername) {
-        AccountID userAccount = AccountManager.getAccountIDByUsername(userName);
+    public static ResponseEntity<Object> addFriend(String username, String friendUsername) {
+        AccountID userAccount = AccountManager.getAccountIDByUsername(username);
         assert userAccount != null;
         String userID = userAccount.getID();
         AccountID friendAccount = AccountManager.getAccountIDByUsername(friendUsername);
@@ -125,19 +117,16 @@ public class FriendsManager {
     }
 
     // delete friend
-    public static ResponseEntity<Object> deleteFriend(String userName, String friendUsername, String sessionID) {
+    public static ResponseEntity<Object> deleteFriend(String friendUsername, String sessionID) {
 
         // Check if valid session
         AccountID accountID = AccountManager.verifySession(new SessionID(sessionID));
         if(accountID == null) {
             return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        else if(!((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(accountID).getBody())).getUsername().equals(userName)) {
-            return LogHandler.logError(new SessionException("Invalid session!"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
 
-        // Find each user and friend's accountID
-        String userID = Objects.requireNonNull(AccountManager.getAccountIDByUsername(userName)).getID();
+        // Find each friend's accountID
+        String userID = accountID.getID();
         String friendID = Objects.requireNonNull(AccountManager.getAccountIDByUsername(friendUsername)).getID();
 
         if (friendsRepo.existsById(userID) && friendsRepo.existsById(friendID)) {
@@ -172,15 +161,12 @@ public class FriendsManager {
     }
 
     // used by deleteAccount in AccountManager
-    public static ResponseEntity<Object> deleteAllCorrelatedFriends(String userName, String sessionID) {
+    public static ResponseEntity<Object> deleteAllCorrelatedFriends(String sessionID) {
 
         // Check if valid session
         AccountID accountID = AccountManager.verifySession(new SessionID(sessionID));
         if(accountID == null) {
             return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        else if(!((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(accountID).getBody())).getUsername().equals(userName)) {
-            return LogHandler.logError(new SessionException("Invalid session!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // Delete the user in Friends DB

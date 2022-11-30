@@ -1,6 +1,5 @@
 package com.backend.usecases;
 
-import com.backend.controller.InvitationController;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Invitation;
@@ -11,7 +10,6 @@ import com.backend.error.handlers.LogHandler;
 import com.backend.repositories.InvitationsRepo;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

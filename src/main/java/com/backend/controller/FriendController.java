@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 public class FriendController {
 
     @GetMapping("/friends/getFriends")
-    public ResponseEntity<Object> getFriends(@RequestParam String userName, @RequestParam String sessionID) {
-        return FriendsManager.getFriends(userName, sessionID);
+    public ResponseEntity<Object> getFriends(@RequestParam String sessionID) {
+        return FriendsManager.getUserFriends(sessionID);
     }
 
     @DeleteMapping("/friends/deleteFriend")
-    public ResponseEntity<Object> deleteFriend(@RequestParam String userName, @RequestParam String friendUserName, @RequestParam String sessionID) {
-        return FriendsManager.deleteFriend(userName, friendUserName, sessionID);
+    public ResponseEntity<Object> deleteFriend(@RequestParam String friendUserName, @RequestParam String sessionID) {
+        return FriendsManager.deleteFriend(friendUserName, sessionID);
     }
 }
