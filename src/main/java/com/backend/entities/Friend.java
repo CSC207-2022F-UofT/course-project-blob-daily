@@ -18,12 +18,12 @@ public class Friend {
     @Id
     private String accountID;
 
-    private ArrayList<String> friends;
+    private final ArrayList<String> friends;
 
     // fields, getters, setters
-    public Friend(AccountID accountID, ArrayList<String> friends) {
-        this.accountIDObject = accountID;
-        this.accountID = accountID.getID();
+    public Friend(AccountID accountIDObject, ArrayList<String> friends) {
+        this.accountIDObject = accountIDObject;
+        this.accountID = accountIDObject.getID();
         this.friends = friends;
     }
 
@@ -38,6 +38,11 @@ public class Friend {
      * Retrieve the AccountID as String for this given instance
      * @return the AccountID as String for this given instance
      */
+    @SuppressWarnings("unused")
+    public AccountID getaccountIDObject() {
+        return this.accountIDObject;
+    }
+
     public String getAccountID() { return this.accountID; }
 
     /**

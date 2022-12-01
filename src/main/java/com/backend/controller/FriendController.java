@@ -2,7 +2,6 @@ package com.backend.controller;
 
 
 import com.backend.usecases.facades.FriendSystemFacade;
-import com.backend.usecases.managers.FriendsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 public class FriendController {
 
     private final FriendSystemFacade friendSystemFacade;
+
     @Autowired
     public FriendController(FriendSystemFacade friendSystemFacade) {
         this.friendSystemFacade = friendSystemFacade;
     }
-
 
     @GetMapping("/friends/getFriends")
     public ResponseEntity<Object> getFriends(@RequestParam String sessionID) {
@@ -26,6 +25,7 @@ public class FriendController {
     public ResponseEntity<Object> deleteFriend(@RequestParam String friendUserName, @RequestParam String sessionID) {
         return this.friendSystemFacade.deleteFriend(friendUserName, sessionID);
     }
+
     @DeleteMapping("/friends/deleteAllCorrelatedFriends")
     public ResponseEntity<Object> deleteALlCorrelatedFriends(@RequestParam String sessionID) {
         return this.friendSystemFacade.deleteAllCorrelatedFriends(sessionID);
