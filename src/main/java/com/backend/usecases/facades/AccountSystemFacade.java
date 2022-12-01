@@ -21,16 +21,18 @@ import javax.security.auth.login.AccountNotFoundException;
 import java.util.Map;
 
 @Service
-public class AccountSystemFacade implements IErrorHandler {
+public class AccountSystemFacade {
     private final AccountManager accountManager;
+    private final IErrorHandler errorHandler;
 
     /**
      * Spring Boot Dependency Injection of the accountManager
      * @param accountManager the dependency to be injected
      */
     @Autowired
-    public AccountSystemFacade (AccountManager accountManager) {
+    public AccountSystemFacade (AccountManager accountManager, IErrorHandler errorHandler) {
         this.accountManager = accountManager;
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -42,7 +44,7 @@ public class AccountSystemFacade implements IErrorHandler {
     public ResponseEntity<Object> loginAccount(String username, String password) {
         // Verify Account Information
         if (!new Username(username).isValid() || !new Password(password).isValid()) {
-            return this.logError(new AccountInfoException(String.format("The given account info is invalid, %s and %s", username, password)), HttpStatus.BAD_REQUEST);
+            return errorHandler.logError(new AccountInfoException(String.format("The given account info is invalid, %s and %s", username, password)), HttpStatus.BAD_REQUEST);
         }
 
         // Hash the password
@@ -52,8 +54,8 @@ public class AccountSystemFacade implements IErrorHandler {
         Account account = this.accountManager.validateCredentials(username, hashedPassword);
 
         // Check for errors
-        if (account == null) return this.logError(new AccountInfoException("Could not find matching account"), HttpStatus.NOT_FOUND);
-        else if (account.getSessionID() != null) return this.logError(new SessionException("Already Logged in"), HttpStatus.UNAUTHORIZED);
+        if (account == null) return errorHandler.logError(new AccountInfoException("Could not find matching account"), HttpStatus.NOT_FOUND);
+        else if (account.getSessionID() != null) return errorHandler.logError(new SessionException("Already Logged in"), HttpStatus.UNAUTHORIZED);
 
         // Generate a session ID
         account.getSessionIDObject().generateID();
@@ -77,7 +79,7 @@ public class AccountSystemFacade implements IErrorHandler {
         AccountID accountID = this.accountManager.verifySession(sessionID);
 
         // Check if the account exists
-        if (accountID == null) return this.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
+        if (accountID == null) return errorHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
 
         // Logout account by the accountID
         Account account = this.accountManager.getAccount(accountID);
@@ -101,13 +103,13 @@ public class AccountSystemFacade implements IErrorHandler {
         Account account = this.accountManager.createAccount(username, password);
 
         // Validate created account
-        if (!this.accountManager.verifyAccountInfo(account)) return this.logError(new AccountInfoException("The given account info is invalid"), HttpStatus.BAD_REQUEST);
+        if (!this.accountManager.verifyAccountInfo(account)) return errorHandler.logError(new AccountInfoException("The given account info is invalid"), HttpStatus.BAD_REQUEST);
 
         // Hash the password
         this.accountManager.hashPassword(account, password);
 
         // Check if the account exists
-        if (this.accountManager.accountExists(account)) return this.logError(new AccountInfoException("The given account already exists!"), HttpStatus.BAD_REQUEST);
+        if (this.accountManager.accountExists(account)) return errorHandler.logError(new AccountInfoException("The given account already exists!"), HttpStatus.BAD_REQUEST);
 
         // Save to DB
         this.accountManager.updateAccount(account);
@@ -129,11 +131,11 @@ public class AccountSystemFacade implements IErrorHandler {
         AccountID accountID = this.accountManager.verifySession(sessionID);
 
         // Check if the account exists
-        if (accountID == null ) return this.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
+        if (accountID == null ) return errorHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
 
         // Delete account by the accountID
         if (!this.accountManager.deleteAccount(accountID)) {
-            return this.logError(new AccountException("The given account could not be deleted"), HttpStatus.CONFLICT);
+            return errorHandler.logError(new AccountException("The given account could not be deleted"), HttpStatus.CONFLICT);
         }
 
         // Other manager calls
@@ -152,14 +154,14 @@ public class AccountSystemFacade implements IErrorHandler {
 
         // Check for errors
         if (accountID == null) {
-            return this.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
+            return errorHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
         }
 
         // Get account information
         ProtectedAccount protectedAccount = this.accountManager.getAccountInfo(accountID);
 
         if (protectedAccount == null) {
-            return this.logError(new AccountNotFoundException("The account connot be found with the given information"), HttpStatus.NOT_FOUND);
+            return errorHandler.logError(new AccountNotFoundException("The account connot be found with the given information"), HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(protectedAccount, HttpStatus.OK);
