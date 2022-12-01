@@ -2,6 +2,7 @@ package com.backend.error.handlers;
 
 
 import com.backend.entities.criteria.conditions.IConditionHandler;
+import com.backend.usecases.IErrorHandler;
 import net.minidev.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
-public class LogHandler implements IConditionHandler {
+public class LogHandler implements IConditionHandler, IErrorHandler {
     // Variables
     private static final Logger LOGGER = Logger.getLogger( LogHandler.class.getName() );
 
@@ -92,8 +93,9 @@ public class LogHandler implements IConditionHandler {
      * @param status of type HttpStatus, status of the REST response to be generated
      * @return a ResponseEntity with the associated exception message and status code
      */
-    public static ResponseEntity<Object> logError(Exception e, HttpStatus status) {
-        // this.logError(e);
+    @Override
+    public ResponseEntity<Object> logError(Exception e, HttpStatus status) {
+        this.logError(e);
 
 
         JSONObject jsonObject = new JSONObject();
