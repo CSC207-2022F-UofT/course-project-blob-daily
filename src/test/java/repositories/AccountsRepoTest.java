@@ -4,7 +4,8 @@ import com.backend.QuestPetsApplication;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.users.Account;
 import com.backend.repositories.AccountsRepo;
-import com.backend.usecases.AccountManager;
+import com.backend.usecases.facades.AccountSystemFacade;
+import com.backend.usecases.managers.AccountManager;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -17,28 +18,34 @@ import java.util.Objects;
 
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountsRepoTest {
-
-    @Autowired
-    AccountsRepo accountsRepo;
-
+    private final AccountsRepo accountsRepo;
+    private final AccountSystemFacade accountSystemFacade;
+    private final AccountManager accountManager;
     private SessionID sessionID;
     private final String username = "username";
     private final String password = "abc123!";
 
+    @Autowired
+    public AccountsRepoTest(AccountsRepo accountsRepo, AccountSystemFacade accountSystemFacade, AccountManager accountManager) {
+        this.accountsRepo = accountsRepo;
+        this.accountSystemFacade = accountSystemFacade;
+        this.accountManager = accountManager;
+    }
+
     @BeforeEach
     public void setup() {
-        sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(AccountManager.loginAccount(username, password).getBody())).get("sessionID"));
+        sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(username, password).getBody())).get("sessionID"));
     }
 
     @AfterEach
     public void tearDown() {
-        AccountManager.logoutAccount(sessionID);
+        this.accountSystemFacade.logoutAccount(sessionID);
     }
 
     @Test
     public void findByAccountIDTest() {
         // Values
-        String expectedAccountID = Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID();
+        String expectedAccountID = Objects.requireNonNull(this.accountManager.verifySession(sessionID)).getID();
         String expectedSessionID = sessionID.getID();
 
         // Action
@@ -49,7 +56,7 @@ public class AccountsRepoTest {
 
         // Assertion Statements
         Assertions.assertEquals(username, account.getUsername(), findByAccountIDMessage);
-        Assertions.assertEquals(AccountManager.hash(password), account.getPassword(), findByAccountIDMessage);
+        Assertions.assertEquals(this.accountManager.hash(password), account.getPassword(), findByAccountIDMessage);
         Assertions.assertEquals(expectedSessionID, account.getSessionID(), findByAccountIDMessage);
         Assertions.assertEquals(expectedAccountID, account.getAccountID(), findByAccountIDMessage);
     }
@@ -57,7 +64,7 @@ public class AccountsRepoTest {
     @Test
     public void findBySessionIDTest() {
         // Values
-        String expectedAccountID = Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID();
+        String expectedAccountID = Objects.requireNonNull(this.accountManager.verifySession(sessionID)).getID();
         String expectedSessionID = sessionID.getID();
 
         // Action
@@ -68,7 +75,7 @@ public class AccountsRepoTest {
 
         // Assertion Statements
         Assertions.assertEquals(username, account.getUsername(), findBySessionIDMessage);
-        Assertions.assertEquals(AccountManager.hash(password), account.getPassword(), findBySessionIDMessage);
+        Assertions.assertEquals(this.accountManager.hash(password), account.getPassword(), findBySessionIDMessage);
         Assertions.assertEquals(expectedSessionID, account.getSessionID(), findBySessionIDMessage);
         Assertions.assertEquals(expectedAccountID, account.getAccountID(), findBySessionIDMessage);
     }
@@ -76,18 +83,18 @@ public class AccountsRepoTest {
     @Test
     public void findByCredentialsTest() {
         // Values
-        String expectedAccountID = Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID();
+        String expectedAccountID = Objects.requireNonNull(this.accountManager.verifySession(sessionID)).getID();
         String expectedSessionID = sessionID.getID();
 
         // Action
-        Account account = accountsRepo.findByCredentials(username, AccountManager.hash(password));
+        Account account = accountsRepo.findByCredentials(username, this.accountManager.hash(password));
 
         // Assertion Message
         String findByCredentialsMessage = "Invalid account provided for given credentials";
 
         // Assertion Statements
         Assertions.assertEquals(username, account.getUsername(), findByCredentialsMessage);
-        Assertions.assertEquals(AccountManager.hash(password), account.getPassword(), findByCredentialsMessage);
+        Assertions.assertEquals(this.accountManager.hash(password), account.getPassword(), findByCredentialsMessage);
         Assertions.assertEquals(expectedSessionID, account.getSessionID(), findByCredentialsMessage);
         Assertions.assertEquals(expectedAccountID, account.getAccountID(), findByCredentialsMessage);
     }
@@ -95,7 +102,7 @@ public class AccountsRepoTest {
     @Test
     public void findByUsernameTest() {
         // Values
-        String expectedAccountID = Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID();
+        String expectedAccountID = Objects.requireNonNull(this.accountManager.verifySession(sessionID)).getID();
         String expectedSessionID = sessionID.getID();
 
         // Action
@@ -106,7 +113,7 @@ public class AccountsRepoTest {
 
         // Assertion Statements
         Assertions.assertEquals(username, account.getUsername(), findByUsernameMessage);
-        Assertions.assertEquals(AccountManager.hash(password), account.getPassword(), findByUsernameMessage);
+        Assertions.assertEquals(this.accountManager.hash(password), account.getPassword(), findByUsernameMessage);
         Assertions.assertEquals(expectedSessionID, account.getSessionID(), findByUsernameMessage);
         Assertions.assertEquals(expectedAccountID, account.getAccountID(), findByUsernameMessage);
     }

@@ -5,12 +5,15 @@ import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.users.Account;
 import com.backend.entities.users.ProtectedAccount;
-import com.backend.usecases.AccountManager;
+import com.backend.repositories.AccountsRepo;
+import com.backend.usecases.facades.AccountSystemFacade;
+import com.backend.usecases.managers.AccountManager;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +23,26 @@ import java.util.Objects;
 
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountManagerTest {
-
+    private final AccountsRepo accountsRepo;
+    private final AccountSystemFacade accountSystemFacade;
+    private final AccountManager accountManager;
     private SessionID sessionID;
     private final String username = "username";
     private final String password = "abc123!";
 
+    @Autowired
+    public AccountManagerTest(AccountsRepo accountsRepo, AccountSystemFacade accountSystemFacade, AccountManager accountManager) {
+        this.accountsRepo = accountsRepo;
+        this.accountSystemFacade = accountSystemFacade;
+        this.accountManager = accountManager;
+    }
+
     @BeforeEach
     public void setup() {
-        ResponseEntity<Object> register = AccountManager.registerAccount(this.username, this.password);
+        ResponseEntity<Object> register = this.accountSystemFacade.registerAccount(this.username, this.password);
 
         if (!(register.getStatusCode() == HttpStatus.OK)){
-            sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(AccountManager.loginAccount(this.username, this.password).getBody())).get("sessionID"));
+            sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(this.username, this.password).getBody())).get("sessionID"));
         } else  {
             sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(register.getBody())).get("sessionID"));
         }
@@ -40,21 +52,21 @@ public class AccountManagerTest {
     @AfterEach
     public void tearDown() {
         if (sessionID != null) {
-            AccountManager.logoutAccount(this.sessionID);
+            this.accountSystemFacade.logoutAccount(this.sessionID);
         }
     }
 
     @Test
     public void verifySessionTest() {
         // Action
-        String actualAccountID = Objects.requireNonNull(AccountManager.verifySession(this.sessionID)).getID();
+        String actualAccountID = Objects.requireNonNull(this.accountManager.verifySession(this.sessionID)).getID();
 
         // Assertion Message
         String verifySessionMessage = String.format("The given valid ID returned an unexpected accountID '%s'",
                 actualAccountID);
 
         // Assertion Statement
-        Assertions.assertTrue(AccountManager.accountsRepo.existsById(actualAccountID), verifySessionMessage);
+        Assertions.assertTrue(this.accountsRepo.existsById(actualAccountID), verifySessionMessage);
     }
 
     @Test
@@ -63,7 +75,7 @@ public class AccountManagerTest {
         String invalidSessionID = "deal28check";
 
         // Action
-        Object actual = AccountManager.verifySession(new SessionID(invalidSessionID));
+        Object actual = this.accountManager.verifySession(new SessionID(invalidSessionID));
 
         // Assertion Message
         String verifySessionInvalidMessage = String.format("The given invalid ID '%s' returned an unexpected result",
@@ -81,7 +93,7 @@ public class AccountManagerTest {
         ProtectedAccount protectedAccount = new ProtectedAccount(username, timestamp);
 
         // Action
-        boolean resultProtectedAccount = AccountManager.verifyAccountInfo(protectedAccount);
+        boolean resultProtectedAccount = this.accountManager.verifyAccountInfo(protectedAccount);
 
         // Assertion Message
         String verifyAccountInfoMessage = "The given valid account returned invalid (false) unexpectedly";
@@ -101,7 +113,7 @@ public class AccountManagerTest {
         accountByAccountID.getSessionIDObject().generateID();
 
         // Action
-        boolean resultAccountByAccountID = AccountManager.verifyAccountInfo(accountByAccountID);
+        boolean resultAccountByAccountID = this.accountManager.verifyAccountInfo(accountByAccountID);
 
         // Assertion Message
         String verifyAccountInfoMessage = "The given valid account returned invalid (false) unexpectedly";
@@ -120,7 +132,7 @@ public class AccountManagerTest {
         accountBySessionID.getSessionIDObject().generateID();
 
         // Action
-        boolean resultAccountBySessionID = AccountManager.verifyAccountInfo(accountBySessionID);
+        boolean resultAccountBySessionID = this.accountManager.verifyAccountInfo(accountBySessionID);
 
         // Assertion Message
         String verifyAccountInfoMessage = "The given valid account returned invalid (false) unexpectedly";
@@ -136,7 +148,7 @@ public class AccountManagerTest {
         ProtectedAccount protectedAccount = new ProtectedAccount(username, null);
 
         // Action
-        boolean resultProtectedAccount = AccountManager.verifyAccountInfo(protectedAccount);
+        boolean resultProtectedAccount = this.accountManager.verifyAccountInfo(protectedAccount);
 
         // Assertion Message
         String verifyAccountInfoMessage = "The given invalid account returned valid (true) unexpectedly";
@@ -156,7 +168,7 @@ public class AccountManagerTest {
         accountByAccountID.getSessionIDObject().generateID();
 
         // Action
-        boolean resultAccountByAccountID = AccountManager.verifyAccountInfo(accountByAccountID);
+        boolean resultAccountByAccountID = this.accountManager.verifyAccountInfo(accountByAccountID);
 
         // Assertion Message
         String verifyAccountInfoMessage = "The given invalid account returned valid (true) unexpectedly";
@@ -174,7 +186,7 @@ public class AccountManagerTest {
         accountBySessionID.getAccountIDObject().generateID();
 
         // Action
-        boolean resultAccountBySessionID = AccountManager.verifyAccountInfo(accountBySessionID);
+        boolean resultAccountBySessionID = this.accountManager.verifyAccountInfo(accountBySessionID);
 
         // Assertion Message
         String verifyAccountInfoMessage = "The given invalid account returned valid (true) unexpectedly";
@@ -190,7 +202,7 @@ public class AccountManagerTest {
         String expectedHash = "033b83d92431548e13424903c235a9922af56dd34d53c9b72b37cf158489213e";
 
         // Action
-        String hashedPassword = AccountManager.hash(password);
+        String hashedPassword = this.accountManager.hash(password);
 
         // Assertion Message
         String hashMessage = "The given string was not hashed correctly according to the SHA-256 algorithm";
@@ -202,11 +214,11 @@ public class AccountManagerTest {
     @Test
     public void getAccountInfoAccountIDTest() {
         // Values
-        AccountID accountID = AccountManager.verifySession(sessionID);
+        AccountID accountID = this.accountManager.verifySession(sessionID);
         ProtectedAccount expectedAccount = new ProtectedAccount(username, null);
 
         // Action
-        ProtectedAccount actualAccount = (ProtectedAccount) AccountManager.getAccountInfo(accountID).getBody();
+        ProtectedAccount actualAccount = this.accountManager.getAccountInfo(accountID);
 
         // Assertion Message
         String accountInfoMessage = "The given accountID didn't yield the corresponding account information";
@@ -222,7 +234,7 @@ public class AccountManagerTest {
         ProtectedAccount expectedAccount = new ProtectedAccount(username, null);
 
         // Action
-        ProtectedAccount actualAccount = (ProtectedAccount) AccountManager.getAccountInfo(sessionID).getBody();
+        ProtectedAccount actualAccount = this.accountManager.getAccountInfo(this.accountManager.verifySession(sessionID));
 
         // Assertion Message
         String accountInfoMessage = "The given accountID didn't yield the corresponding account information";
@@ -235,17 +247,17 @@ public class AccountManagerTest {
     @Test
     public void registerTest() {
         // Setup
-        AccountManager.deleteAccount(sessionID);
+        this.accountSystemFacade.deleteAccount(sessionID);
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.registerAccount(username, password);
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.registerAccount(username, password);
         sessionID = new SessionID(((JSONObject) Objects.requireNonNull(responseEntity.getBody())).get("sessionID").toString());
 
         // Assertion Message
         String registerMessage = "Could not register an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertTrue(AccountManager.accountsRepo.existsById(Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID()), registerMessage);
+        Assertions.assertTrue(this.accountsRepo.existsById(Objects.requireNonNull(this.accountManager.verifySession(sessionID)).getID()), registerMessage);
     }
 
     @Test
@@ -253,7 +265,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.registerAccount(username, password);
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.registerAccount(username, password);
 
         // Assertion Message
         String registerMessage = "Account was unexpectedly 'created' when given existing credentials";
@@ -267,7 +279,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.registerAccount(username, "");
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.registerAccount(username, "");
 
         // Assertion Message
         String registerMessage = "Account was unexpectedly 'created' when given invalid credentials";
@@ -279,17 +291,17 @@ public class AccountManagerTest {
     @Test
     public void loginTest() {
         // Setup
-        AccountManager.logoutAccount(sessionID);
+        this.accountSystemFacade.logoutAccount(sessionID);
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.loginAccount(username, password);
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.loginAccount(username, password);
         sessionID = new SessionID(((JSONObject) Objects.requireNonNull(responseEntity.getBody())).get("sessionID").toString());
 
         // Assertion Message
         String loginMessage = "Could not login an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertTrue(AccountManager.accountsRepo.existsById(Objects.requireNonNull(AccountManager.verifySession(sessionID)).getID()), loginMessage);
+        Assertions.assertTrue(this.accountsRepo.existsById(Objects.requireNonNull(this.accountManager.verifySession(sessionID)).getID()), loginMessage);
     }
 
     @Test
@@ -297,7 +309,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.loginAccount(username, password);
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.loginAccount(username, password);
 
         // Assertion Message
         String loginMessage = "Account was unexpectedly 'logged in' when given credentials of an already logged in account";
@@ -311,7 +323,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.loginAccount(username, "");
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.loginAccount(username, "");
 
         // Assertion Message
         String loginMessage = "Account was unexpectedly 'logged in' when given invalid credentials";
@@ -325,7 +337,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.loginAccount("notUsername", password);
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.loginAccount("notUsername", password);
 
         // Assertion Message
         String loginMessage = "Account was unexpectedly 'logged in' when given credentials of account that doesn't exist";
@@ -339,22 +351,22 @@ public class AccountManagerTest {
         // Setup (not Required)
 
         // Action
-        AccountManager.logoutAccount(sessionID);
+        this.accountSystemFacade.logoutAccount(sessionID);
 
         // Assertion Message
         String logoutMessage = "Could not logout an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertNull(AccountManager.accountsRepo.findBySessionID(sessionID.getID()), logoutMessage);
+        Assertions.assertNull(this.accountsRepo.findBySessionID(sessionID.getID()), logoutMessage);
     }
 
     @Test
     public void logoutAlreadyLoggedOutTest() {
         // Setup
-        AccountManager.logoutAccount(sessionID);
+        this.accountSystemFacade.logoutAccount(sessionID);
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(sessionID);
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(sessionID);
 
         // Assertion Message
         String logoutMessage = "Account was unexpectedly 'logged out' when given credentials of an already logged in account";
@@ -368,7 +380,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID("invalidID"));
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(new SessionID("invalidID"));
 
         // Assertion Message
         String logoutMessage = "Account was unexpectedly 'logged out' when given invalid credentials";
@@ -382,7 +394,7 @@ public class AccountManagerTest {
         // Setup (Not Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID("diajmdlanmdln80"));
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(new SessionID("diajmdlanmdln80"));
 
         // Assertion Message
         String logoutMessage = "Account was unexpectedly 'logged in' when given credentials of account that doesn't exist";
@@ -396,22 +408,22 @@ public class AccountManagerTest {
         // Setup (not Required)
 
         // Action
-        AccountManager.deleteAccount(sessionID);
+        this.accountSystemFacade.deleteAccount(sessionID);
 
         // Assertion Message
         String deleteMessage = "Could not delete an account with valid credentials";
 
         // Assertion Statement
-        Assertions.assertNull(AccountManager.accountsRepo.findBySessionID(sessionID.getID()), deleteMessage);
+        Assertions.assertNull(this.accountsRepo.findBySessionID(sessionID.getID()), deleteMessage);
     }
 
     @Test
     public void deleteUnauthorizedTest() {
         // Setup
-        AccountManager.logoutAccount(sessionID);
+        this.accountSystemFacade.logoutAccount(sessionID);
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.deleteAccount(sessionID);
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.deleteAccount(sessionID);
 
         // Assertion Message
         String deleteMessage = "Account was unexpectedly 'deleted' when given unauthorized credentials";
@@ -425,7 +437,7 @@ public class AccountManagerTest {
         // Setup (Non Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID("invalidID"));
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(new SessionID("invalidID"));
 
         // Assertion Message
         String deleteMessage = "Account was unexpectedly 'deleted' when given invalid credentials";
@@ -439,7 +451,7 @@ public class AccountManagerTest {
         // Setup (Not Required)
 
         // Action
-        ResponseEntity<Object> responseEntity = AccountManager.logoutAccount(new SessionID("diajmdlanmdln80"));
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(new SessionID("diajmdlanmdln80"));
 
         // Assertion Message
         String deleteMessage = "Account was unexpectedly 'delete' when given credentials of account that doesn't exist";
@@ -451,10 +463,10 @@ public class AccountManagerTest {
     @Test
     public void getAccountIDByUsernameTest() {
         // Setup
-        AccountID expectedAccountID = AccountManager.verifySession(sessionID);
+        AccountID expectedAccountID = this.accountManager.verifySession(sessionID);
 
         // Action
-        AccountID actualAccountID = AccountManager.getAccountIDByUsername(username);
+        AccountID actualAccountID = this.accountManager.getAccountIDByUsername(username);
 
         // Assertion Message
         String getAccountIDMessage = "The actual AccountID did not match the expected AccountID";
@@ -470,7 +482,7 @@ public class AccountManagerTest {
         // Setup (Not required)
 
         // Action
-        AccountID actualAccountID = AccountManager.getAccountIDByUsername("9");
+        AccountID actualAccountID = this.accountManager.getAccountIDByUsername("9");
 
         // Assertion Message
         String getAccountIDMessage = "The actual AccountID did not match the expected AccountID";
