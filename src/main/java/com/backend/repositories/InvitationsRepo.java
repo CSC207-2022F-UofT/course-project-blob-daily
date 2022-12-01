@@ -15,10 +15,4 @@ public interface InvitationsRepo extends MongoRepository<Invitation, String> {
 
     @Query("{ 'senderID' : ?0 }")
     List<Invitation> findAllBySenderID(String senderID);
-
-    @Query("{ 'receiverID' : ?0}")
-    void deleteAllByReceiverID(List<Invitation> invitationsAsReceiver);
-
-    @Query("{ 'senderID' : ?0}")
-    void deleteAllBySenderID(List<Invitation> invitationsAsSender);
 }

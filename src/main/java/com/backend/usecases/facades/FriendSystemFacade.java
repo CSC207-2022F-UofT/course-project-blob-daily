@@ -61,18 +61,18 @@ public class FriendSystemFacade {
             return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        JSONObject invites = new JSONObject();
         ArrayList<String> friendIDs = this.friendsManager.getFriends(userID.getID());
+        JSONArray friends = new JSONArray();
 
         if (friendIDs.size() != 0) {
-            ArrayList<String> friendList = new ArrayList<>();
             for (String friendID : friendIDs) {
-                ProtectedAccount friendUsername = this.accountManager.getAccountInfo(new AccountID(friendID));
-                friendList.add(friendUsername.getUsername());
+                ProtectedAccount friendAccount = this.accountManager.getAccountInfo(new AccountID(friendID));
+                friends.add(friendAccount);
             }
-            return new ResponseEntity<>(friendList, HttpStatus.OK);
+            invites.put("friends", friends);
         }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
-
+        return new ResponseEntity<>(invites, HttpStatus.OK);
     }
 
     public ResponseEntity<Object> deleteFriend(String friendUsername, String sessionID) {
@@ -151,7 +151,7 @@ public class FriendSystemFacade {
         JSONArray users = new JSONArray();
 
         for (Invitation account : accounts) {
-            ProtectedAccount friendAccount = this.accountManager.getAccountInfo(new AccountID(account.getSenderID()));
+            ProtectedAccount friendAccount = this.accountManager.getAccountInfo(new AccountID((isReceiver ? account.getSenderID(): account.getReceiverID())));
             users.add(friendAccount);
         }
 
