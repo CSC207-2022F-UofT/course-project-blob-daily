@@ -136,6 +136,8 @@ public class AccountSystemFacade {
             return LogHandler.logError(new AccountException("The given account could not be deleted"), HttpStatus.CONFLICT);
         }
 
+        // Other manager calls
+
         return new ResponseEntity<>("Successfully Deleted Account!", HttpStatus.OK);
     }
 
