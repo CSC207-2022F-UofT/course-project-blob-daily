@@ -1,4 +1,4 @@
-package com.backend.usecases;
+package com.backend.usecases.managers;
 
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.ID;

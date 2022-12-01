@@ -1,7 +1,7 @@
 package com.backend.controller;
 
 import com.backend.entities.IDs.SessionID;
-import com.backend.usecases.AccountManager;
+import com.backend.usecases.managers.AccountManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

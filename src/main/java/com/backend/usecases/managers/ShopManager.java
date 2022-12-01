@@ -1,6 +1,5 @@
-package com.backend.usecases;
+package com.backend.usecases.managers;
 
-import com.backend.controller.PetController;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Pet;

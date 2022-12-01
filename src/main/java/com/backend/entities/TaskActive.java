@@ -10,13 +10,17 @@ public class TaskActive extends Task{
     //instance variable
     private final String timestamp;
 
-    //constructor
-    public TaskActive(String task, double reward, String timestamp){
-        super(task, reward);
+    /**
+     * Task active constructor
+     * @param name of type String, the name of the task
+     * @param reward of type double, the reward of the task
+     * @param timestamp of type String, the time of the task
+     */
+    public TaskActive(String name, double reward, String timestamp){
+        super(name, reward);
         this.timestamp = timestamp;
     }
 
-    //getter
     /**
      * gets the timestamp
      * @return a string of the timestamp

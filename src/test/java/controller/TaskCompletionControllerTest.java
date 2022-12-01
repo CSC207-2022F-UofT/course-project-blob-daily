@@ -4,8 +4,9 @@ import com.backend.QuestPetsApplication;
 import com.backend.controller.TaskCompletionController;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.TaskActive;
-import com.backend.usecases.AccountManager;
-import com.backend.usecases.TaskManager;
+import com.backend.repositories.TaskActiveRepo;
+import com.backend.usecases.managers.AccountManager;
+import com.backend.usecases.managers.TaskManager;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -20,20 +21,27 @@ import java.util.Objects;
 
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TaskCompletionControllerTest {
-
-    @SuppressWarnings("unused")
-    @Autowired
-    TaskCompletionController completionController;
     private SessionID sessionID;
     private String task;
     private final String image = "https://www.saycampuslife.com/wp-content/uploads/2017/10/collegelectures-800x500_c.jpg";
     private double reward;
 
+    TaskCompletionController completionController;
+    TaskManager taskManager;
+    TaskActiveRepo taskActiveRepo;
+
+    @Autowired
+    public TaskCompletionControllerTest(TaskCompletionController completionController, TaskManager taskManager, TaskActiveRepo taskActiveRepo) {
+        this.completionController = completionController;
+        this.taskManager = taskManager;
+        this.taskActiveRepo = taskActiveRepo;
+    }
+
     @BeforeEach
     public void setup() {
         String username = "username";
         String password = "abc123!";
-        TaskActive active = TaskManager.activeRepo.findAll().get(0);
+        TaskActive active = taskActiveRepo.findAll().get(0);
 
         sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(AccountManager.loginAccount(username, password).getBody())).get("sessionID"));
         task = active.getName();
@@ -42,7 +50,7 @@ public class TaskCompletionControllerTest {
 
     @AfterEach
     public void tearDown() {
-        TaskManager.deleteAllCorrelatedCompletions(AccountManager.verifySession(sessionID));
+        taskManager.deleteAllCorrelatedCompletions(AccountManager.verifySession(sessionID));
         AccountManager.logoutAccount(sessionID);
     }
 

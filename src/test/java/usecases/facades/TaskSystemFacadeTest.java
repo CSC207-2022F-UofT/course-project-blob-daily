@@ -1,36 +1,50 @@
-package usecases;
+package usecases.facades;
 
 import com.backend.QuestPetsApplication;
-import com.backend.entities.IDs.AccountID;
+import com.backend.controller.TaskCompletionController;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.TaskActive;
-import com.backend.entities.TaskCompletionRecord;
-import com.backend.usecases.AccountManager;
-import com.backend.usecases.TaskManager;
+import com.backend.repositories.TaskActiveRepo;
+import com.backend.usecases.facades.TaskSystemFacade;
+import com.backend.usecases.managers.AccountManager;
+import com.backend.usecases.managers.TaskManager;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.Objects;
 
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TaskManagerTest {
+public class TaskSystemFacadeTest {
     private SessionID sessionID;
     private String task;
     private final String image = "https://www.saycampuslife.com/wp-content/uploads/2017/10/collegelectures-800x500_c.jpg";
     private double reward;
 
+    TaskCompletionController completionController;
+    TaskSystemFacade taskSystemFacade;
+    TaskActiveRepo taskActiveRepo;
+    TaskManager taskManager;
+
+    @Autowired
+    public TaskSystemFacadeTest(TaskCompletionController completionController, TaskSystemFacade taskSystemFacade, TaskActiveRepo taskActiveRepo, TaskManager taskManager) {
+        this.completionController = completionController;
+        this.taskSystemFacade = taskSystemFacade;
+        this.taskActiveRepo = taskActiveRepo;
+        this.taskManager = taskManager;
+    }
+
     @BeforeEach
     public void setup() {
         String username = "username";
         String password = "abc123!";
-        TaskActive active = TaskManager.activeRepo.findAll().get(0);
+        TaskActive active = taskActiveRepo.findAll().get(0);
 
         sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(AccountManager.loginAccount(username, password).getBody())).get("sessionID"));
         task = active.getName();
@@ -39,16 +53,14 @@ public class TaskManagerTest {
 
     @AfterEach
     public void tearDown() {
-        TaskManager.deleteAllCorrelatedCompletions(AccountManager.verifySession(sessionID));
+        taskManager.deleteAllCorrelatedCompletions(AccountManager.verifySession(sessionID));
         AccountManager.logoutAccount(sessionID);
     }
 
     @Test
     public void postCompletedTaskTest(){
         //action
-        ResponseEntity<?> responseEntity = TaskManager.postCompletedTask(
-                sessionID, task, image, reward
-        );
+        ResponseEntity<?> responseEntity = taskSystemFacade.completeTask(sessionID, task, image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task due to invalid session";
@@ -60,9 +72,7 @@ public class TaskManagerTest {
     @Test
     public void postCompletedTaskInvalidSessionTest(){
         //action
-        ResponseEntity<?> responseEntity = TaskManager.postCompletedTask(
-                new SessionID("bad id"), task, image, reward
-        );
+        ResponseEntity<?> responseEntity = taskSystemFacade.completeTask(new SessionID("bad id"), task, image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task due to invalid session";
@@ -74,9 +84,7 @@ public class TaskManagerTest {
     @Test
     public void postCompletedTaskInvalidTaskTest(){
         //action
-        ResponseEntity<?> responseEntity = TaskManager.postCompletedTask(
-                sessionID, "not a task", image, reward
-        );
+        ResponseEntity<?> responseEntity = taskSystemFacade.completeTask(sessionID, "not a task", image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task as it does not exist";
@@ -88,9 +96,7 @@ public class TaskManagerTest {
     @Test
     public void postCompletedTaskInvalidRewardTest(){
         //action
-        ResponseEntity<?> responseEntity = TaskManager.postCompletedTask(
-                sessionID, task, image, 10000
-        );
+        ResponseEntity<?> responseEntity = taskSystemFacade.completeTask(sessionID, task, image, 10000);
 
         //assertion message
         String completeTaskMessage = "Unable finish task as reward does not match";
@@ -102,12 +108,8 @@ public class TaskManagerTest {
     @Test
     public void postCompletedTaskAlreadyCompleteTest(){
         //setup
-        TaskManager.postCompletedTask(
-                sessionID, task, image, reward
-        );
-        ResponseEntity<?> responseEntity = TaskManager.postCompletedTask(
-                sessionID, task, image, reward
-        );
+        taskSystemFacade.completeTask(sessionID, task, image, reward);
+        ResponseEntity<?> responseEntity = taskSystemFacade.completeTask(sessionID, task, image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task as it is already completed";
@@ -117,24 +119,9 @@ public class TaskManagerTest {
     }
 
     @Test
-    public void deleteAllCorrelatedCompletionsTest(){
-        //setup
-        AccountID accountID = AccountManager.verifySession(sessionID);
-
-        //actions
-        ResponseEntity<?> responseEntity = TaskManager.deleteAllCorrelatedCompletions(accountID);
-
-        //assertion message
-        String deleteAllMessage = "invalid account provided for given accountID";
-
-        //assertion statements
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, deleteAllMessage);
-    }
-
-    @Test
     public void getActiveTasksTest(){
         //actions
-        ResponseEntity<?> responseEntity = TaskManager.getActiveTasks(sessionID);
+        ResponseEntity<?> responseEntity = taskSystemFacade.getActiveTasks(sessionID);
 
         //assertion message
         String activeTaskMessage = "an invalid session id was provided";
@@ -146,27 +133,12 @@ public class TaskManagerTest {
     @Test
     public void getActiveTasksInvalidTest(){
         //actions
-        ResponseEntity<?> responseEntity = TaskManager.getActiveTasks(new SessionID("bad id"));
+        ResponseEntity<?> responseEntity = taskSystemFacade.getActiveTasks(new SessionID("bad id"));
 
         //assertion message
         String activeTaskMessage = "an invalid session id was provided";
 
         //assert
         Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, activeTaskMessage);
-    }
-
-    @Test
-    public void getRecordTest() {
-        //setup
-        TaskManager.postCompletedTask(sessionID, task, image, reward);
-
-        //actions
-        List<TaskCompletionRecord> records = TaskManager.getRecord(Objects.requireNonNull(AccountManager.verifySession(sessionID)));
-
-        //assertion message
-        String getRecordMessage = "invalid account provided for given accountID";
-
-        //assertion statements
-        Assertions.assertEquals(1, records.size(), getRecordMessage);
     }
 }

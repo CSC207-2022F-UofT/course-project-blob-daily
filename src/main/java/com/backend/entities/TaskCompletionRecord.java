@@ -6,42 +6,52 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 /**
  * completion record for tasks
  */
 @Document(collection = "TaskCompletedCollection")
 public class TaskCompletionRecord {
     //instance variables
-    @SuppressWarnings("unused")
     @Id
     private String ID;
     @Transient
     private final AccountID accountIDObject;
     private final String accountID;
     private final String timestamp;
-    private final String task;
+    private final String name;
     private final String image;
 
-    //constructors
-    public TaskCompletionRecord(AccountID accountIDObject, String timestamp, String task, String image){
+    /**
+     * Task completion record constructor
+     * @param accountIDObject of type AccountID, the account that completed the task
+     * @param timestamp of type String, the time the task was completed
+     * @param name of type String, the name of the task
+     * @param image of type String, the link of the image
+     */
+    public TaskCompletionRecord(AccountID accountIDObject, String timestamp, String name, String image){
         this.accountIDObject = accountIDObject;
         this.accountID = accountIDObject.getID();
         this.timestamp = timestamp;
-        this.task = task;
+        this.name = name;
         this.image = image;
     }
 
+    /**
+     * Task completion record constructor
+     * @param accountID of type String, the account that completed the task
+     * @param timestamp of type String, the time the task was completed
+     * @param name of type String, the name of the task
+     * @param image of type String, the link of the image
+     */
     @PersistenceCreator
-    public TaskCompletionRecord(String accountID, String timestamp, String task, String image) {
+    public TaskCompletionRecord(String accountID, String timestamp, String name, String image) {
         this.accountIDObject = new AccountID(accountID);
         this.accountID = accountID;
         this.timestamp = timestamp;
-        this.task = task;
+        this.name = name;
         this.image = image;
     }
 
-    //getters
     /**
      * get the unique ID
      * @return a string of ID
@@ -79,8 +89,8 @@ public class TaskCompletionRecord {
      * gets the task name
      * @return a string of the task name
      */
-    public String getTask(){
-        return this.task;
+    public String getName(){
+        return this.name;
     }
 
     /**

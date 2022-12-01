@@ -4,7 +4,7 @@ import com.backend.QuestPetsApplication;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.users.Account;
 import com.backend.repositories.AccountsRepo;
-import com.backend.usecases.AccountManager;
+import com.backend.usecases.managers.AccountManager;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

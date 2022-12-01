@@ -8,22 +8,25 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "TasksCollection")
 public class Task {
     //instance variables
-    private final String task;
+    private final String name;
     private final double reward;
 
-    //constructor
-    public Task(String task, double reward){
-        this.task = task;
+    /**
+     * Task constructor
+     * @param name of type String, the name of the task
+     * @param reward of type double, the reward of the task
+     */
+    public Task(String name, double reward){
+        this.name = name;
         this.reward = reward;
     }
 
-    //getters
     /**
      * gets the task name
      * @return a string of the task name
      */
     public String getName(){
-        return this.task;
+        return this.name;
     }
 
     /**

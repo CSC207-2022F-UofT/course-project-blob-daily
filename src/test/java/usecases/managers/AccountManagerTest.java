@@ -1,11 +1,11 @@
-package usecases;
+package usecases.managers;
 
 import com.backend.QuestPetsApplication;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.users.Account;
 import com.backend.entities.users.ProtectedAccount;
-import com.backend.usecases.AccountManager;
+import com.backend.usecases.managers.AccountManager;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

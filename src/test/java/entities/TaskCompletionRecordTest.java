@@ -44,7 +44,7 @@ public class TaskCompletionRecordTest {
         Assertions.assertEquals(expectedAccountIDObj, complete.getAccountIDObject(), getConstructorMessage);
         Assertions.assertEquals(expectedAccountIDObj.getID(), complete.getAccountID(), getConstructorMessage);
         Assertions.assertEquals(expectedTimestamp, complete.getTimestamp(), getConstructorMessage);
-        Assertions.assertEquals(expectedName, complete.getTask(), getConstructorMessage);
+        Assertions.assertEquals(expectedName, complete.getName(), getConstructorMessage);
         Assertions.assertEquals(expectedImage, complete.getImage());
     }
 
@@ -69,7 +69,7 @@ public class TaskCompletionRecordTest {
         assertThat(expectedAccountIDObj).usingRecursiveComparison().isEqualTo(complete.getAccountIDObject());
         Assertions.assertEquals(expectedAccountID, complete.getAccountID(), getConstructorMessage);
         Assertions.assertEquals(expectedTimestamp, complete.getTimestamp(), getConstructorMessage);
-        Assertions.assertEquals(expectedName, complete.getTask(), getConstructorMessage);
+        Assertions.assertEquals(expectedName, complete.getName(), getConstructorMessage);
         Assertions.assertEquals(expectedImage, complete.getImage());
     }
 
@@ -153,7 +153,7 @@ public class TaskCompletionRecordTest {
         String getConstructorMessage = "Given parameters does not match expected parameters";
 
         //asserts
-        Assertions.assertEquals(expectedName, complete.getTask(), getConstructorMessage);
+        Assertions.assertEquals(expectedName, complete.getName(), getConstructorMessage);
     }
 
     @Test
