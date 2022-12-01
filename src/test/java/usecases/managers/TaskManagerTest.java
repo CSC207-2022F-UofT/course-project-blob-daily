@@ -165,7 +165,7 @@ public class TaskManagerTest {
         String completeTaskMessage = "Unable finish task as it is already completed";
 
         //assertion statement
-        Assertions.assertTrue(expectedOutput, completeTaskMessage);
+        Assertions.assertFalse(expectedOutput, completeTaskMessage);
     }
 
     @Test

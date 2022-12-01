@@ -65,7 +65,11 @@ public class TaskManager {
                 current = task;
             }
         }
-        return current != null && current.getReward() == reward;
+
+        if (current == null)  {
+            return false;
+        }
+        return current.getReward() == reward;
     }
 
     /**
@@ -133,6 +137,7 @@ public class TaskManager {
     public List<TaskActive> newActiveTasks() {
         //empty active tasks in order to replace them
         List<Task> tasks = this.taskRepo.findAll();
+        System.out.println(tasks.get(0).getName());
         List<Integer> prev = new ArrayList<>();
         Random rand = new Random();
 
@@ -145,7 +150,9 @@ public class TaskManager {
                 Task task = tasks.get(num);
                 prev.add(num);
 
-                this.activeRepo.save(new TaskActive(task.getName(), task.getReward(),
+                System.out.println(task.getName());
+
+                this.activeRepo.save(new TaskActive(task.getName(), task.getReward()    ,
                         new Timestamp(System.currentTimeMillis()).toString()));
             }
         }

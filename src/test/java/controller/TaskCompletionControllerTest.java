@@ -60,9 +60,7 @@ public class TaskCompletionControllerTest {
         HttpStatus expectedStatus = HttpStatus.OK;
 
         //action
-        ResponseEntity<?> actualResponse = completionController.postCompletedTask(
-                sessionID.toString(), task, image, reward
-        );
+        ResponseEntity<?> actualResponse = completionController.postCompletedTask(sessionID.toString(), task, image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task due to invalid session";
@@ -77,9 +75,7 @@ public class TaskCompletionControllerTest {
         HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
 
         //action
-        ResponseEntity<?> actualResponse = completionController.postCompletedTask(
-                "bad id", task, image, reward
-        );
+        ResponseEntity<?> actualResponse = completionController.postCompletedTask("bad id", task, image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task due to invalid session";
@@ -94,12 +90,8 @@ public class TaskCompletionControllerTest {
         HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
 
         //action
-        completionController.postCompletedTask(
-                sessionID.toString(), task, image, reward
-        );
-        ResponseEntity<?> actualResponse = completionController.postCompletedTask(
-                sessionID.toString(), task, image, reward
-        );
+        completionController.postCompletedTask(sessionID.toString(), task, image, reward);
+        ResponseEntity<?> actualResponse = completionController.postCompletedTask(sessionID.toString(), task, image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task as it is already completed";

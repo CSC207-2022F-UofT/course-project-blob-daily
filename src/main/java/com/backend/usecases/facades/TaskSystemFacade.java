@@ -39,7 +39,7 @@ public class TaskSystemFacade {
         }
 
         //check if the task name and reward are correct
-        if (this.taskManager.verifyTask(name, reward)) {
+        if (!this.taskManager.verifyTask(name, reward)) {
             return LogHandler.logError(new Exception("Task does not exist"), HttpStatus.BAD_REQUEST);
         }
 
