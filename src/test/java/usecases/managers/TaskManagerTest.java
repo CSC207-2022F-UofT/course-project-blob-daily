@@ -153,19 +153,20 @@ public class TaskManagerTest {
         String completeTaskMessage = "Unable finish task as it is already completed";
 
         //assertion statement
-        Assertions.assertTrue(expectedOutput, completeTaskMessage);
+        Assertions.assertFalse(expectedOutput, completeTaskMessage);
     }
 
     @Test
-    public void checkCompletedInvalidTest(){
+    public void checkCompletedAlreadyCompletedTest(){
         //setup
+        taskManager.completeTask(accountID, task, image);
         boolean expectedOutput = taskManager.checkCompleted(task, accountID);
 
         //assertion message
         String completeTaskMessage = "Unable finish task as it is already completed";
 
         //assertion statement
-        Assertions.assertFalse(expectedOutput, completeTaskMessage);
+        Assertions.assertTrue(expectedOutput, completeTaskMessage);
     }
 
     @Test
