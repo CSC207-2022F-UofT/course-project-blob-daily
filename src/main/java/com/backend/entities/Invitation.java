@@ -72,7 +72,7 @@ public class Invitation {
     }
 
     /**
-     * Retrive the String of the sender for this given instance
+     * Retrieve the String of the sender for this given instance
      * @return the String of the sender for this given instance
      */
     public String getSenderID(){
@@ -80,7 +80,7 @@ public class Invitation {
     }
 
     /**
-     * Retrive the String of the receiver for this given instance
+     * Retrieve the String of the receiver for this given instance
      * @return the String of the receiver for this given instance
      */
     public String getReceiverID(){
@@ -92,9 +92,6 @@ public class Invitation {
      * @return the java.u
      */
     public Date getTimestamp() {
-        if(timestamp == null) {
-            return null;
-        }
         return this.timestamp;
     }
 }

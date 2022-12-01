@@ -1,4 +1,4 @@
-package com.backend.usecases;
+package com.backend.usecases.managers;
 
 import com.backend.entities.Friend;
 import com.backend.entities.IDs.AccountID;
@@ -28,7 +28,7 @@ public class FriendsManager {
         FriendsManager.friendsRepo = friendsRepo;
     }
     // helper functions
-    public static ResponseEntity<Object> getUserFriends(String sessionID) {
+    public ArrayList<> getUserFriends(String sessionID) {
 
         AccountID userID = AccountManager.verifySession(new SessionID(sessionID));
         if (userID == null) {
@@ -49,10 +49,8 @@ public class FriendsManager {
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
     }
 
-    private static ArrayList<String> getFriends(String username) {
-        AccountID userID = AccountManager.getAccountIDByUsername(username);
-        assert userID != null;
-        Optional<Friend> friendList = friendsRepo.findById(userID.getID());
+    private ArrayList<String> getFriends(String userID) {
+        Optional<Friend> friendList = friendsRepo.findById(userID);
         if (friendList.isPresent()) {
             return friendList.get().getFriends();
         }
@@ -69,62 +67,26 @@ public class FriendsManager {
     }
 
     // Use cases
-    @SuppressWarnings("unchecked")
-    public static ResponseEntity<Object> addFriend(String username, String friendUsername, String sessionID) {
-        AccountID userAccount = AccountManager.getAccountIDByUsername(username);
-        assert userAccount != null;
-        String userID = userAccount.getID();
-        AccountID friendAccount = AccountManager.getAccountIDByUsername(friendUsername);
-        assert friendAccount != null;
-        String friendID = friendAccount.getID();
+    public static ResponseEntity<Object> addFriend(String userID, String friendUserID) {
 
         if (friendsRepo.existsById(userID)) {
-            ResponseEntity<Object> verification = FriendsManager.getUserFriends(sessionID);
-            if (!(verification.getBody() instanceof ArrayList)) return verification;
+            ArrayList<String> friendsList = new ArrayList<>();
+            if(friendsRepo.findById(userID).isPresent()) {
+                friendsList = friendsRepo.findById(userID).get().getFriends();
+            }
 
-            ArrayList<String> friendsList = (ArrayList<String>) verification.getBody();
-
-            if (friendsList.contains(friendID)) {
+            if (friendsList.contains(friendUserID)) {
                 return LogHandler.logError(new FileAlreadyExistsException("Friend already exists!"), HttpStatus.CONFLICT);
             } else {
-                friendsList.add(friendID);
+                friendsList.add(friendUserID);
                 friendsRepo.save(new Friend(userID, friendsList));
-
             }
         } else {
             ArrayList<String> friendsList = new ArrayList<>();
-            friendsList.add(friendID);
+            friendsList.add(friendUserID);
             friendsRepo.save(new Friend(userID, friendsList));
         }
         return new ResponseEntity<>("Friend successfully added! for both sides!", HttpStatus.OK);
-    }
-
-    // Overloading method
-    public static ResponseEntity<Object> addFriend(String username, String friendUsername) {
-        AccountID userAccount = AccountManager.getAccountIDByUsername(username);
-        assert userAccount != null;
-        String userID = userAccount.getID();
-        AccountID friendAccount = AccountManager.getAccountIDByUsername(friendUsername);
-        assert friendAccount != null;
-        String friendID = friendAccount.getID();
-
-        if (friendsRepo.existsById(userID)) {
-
-            ArrayList<String> friendsList = FriendsManager.getFriends(userID);
-
-            if (friendsList.contains(friendID)) {
-                return LogHandler.logError(new FileAlreadyExistsException("Friend already exists!"), HttpStatus.CONFLICT);
-            } else {
-                friendsList.add(friendID);
-                friendsRepo.save(new Friend(userID, friendsList));
-
-            }
-        } else {
-            ArrayList<String> friendsList = new ArrayList<>();
-            friendsList.add(friendID);
-            friendsRepo.save(new Friend(userID, friendsList));
-        }
-        return new ResponseEntity<>("Friend successfully added for both sides!", HttpStatus.OK);
     }
 
     // delete friend
@@ -173,7 +135,6 @@ public class FriendsManager {
 
     // used by deleteAccount in AccountManager
     public static ResponseEntity<Object> deleteAllCorrelatedFriends(String sessionID) {
-
         // Check if valid session
         AccountID accountID = AccountManager.verifySession(new SessionID(sessionID));
         if(accountID == null) {
@@ -193,7 +154,7 @@ public class FriendsManager {
             updatedList.remove(accountID.getID());
             friendsRepo.save(new Friend(friend.getAccountID(), updatedList));
         }
-        return new ResponseEntity<>("This is what it returned", HttpStatus.OK);
+        return new ResponseEntity<>("Delete user for all Correlated Friends list!", HttpStatus.OK);
     }
 
 }

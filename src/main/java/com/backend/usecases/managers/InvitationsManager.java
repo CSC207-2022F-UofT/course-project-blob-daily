@@ -1,9 +1,8 @@
-package com.backend.usecases;
+package com.backend.usecases.managers;
 
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Invitation;
-import com.backend.entities.users.Account;
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.error.exceptions.SessionException;
 import com.backend.error.handlers.LogHandler;
@@ -32,7 +31,7 @@ public class InvitationsManager {
     public static boolean invitationExists(String senderID, String receiverID) {
         return invitationsRepo.findBySenderIDAndReceiverID(senderID, receiverID) != null;
     }
-    public static ResponseEntity<Object> checkUsersExist(AccountID sender, AccountID receiver) {
+    private static ResponseEntity<Object> checkUsersExist(AccountID sender, AccountID receiver) {
         if (sender == null && receiver == null) {
             return LogHandler.logError(new NullPointerException("Sender and receiver does not exist!"), HttpStatus.NOT_FOUND);
         } else if (sender == null) {
@@ -42,16 +41,7 @@ public class InvitationsManager {
         else return null;
     }
 
-    public static ResponseEntity<Object> verifyInvitation(String currentUserName, String senderUsername, String receiverUsername, String sessionID) {
-
-        // Check if valid session
-        AccountID accountID = AccountManager.verifySession(new SessionID(sessionID));
-        if(accountID == null) {
-            return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        else if(!((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(accountID).getBody())).getUsername().equals(currentUserName)) {
-            return LogHandler.logError(new SessionException("Invalid session!"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    private static ResponseEntity<Object> verifyInvitation(String senderUsername, String receiverUsername) {
 
         // Update to use AccountManager
         AccountID sender = AccountManager.getAccountIDByUsername(senderUsername);
@@ -66,7 +56,7 @@ public class InvitationsManager {
 
         // Check if sender and receiver are not the same
         if (senderID.equals(receiverID)) {
-            throw new InvalidParameterException("Sender and Receiver are the same!");
+            return LogHandler.logError(new InvalidParameterException("Sender and Receiver are the same!"), HttpStatus.CONFLICT);
         }
 
         ArrayList<String> senderAndReceiverID = new ArrayList<>();
@@ -75,29 +65,34 @@ public class InvitationsManager {
 
         return new ResponseEntity<>(senderAndReceiverID, HttpStatus.OK);
     }
-    public static ResponseEntity<Object> deleteAllCorrelatedInvitations(String userName, String sessionID) {
+    public static ResponseEntity<Object> deleteAllCorrelatedInvitations(String sessionID) {
 
         AccountID accountID = AccountManager.verifySession(new SessionID(sessionID));
-        if(!((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(accountID).getBody())).getUsername().equals(userName)) {
-            return LogHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        if(accountID == null) return LogHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
 
-        assert accountID != null;
-        List<Invitation> invitationsAsSender = invitationsRepo.findAllByReceiverID(accountID.getID());
+        List<Invitation> invitationsAsSender = invitationsRepo.findAllBySenderID(accountID.getID());
         List<Invitation> invitationsAsReceiver = invitationsRepo.findAllByReceiverID(accountID.getID());
 
-        invitationsRepo.deleteAllByReceiverID(invitationsAsReceiver);
-        invitationsRepo.deleteAllBySenderID(invitationsAsSender);
+        if(invitationsAsReceiver.size() + invitationsAsSender.size() == 0){
+            return LogHandler.logError(new NoSuchFileException("No Invitations correlated to the user!"), HttpStatus.NOT_FOUND);
+        }
 
-        return new ResponseEntity<>("Correlated Invitations all successfully delete!", HttpStatus.OK);
+        invitationsRepo.deleteAll(invitationsAsReceiver);
+        invitationsRepo.deleteAll(invitationsAsSender);
+
+        return new ResponseEntity<>("Correlated Invitations all successfully deleted!", HttpStatus.OK);
     }
 
     // create invitation and save it to the database
     @SuppressWarnings("unchecked")
-    public static ResponseEntity<Object> createInvitation(String senderUsername, String receiverUsername, String sessionID) {
+    public static ResponseEntity<Object> createInvitation(String receiverUsername, String sessionID) {
+        System.out.println(sessionID);
         // check if invitation is valid
+        AccountID userID = AccountManager.verifySession(new SessionID(sessionID));
+        if(userID == null) return LogHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
+        String senderUsername = ((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(userID).getBody())).getUsername();
         ArrayList<String> senderAndReceiverID;
-        ResponseEntity<Object> verification = InvitationsManager.verifyInvitation(senderUsername, senderUsername, receiverUsername, sessionID);
+        ResponseEntity<Object> verification = InvitationsManager.verifyInvitation(senderUsername, receiverUsername);
         if(!(verification.getBody() instanceof ArrayList)) return verification;
         senderAndReceiverID = (ArrayList<String>) verification.getBody();
 
@@ -107,6 +102,13 @@ public class InvitationsManager {
         // Check if invitation already exists
         if (invitationExists(senderID, receiverID)) {
             return LogHandler.logError(new FileAlreadyExistsException("Invitation already sent!"), HttpStatus.PRECONDITION_FAILED);
+        }
+
+        // check if the other user already sent invitation
+        if(invitationExists(receiverID, senderID)) {
+            // if then, the automatically accept each other
+            handleInvitation(receiverUsername, sessionID, true);
+            return new ResponseEntity<Object>("Friend request automatically accepted!", HttpStatus.OK);
         }
 
         // Check if sender and receiver are already friends
@@ -124,11 +126,13 @@ public class InvitationsManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static ResponseEntity<Object> withdrawInvitation(String senderUsername, String receiverUsername, String sessionID) {
+    public static ResponseEntity<Object> withdrawInvitation(String receiverUsername, String sessionID) {
 
-        // check if invitation is valid
+        AccountID userID = AccountManager.verifySession(new SessionID(sessionID));
+        if(userID == null) return LogHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
+        String senderUsername = ((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(userID).getBody())).getUsername();
         ArrayList<String> senderAndReceiverID;
-        ResponseEntity<Object> verification = InvitationsManager.verifyInvitation(senderUsername, senderUsername, receiverUsername, sessionID);
+        ResponseEntity<Object> verification = InvitationsManager.verifyInvitation(senderUsername, receiverUsername);
         if(!(verification.getBody() instanceof ArrayList)) return verification;
         senderAndReceiverID = (ArrayList<String>) verification.getBody();
 
@@ -151,16 +155,19 @@ public class InvitationsManager {
     }
 
     // delete invitation from the database
-    public static ResponseEntity<Object> deleteInvitation(String senderID, String receiverID) {
-        invitationsRepo.deleteById(senderID + receiverID);
+    public static ResponseEntity<Object> deleteInvitation(String accepterID, String senderID) {
+        System.out.println(accepterID + senderID);
+        invitationsRepo.deleteById(senderID + accepterID);
         return new ResponseEntity<>("Invitation successfully deleted!", HttpStatus.OK);
     }
 
     @SuppressWarnings("unchecked")
-    public static ResponseEntity<Object> handleInvitation(String senderUsername, String receiverUsername, String sessionID, boolean isAccepted){
-        // check if invitation & session is valid
+    public static ResponseEntity<Object> handleInvitation(String receiverUsername, String sessionID, boolean isAccepted){
+        AccountID userID = AccountManager.verifySession(new SessionID(sessionID));
+        if(userID == null) return LogHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
+        String senderUsername = ((ProtectedAccount) Objects.requireNonNull(AccountManager.getAccountInfo(userID).getBody())).getUsername();
         ArrayList<String> senderAndReceiverID;
-        ResponseEntity<Object> verification = InvitationsManager.verifyInvitation(receiverUsername, senderUsername, receiverUsername, sessionID);
+        ResponseEntity<Object> verification = InvitationsManager.verifyInvitation(receiverUsername, senderUsername);
         if(!(verification.getBody() instanceof ArrayList)) return verification;
         senderAndReceiverID = (ArrayList<String>) verification.getBody();
 
@@ -173,34 +180,41 @@ public class InvitationsManager {
         }
 
         // Otherwise, update each other's friend's list and delete the existing invitation
+        // and check if the other user already sent invitation
         if (isAccepted) {
-            ResponseEntity<Object> firstCheck = FriendsManager.addFriend(senderUsername, receiverUsername, sessionID);
+            // addFriend
+            ResponseEntity<Object> firstCheck = FriendsManager.addFriend(senderID, receiverID);
             if(firstCheck.getStatusCode() != HttpStatus.OK) return firstCheck;
-            ResponseEntity<Object> secondCheck = FriendsManager.addFriend(senderUsername, receiverUsername);
+            ResponseEntity<Object> secondCheck = FriendsManager.addFriend(receiverID, senderID);
             if(secondCheck.getStatusCode() != HttpStatus.OK) return secondCheck;
-            InvitationsManager.deleteInvitation(senderID, receiverID);
+            InvitationsManager.deleteInvitation(receiverID, senderID);
             return new ResponseEntity<>("invitation successfully accepted!", HttpStatus.OK);
         } else {
-            InvitationsManager.deleteInvitation(senderID, receiverID);
+            InvitationsManager.deleteInvitation(receiverID, senderID);
             return new ResponseEntity<>("invitation successfully declined!", HttpStatus.OK);
         }
     }
 
     // receive an ArrayList of invitations of the user
-    public static ResponseEntity<Object> getInvitations(String userName, String sessionID){
+    public static ResponseEntity<Object> getInvitations(String sessionID, boolean isReceiver){
 
         // Check if valid session
-        if(AccountManager.verifySession(new SessionID(sessionID)) == null) return LogHandler.logError(new SessionException("Invalid SessionID"), HttpStatus.BAD_REQUEST);
+        AccountID userID = AccountManager.verifySession(new SessionID(sessionID));
+        if(userID == null) return LogHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
 
-        AccountID userID = AccountManager.getAccountIDByUsername(userName);
         JSONObject invites = new JSONObject();
+        List<Invitation> accounts;
 
-        assert userID != null;
-        List<Invitation> accounts = invitationsRepo.findAllByReceiverID(userID.getID());
+        if(isReceiver) {
+            accounts = invitationsRepo.findAllByReceiverID(userID.getID());
+        }
+        else {
+            accounts = invitationsRepo.findAllBySenderID(userID.getID());
+        }
         JSONArray users = new JSONArray();
 
         for (Invitation account : accounts) {
-            Account acc = (Account) AccountManager.getAccountInfo(new AccountID(account.getSenderID())).getBody();
+            ProtectedAccount acc = (ProtectedAccount) AccountManager.getAccountInfo(new AccountID(account.getSenderID())).getBody();
             users.add(acc);
         }
 

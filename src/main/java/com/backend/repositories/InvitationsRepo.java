@@ -13,6 +13,9 @@ public interface InvitationsRepo extends MongoRepository<Invitation, String> {
     @Query("{ 'receiverID' : ?0 }")
     List<Invitation> findAllByReceiverID(String receiverID);
 
+    @Query("{ 'senderID' : ?0 }")
+    List<Invitation> findAllBySenderID(String senderID);
+
     @Query("{ 'receiverID' : ?0}")
     void deleteAllByReceiverID(List<Invitation> invitationsAsReceiver);
 
