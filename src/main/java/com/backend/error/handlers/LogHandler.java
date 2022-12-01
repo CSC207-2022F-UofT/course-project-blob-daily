@@ -68,15 +68,6 @@ public class LogHandler implements IConditionHandler {
     }
 
     /**
-     * Log a severe message to the console with the given parameter
-     * @param message of type String, message to be displayed
-     */
-    @Override
-    public void logSevere(String message) {
-        logMessage(message, "SEVERE");
-    }
-
-    /**
      * Log an error message to the console with the given parameter
      * @param e of type Exception, exception with information to be displayed (message, stackTrace, etc)
      */
