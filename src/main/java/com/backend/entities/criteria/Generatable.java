@@ -11,7 +11,15 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public interface generatable extends verifiable{
+/**
+ * Interface to support generating a string for a given criteria
+ */
+public interface Generatable extends Verifiable {
+    /**
+     * Generate a new string given a criteria
+     * @param criteria of type Criteria, criteria to generate a new valid string with
+     * @return A new string based on the given criteria
+     */
     default String generate(Criteria criteria) {
         // Get min size and types based on criteria
         int sizeParam = 0;
@@ -31,7 +39,7 @@ public interface generatable extends verifiable{
         types = (ArrayList<String>) types.stream().distinct().collect(Collectors.toList());
 
         // Generate the new string based on the previous info
-        StringBuilder newString = new StringBuilder("");
+        StringBuilder newString = new StringBuilder();
         Random random = new Random();
         HashMap<String, String> legend = criteria.getLegend();
 

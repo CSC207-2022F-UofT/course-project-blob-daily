@@ -8,9 +8,12 @@ import com.backend.entities.criteria.conditions.SizeExpression;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representation of a AccountID Entity (ID, validity, generation, etc)
+ */
 public class AccountID extends ID {
 
-    public static Criteria criteria = new Criteria(new ArrayList<>(List.of(
+    public static final Criteria criteria = new Criteria(new ArrayList<>(List.of(
             new SizeExpression(20, null),
             new ContainsOnlyTypeExpression(new ArrayList<>(List.of("number", "letter", "special")), null),
             new ContainsAtleastTypeExpression(new ArrayList<>(List.of("special", "number", "letter", "uppercase", "lowercase")), null)

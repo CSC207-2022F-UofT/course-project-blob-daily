@@ -8,18 +8,17 @@ import java.util.logging.LogRecord;
 public class LogFormatter extends Formatter {
     // ANSI escape code
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[0;91m";
-    public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001b[33;1m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_GREY = "\u001B[37m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
 
-
+    /**
+     * Format log message to appeal to developers when debugging/testing
+     * @param record the log record to be formatted
+     * @return the formatted log message
+     */
     @Override
     public String format(LogRecord record) {
         StringBuilder builder = new StringBuilder();
@@ -79,6 +78,11 @@ public class LogFormatter extends Formatter {
         return builder.toString();
     }
 
+    /**
+     * Calculate the date in the format of year-month-day hour:minute:second from the given LONG parameter
+     * @param milliseconds of type long, milliseconds representation of date as a long
+     * @return the date in the above stated format
+     */
     private String calcDate(long milliseconds) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date resultDate = new Date(milliseconds);
