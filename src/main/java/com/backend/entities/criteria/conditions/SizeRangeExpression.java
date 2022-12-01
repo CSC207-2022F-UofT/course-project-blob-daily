@@ -8,7 +8,6 @@ public class SizeRangeExpression extends CriteriaExpression{
     private final int min;
     private final int max;
 
-
     // Constructor
     public SizeRangeExpression(int min, int max, String target) {
         super(min + " - " + max, "size of range", target);
