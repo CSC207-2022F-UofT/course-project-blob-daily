@@ -1,8 +1,8 @@
 package com.backend.usecases.managers;
 
 import com.backend.entities.Invitation;
-import com.backend.error.handlers.LogHandler;
 import com.backend.repositories.InvitationsRepo;
+import com.backend.usecases.IErrorHandler;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,11 @@ import java.util.*;
 @Configurable
 public class InvitationsManager {
     private static InvitationsRepo invitationsRepo;
+    private final IErrorHandler errorHandler;
 
-    public InvitationsManager(InvitationsRepo invitationsRepo) {
+    public InvitationsManager(InvitationsRepo invitationsRepo, IErrorHandler errorHandler) {
         InvitationsManager.invitationsRepo = invitationsRepo;
+        this.errorHandler = errorHandler;
     }
 
     // check if invitation exists
@@ -25,13 +27,13 @@ public class InvitationsManager {
         return invitationsRepo.findBySenderIDAndReceiverID(senderID, receiverID) != null;
     }
 
-    private static ResponseEntity<Object> checkUsersExist(String sender, String receiver) {
+    private ResponseEntity<Object> checkUsersExist(String sender, String receiver) {
         if (sender == null && receiver == null) {
-            return LogHandler.logError(new NullPointerException("Sender and receiver does not exist!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new NullPointerException("Sender and receiver does not exist!"), HttpStatus.NOT_FOUND);
         } else if (sender == null) {
-            return LogHandler.logError(new NullPointerException("Sender does not exist!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new NullPointerException("Sender does not exist!"), HttpStatus.NOT_FOUND);
         } else if (receiver == null)
-            return LogHandler.logError(new NullPointerException("Receiver does not exist!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new NullPointerException("Receiver does not exist!"), HttpStatus.NOT_FOUND);
 
         else return null;
     }
@@ -39,9 +41,9 @@ public class InvitationsManager {
     public ResponseEntity<Object> verifyInvitation(Invitation invitation) {
 
         // check if the invitation follows the entities structure
-        if (invitation.getReceiverIDObject() == null) return LogHandler.logError(new InvalidParameterException("Invalid receiverID"), HttpStatus.CONFLICT);
-        if (invitation.getSenderIDObject() == null) return LogHandler.logError(new InvalidParameterException("Invalid senderID"), HttpStatus.CONFLICT);
-        if (invitation.getTimestamp() == null) return LogHandler.logError(new InvalidParameterException("Invalid TimeStamp"), HttpStatus.CONFLICT);
+        if (invitation.getReceiverIDObject() == null) return this.errorHandler.logError(new InvalidParameterException("Invalid receiverID"), HttpStatus.CONFLICT);
+        if (invitation.getSenderIDObject() == null) return this.errorHandler.logError(new InvalidParameterException("Invalid senderID"), HttpStatus.CONFLICT);
+        if (invitation.getTimestamp() == null) return this.errorHandler.logError(new InvalidParameterException("Invalid TimeStamp"), HttpStatus.CONFLICT);
         String senderID = invitation.getSenderID();
         String receiverID = invitation.getReceiverID();
 
@@ -51,7 +53,7 @@ public class InvitationsManager {
 
         // Check if sender and receiver are not the same
         if (senderID.equals(receiverID)) {
-            return LogHandler.logError(new InvalidParameterException("Sender and Receiver are the same!"), HttpStatus.CONFLICT);
+            return this.errorHandler.logError(new InvalidParameterException("Sender and Receiver are the same!"), HttpStatus.CONFLICT);
         }
 
         ArrayList<String> senderAndReceiverID = new ArrayList<>();

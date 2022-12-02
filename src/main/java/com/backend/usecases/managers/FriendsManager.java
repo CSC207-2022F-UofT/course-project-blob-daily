@@ -1,8 +1,8 @@
 package com.backend.usecases.managers;
 
 import com.backend.entities.Friend;
-import com.backend.error.handlers.LogHandler;
 import com.backend.repositories.FriendsRepo;
+import com.backend.usecases.IErrorHandler;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,11 @@ import java.util.Optional;
 @Configurable
 public class FriendsManager {
     private static FriendsRepo friendsRepo;
+    private final IErrorHandler errorHandler;
 
-    public FriendsManager(FriendsRepo friendsRepo) {
+    public FriendsManager(FriendsRepo friendsRepo, IErrorHandler errorHandler) {
         FriendsManager.friendsRepo = friendsRepo;
+        this.errorHandler = errorHandler;
     }
 
     // Use-cases
@@ -50,7 +52,7 @@ public class FriendsManager {
             }
 
             if (friendsList.contains(friendUserID)) {
-                return LogHandler.logError(new FileAlreadyExistsException("Friend already exists!"), HttpStatus.CONFLICT);
+                return this.errorHandler.logError(new FileAlreadyExistsException("Friend already exists!"), HttpStatus.CONFLICT);
             } else {
                 friendsList.add(friendUserID);
                 friendsRepo.save(new Friend(userID, friendsList));
