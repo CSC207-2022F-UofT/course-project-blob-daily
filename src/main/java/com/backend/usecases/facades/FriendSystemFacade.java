@@ -307,8 +307,8 @@ public class FriendSystemFacade {
 
     /**
      * Deletes all correlated invitation with the user
-     * @param sessionID of type String,
-     * @return
+     * @param sessionID of type String, the identifier used to reference account information
+     * @return a ResponseEntity detailing successful handing of deletion or any associated error
      */
     public ResponseEntity<Object> deleteAllCorrelatedInvitations(String sessionID) {
         AccountID userID = this.accountManager.verifySession(new SessionID(sessionID));

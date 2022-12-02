@@ -20,6 +20,11 @@ public class FriendsManager {
     private static FriendsRepo friendsRepo;
     private final IErrorHandler errorHandler;
 
+    /**
+     * Spring Boot Dependency Injection of the Friends Repository
+     * @param friendsRepo
+     * @param errorHandler
+     */
     public FriendsManager(FriendsRepo friendsRepo, IErrorHandler errorHandler) {
         FriendsManager.friendsRepo = friendsRepo;
         this.errorHandler = errorHandler;
