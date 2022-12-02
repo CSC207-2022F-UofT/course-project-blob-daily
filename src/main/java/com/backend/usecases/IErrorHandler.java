@@ -5,4 +5,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface IErrorHandler {
     ResponseEntity<Object> logError(Exception exception, HttpStatus status);
+    void logError(Exception exception);
 }

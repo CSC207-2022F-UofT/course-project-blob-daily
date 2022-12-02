@@ -54,7 +54,6 @@ public class LogHandler implements IConditionHandler, IErrorHandler {
      * Log an info message to the console with the given parameter
      * @param message of type String, message to be displayed
      */
-    @Override
     public void logInfo(String message) {
         logMessage(message, "INFO");
     }

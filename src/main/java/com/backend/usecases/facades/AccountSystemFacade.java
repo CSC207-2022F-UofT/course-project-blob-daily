@@ -133,12 +133,13 @@ public class AccountSystemFacade {
         // Check if the account exists
         if (accountID == null ) return errorHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
 
+        // Other manager calls
+
+
         // Delete account by the accountID
         if (!this.accountManager.deleteAccount(accountID)) {
             return errorHandler.logError(new AccountException("The given account could not be deleted"), HttpStatus.CONFLICT);
         }
-
-        // Other manager calls
 
         return new ResponseEntity<>("Successfully Deleted Account!", HttpStatus.OK);
     }
