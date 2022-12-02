@@ -39,7 +39,7 @@ public class Friend {
      * @return the AccountID as String for this given instance
      */
     @SuppressWarnings("unused")
-    public AccountID getaccountIDObject() {
+    public AccountID getAccountIDObject() {
         return this.accountIDObject;
     }
 

@@ -70,8 +70,8 @@ public class FriendSystemFacade {
                 ProtectedAccount friendAccount = this.accountManager.getAccountInfo(new AccountID(friendID));
                 friends.add(friendAccount);
             }
-            invites.put("friends", friends);
         }
+        invites.put("friends", friends);
         return new ResponseEntity<>(invites, HttpStatus.OK);
     }
 
@@ -238,10 +238,10 @@ public class FriendSystemFacade {
             if (firstCheck.getStatusCode() != HttpStatus.OK) return firstCheck;
             ResponseEntity<Object> secondCheck = this.friendsManager.addFriend(receiverID.getID(), senderID.getID());
             if (secondCheck.getStatusCode() != HttpStatus.OK) return secondCheck;
-            this.invitationsManager.deleteInvitation(receiverID.getID(), senderID.getID());
+            this.invitationsManager.deleteInvitation(senderID.getID(), receiverID.getID());
             return new ResponseEntity<>("invitation successfully accepted!", HttpStatus.OK);
         } else {
-            this.invitationsManager.deleteInvitation(receiverID.getID(), senderID.getID());
+            this.invitationsManager.deleteInvitation(senderID.getID(), receiverID.getID());
             return new ResponseEntity<>("invitation successfully declined!", HttpStatus.OK);
         }
     }
