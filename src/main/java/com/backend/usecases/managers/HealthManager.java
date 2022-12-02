@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ public class HealthManager {
      * @param accountID string that represents the current session and verifies the action
      * @param amount the double that represents the amount added to the pet's balance
      */
-    public void addHealth(String accountID, double amount){
+    public void updateHealth(String accountID, double amount){
         Optional<Pet> pet = this.petRepo.findById(accountID);
         if (pet.isEmpty()) {
             this.errorHandler.logError(new SessionException("Pet is null since accountID was invalid"));
@@ -53,22 +53,14 @@ public class HealthManager {
 
         int length = completionRecords.size();
         if (length == 0){
-            this.addHealth(accountID, -5);
+            this.updateHealth(accountID, -5);
             return;
         }
         TaskCompletionRecord lastTask =  completionRecords.get(length - 1);
-        String time = lastTask.getTimestamp().toString();
+        String date = lastTask.getDate();
+        String today = new Date(System.currentTimeMillis()).toString().substring(0, 10);
 
-        int lastCompletedYear = Integer.parseInt(time.substring(0, 4));
-        int lastCompletedMonth =  Integer.parseInt(time.substring(5, 7));
-        int lastCompletedDay =  Integer.parseInt(time.substring(8, 10));
-
-        LocalDate localDate = LocalDate.now();
-        int curYear = localDate.getYear();
-        int curMonth = localDate.getMonthValue();
-        int curDay = localDate.getDayOfMonth();
-
-        if (curYear == lastCompletedYear && curMonth == lastCompletedMonth && curDay == lastCompletedDay){
+        if(date.equals(today)){
             return;
         }
 
@@ -78,6 +70,6 @@ public class HealthManager {
             return;
         }
 
-        this.addHealth(accountID, -5);
+        this.updateHealth(accountID, -5);
     }
 }

@@ -209,29 +209,29 @@ public class PetSystemFacadeTest {
         Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);
     }
 
-//    @Test
-//    public void healthDecayFacadeTest(){
-//        //action
-//        ResponseEntity<?> responseEntity = petSystemFacade.healthDecay(sessionID);
-//
-//        //assertion message
-//        String errorMessage = "Unable to check health decay to invalid session";
-//
-//        //assertion statement
-//        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, errorMessage);
-//    }
-//
-//    @Test
-//    public void healthDecayFacadeInvalidTest(){
-//        //action
-//        ResponseEntity<?> responseEntity = petSystemFacade.healthDecay(new SessionID(""));
-//
-//        //assertion message
-//        String errorMessage = "Unexpected to complete health decay with invalid sessionID";
-//
-//        //assertion statement
-//        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);
-//    }
+    @Test
+    public void healthDecayFacadeTest(){
+        //action
+        ResponseEntity<?> responseEntity = petSystemFacade.healthDecay(sessionID);
+
+        //assertion message
+        String errorMessage = "Unable to check health decay to invalid session";
+
+        //assertion statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, errorMessage);
+    }
+
+    @Test
+    public void healthDecayFacadeInvalidTest(){
+        //action
+        ResponseEntity<?> responseEntity = petSystemFacade.healthDecay(new SessionID(""));
+
+        //assertion message
+        String errorMessage = "Unexpected to complete health decay with invalid sessionID";
+
+        //assertion statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);
+    }
 
     @Test
     public void getBalanceFacadeTest(){

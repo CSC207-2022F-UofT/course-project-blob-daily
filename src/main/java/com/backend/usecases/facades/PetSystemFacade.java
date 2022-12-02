@@ -3,6 +3,7 @@ package com.backend.usecases.facades;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.ShopItem;
+import com.backend.entities.TaskCompletionRecord;
 import com.backend.error.exceptions.SessionException;
 import com.backend.usecases.IErrorHandler;
 import com.backend.usecases.managers.*;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Configurable
@@ -24,16 +26,18 @@ public class PetSystemFacade {
     private final HealthManager healthManager;
     private final BalanceManager balanceManager;
     private final IErrorHandler errorHandler;
+    private final TaskManager taskManager;
 
     @Autowired
     public PetSystemFacade(ShopManager shopManager, AccountManager accountManager,
-                           PetManager petManager, HealthManager healthManager, BalanceManager balanceManager, IErrorHandler errorHandler){
+                           PetManager petManager, HealthManager healthManager, BalanceManager balanceManager, IErrorHandler errorHandler, TaskManager taskManager){
         this.shopManager = shopManager;
         this.accountManager = accountManager;
         this.petManager = petManager;
         this.healthManager = healthManager;
         this.balanceManager = balanceManager;
         this.errorHandler = errorHandler;
+        this.taskManager = taskManager;
     }
 
     /**
@@ -98,19 +102,19 @@ public class PetSystemFacade {
         if (accountID == null){
             return this.errorHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
         }
-        this.healthManager.addHealth(accountID.getID(), amount);
+        this.healthManager.updateHealth(accountID.getID(), amount);
         return new ResponseEntity<>("Health successfully updated", HttpStatus.OK);
     }
 
-//    public ResponseEntity<Object> healthDecay(SessionID sessionID){
-//        AccountID accountID = this.accountManager.verifySession(sessionID);
-//        if (accountID == null){
-//            return LogHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
-//        }
-//        List<TaskCompletionRecord> completionRecords = taskManager.getTaskCompletionRecords(accountID);
-//        this.healthManager.healthDecay(accountID.getID(), completionRecords);
-//        return new ResponseEntity<>("Health Decay checked", HttpStatus.OK);
-//    }
+    public ResponseEntity<Object> healthDecay(SessionID sessionID){
+        AccountID accountID = this.accountManager.verifySession(sessionID);
+        if (accountID == null){
+            return this.errorHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
+        }
+        List<TaskCompletionRecord> completionRecords = this.taskManager.getTaskCompletionRecords(accountID);
+        this.healthManager.healthDecay(accountID.getID(), completionRecords);
+        return new ResponseEntity<>("Health Decay checked", HttpStatus.OK);
+    }
 
     public ResponseEntity<Object> getBalance(SessionID sessionID){
         AccountID accountID = this.accountManager.verifySession(sessionID);
