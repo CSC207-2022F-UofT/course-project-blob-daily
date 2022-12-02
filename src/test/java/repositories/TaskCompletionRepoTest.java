@@ -41,7 +41,7 @@ public class TaskCompletionRepoTest {
 
     @BeforeEach
     public void setup() {
-        String username = "username";
+        String username = "gochugum";
         String password = "abc123!";
         sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(AccountManager.loginAccount(username, password).getBody())).get("sessionID"));
         accountID = AccountManager.verifySession(sessionID);

@@ -42,7 +42,7 @@ public class TaskSystemFacadeTest {
 
     @BeforeEach
     public void setup() {
-        String username = "username";
+        String username = "gochugum";
         String password = "abc123!";
         TaskActive active = taskActiveRepo.findAll().get(0);
 
