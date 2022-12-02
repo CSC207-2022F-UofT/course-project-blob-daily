@@ -180,10 +180,10 @@ public class FriendManagerTest {
         String user1AccountID = Objects.requireNonNull(this.accountManager.verifySession(user1SessionID)).getID();
         String user2AccountID = Objects.requireNonNull(this.accountManager.verifySession(user2SessionID)).getID();
 
-        ArrayList<String> user1List = new ArrayList<>();
-        user1List.add(user2AccountID);
         ArrayList<String> user2List = new ArrayList<>();
         user2List.add(user1AccountID);
+
+        this.friendsRepo.save(new Friend(new AccountID(user2AccountID), user2List));
 
         // Action
         boolean actualVal = this.friendsManager.areFriends(user1AccountID, user2AccountID);
@@ -192,6 +192,9 @@ public class FriendManagerTest {
         String areFriendsTestMessage = "User 1 is present!";
 
         Assertions.assertFalse(actualVal, areFriendsTestMessage);
+
+        // Custom CleanUp
+        this.friendsRepo.deleteById(user2AccountID);
     }
     @Test
     public void addFriendSuccessTest() {
@@ -276,11 +279,50 @@ public class FriendManagerTest {
         Assertions.assertFalse(actualResult, userExistsTrueMessage);
     }
     @Test
-    public void updateFriendsListSuccessTest() {
+    public void updateFriendsListTest() {
+        // Value
+        String user1AccountID = Objects.requireNonNull(this.accountManager.verifySession(user1SessionID)).getID();
+        String user2AccountID = Objects.requireNonNull(this.accountManager.verifySession(user2SessionID)).getID();
+        ArrayList<String> user1List = new ArrayList<>();
 
+        this.friendsRepo.save(new Friend(new AccountID(user2AccountID), user1List));
+
+        int previousSize = this.friendsManager.getFriends(user1AccountID).size();
+
+        Assertions.assertEquals(previousSize, 0);
+
+        user1List.add(user2AccountID);
+
+        // Assertion Message
+        String userExistsTrueMessage = "friend list not updated correctly";
+
+        // Action
+        this.friendsManager.updateFriendsList(new Friend(user1AccountID, user1List));
+
+        int updatedSize = this.friendsManager.getFriends(user1AccountID).size();
+
+        // Assertion Statement
+        Assertions.assertEquals(updatedSize, 1, userExistsTrueMessage);
+
+        // Custom Cleanup
+        this.friendsRepo.deleteById(user1AccountID);
+        this.friendsRepo.deleteById(user2AccountID);
     }
     @Test
-    public void updateFriendsListFailTest() {
+    public void deleteFriendByIDTest() {
+        // Values
+        String user1AccountID = Objects.requireNonNull(this.accountManager.verifySession(user1SessionID)).getID();
+        String user2AccountID = Objects.requireNonNull(this.accountManager.verifySession(user2SessionID)).getID();
+
+        ArrayList<String> user1List = new ArrayList<>();
+        user1List.add(user2AccountID);
+        ArrayList<String> user2List = new ArrayList<>();
+        user2List.add(user1AccountID);
+
+        this.friendsRepo.save(new Friend(new AccountID(user1AccountID), user1List));
+        this.friendsRepo.save(new Friend(new AccountID(user2AccountID), user2List));
+
+        // Action
 
     }
 }

@@ -72,7 +72,7 @@ public class FriendsManager {
         friendsRepo.save(friendObject);
     }
 
-    public void deleteFriendById(String accountID) {
+    public void deleteFriendByID(String accountID) {
         friendsRepo.deleteById(accountID);
     }
 

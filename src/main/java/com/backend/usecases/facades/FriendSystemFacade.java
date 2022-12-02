@@ -6,7 +6,7 @@ import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Invitation;
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.error.exceptions.SessionException;
-import com.backend.error.handlers.LogHandler;
+import com.backend.usecases.IErrorHandler;
 import com.backend.usecases.managers.AccountManager;
 import com.backend.usecases.managers.FriendsManager;
 import com.backend.usecases.managers.InvitationsManager;
@@ -27,19 +27,21 @@ public class FriendSystemFacade {
     private final AccountManager accountManager;
     private final InvitationsManager invitationsManager;
     private final FriendsManager friendsManager;
+    private final IErrorHandler errorHandler;
 
     @Autowired
-    public FriendSystemFacade(AccountManager accountManager, InvitationsManager invitationsManager, FriendsManager friendsManager) {
+    public FriendSystemFacade(AccountManager accountManager, InvitationsManager invitationsManager, FriendsManager friendsManager, IErrorHandler errorHandler) {
         this.accountManager = accountManager;
         this.invitationsManager = invitationsManager;
         this.friendsManager = friendsManager;
+        this.errorHandler = errorHandler;
     }
 
     private ResponseEntity<Object> verifySessionAndInvitation(String receiverUsername, String sessionID) {
         // check if it is a valid session
         AccountID userID = this.accountManager.verifySession(new SessionID(sessionID));
         if (userID == null)
-            return LogHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
 
         // receiver senderUsername
         String senderUsername = this.accountManager.getAccountInfo(userID).getUsername();
@@ -58,7 +60,7 @@ public class FriendSystemFacade {
     public ResponseEntity<Object> getUserFriends(String sessionID) {
         AccountID userID = this.accountManager.verifySession(new SessionID(sessionID));
         if (userID == null) {
-            return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.errorHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         JSONObject invites = new JSONObject();
@@ -78,7 +80,7 @@ public class FriendSystemFacade {
     public ResponseEntity<Object> deleteFriend(String friendUsername, String sessionID) {
         AccountID accountID = this.accountManager.verifySession(new SessionID(sessionID));
         if (accountID == null) {
-            return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.errorHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // Find each friend's accountID
@@ -90,17 +92,17 @@ public class FriendSystemFacade {
             ArrayList<String> friendList = this.friendsManager.getFriends(friendID);
 
             if (userList.size() == 0) {
-                return LogHandler.logError(new NoSuchFileException("Friend does not exist!"), HttpStatus.NOT_FOUND);
+                return this.errorHandler.logError(new NoSuchFileException("Friend does not exist!"), HttpStatus.NOT_FOUND);
             } else {
                 if (userList.contains(friendID)) {
                     userList.remove(friendID);
                     this.friendsManager.updateFriendsList(new Friend(new AccountID(userID), userList));
                 } else {
-                    return LogHandler.logError(new NoSuchFileException("Friend does not exist in user's list!"), HttpStatus.NOT_FOUND);
+                    return this.errorHandler.logError(new NoSuchFileException("Friend does not exist in user's list!"), HttpStatus.NOT_FOUND);
                 }
             }
             if (friendList.size() == 0) {
-                return LogHandler.logError(new NoSuchFileException("Friend does not exist!"), HttpStatus.NOT_FOUND);
+                return this.errorHandler.logError(new NoSuchFileException("Friend does not exist!"), HttpStatus.NOT_FOUND);
             } else {
                 if (friendList.contains(userID)) {
                     friendList.remove(userID);
@@ -110,21 +112,21 @@ public class FriendSystemFacade {
             return new ResponseEntity<>("Successfully removed users from each other's friendList!", HttpStatus.OK);
 
         } else if (!this.friendsManager.userExists(userID) && !this.friendsManager.userExists(friendID))
-            return LogHandler.logError(new NoSuchFileException("Both do not exist in each other's list!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new NoSuchFileException("Both do not exist in each other's list!"), HttpStatus.NOT_FOUND);
         else if (!this.friendsManager.userExists(userID))
-            return LogHandler.logError(new NoSuchFileException("User does not have friend in list!"), HttpStatus.NOT_FOUND);
-        return LogHandler.logError(new NoSuchFileException("Friend does not have user in list!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new NoSuchFileException("User does not have friend in list!"), HttpStatus.NOT_FOUND);
+        return this.errorHandler.logError(new NoSuchFileException("Friend does not have user in list!"), HttpStatus.NOT_FOUND);
     }
 
     // used by deleteAccount in AccountManager
     public ResponseEntity<Object> deleteAllCorrelatedFriends(String sessionID) {
         AccountID accountID = this.accountManager.verifySession(new SessionID(sessionID));
         if (accountID == null) {
-            return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.errorHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // Delete the user in FriendsDB
-        this.friendsManager.deleteFriendById(accountID.getID());
+        this.friendsManager.deleteFriendByID(accountID.getID());
 
         List<Friend> friends = this.friendsManager.getAllContainingUserID(accountID.getID());
 
@@ -139,7 +141,7 @@ public class FriendSystemFacade {
     public ResponseEntity<Object> getInvitations(String sessionID, boolean isReceiver) {
         AccountID accountID = this.accountManager.verifySession(new SessionID(sessionID));
         if (accountID == null) {
-            return LogHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.errorHandler.logError(new SessionException("Session does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         JSONObject invites = new JSONObject();
@@ -172,7 +174,7 @@ public class FriendSystemFacade {
 
         // Check if invitation already exists
         if (this.invitationsManager.invitationExists(senderID.getID(), receiverID.getID())) {
-            return LogHandler.logError(new FileAlreadyExistsException("Invitation already sent!"), HttpStatus.PRECONDITION_FAILED);
+            return this.errorHandler.logError(new FileAlreadyExistsException("Invitation already sent!"), HttpStatus.PRECONDITION_FAILED);
         }
 
         // check if other user already sent invitation
@@ -183,7 +185,7 @@ public class FriendSystemFacade {
         }
 
         if (this.friendsManager.areFriends(senderID.getID(), receiverID.getID())) {
-            return LogHandler.logError(new FileAlreadyExistsException("Users are already friends!"), HttpStatus.PRECONDITION_FAILED);
+            return this.errorHandler.logError(new FileAlreadyExistsException("Users are already friends!"), HttpStatus.PRECONDITION_FAILED);
         }
 
         // Create invitation
@@ -209,7 +211,7 @@ public class FriendSystemFacade {
 
         // Check if sender and receiver are not the same
         if (senderID.getID().equals(receiverID.getID())) {
-            return LogHandler.logError(new InvalidParameterException("Sender and Receiver are the same!"), HttpStatus.PRECONDITION_FAILED);
+            return this.errorHandler.logError(new InvalidParameterException("Sender and Receiver are the same!"), HttpStatus.PRECONDITION_FAILED);
         }
 
         // Check invitation exists in DB
@@ -217,7 +219,7 @@ public class FriendSystemFacade {
             // delete invitation
             return this.invitationsManager.deleteInvitation(receiverID.getID(), senderID.getID());
         } else {
-            return LogHandler.logError(new Exception("Invitation does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return this.errorHandler.logError(new Exception("Invitation does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -249,13 +251,13 @@ public class FriendSystemFacade {
     public ResponseEntity<Object> deleteAllCorrelatedInvitations(String sessionID) {
         AccountID userID = this.accountManager.verifySession(new SessionID(sessionID));
         if (userID == null)
-            return LogHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new SessionException("Invalid SessionID!"), HttpStatus.NOT_FOUND);
 
         List<Invitation> invitationsAsSender = this.invitationsManager.getAllBySenderID(userID.getID());
         List<Invitation> invitationsAsReceiver = this.invitationsManager.getAllByReceiverID(userID.getID());
 
         if (invitationsAsReceiver.size() + invitationsAsSender.size() == 0) {
-            return LogHandler.logError(new NoSuchFileException("No Invitations correlated to the user!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new NoSuchFileException("No Invitations correlated to the user!"), HttpStatus.NOT_FOUND);
         }
 
         this.invitationsManager.deleteAllInvitationsRelatedTo(invitationsAsReceiver);
