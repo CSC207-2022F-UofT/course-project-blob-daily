@@ -215,7 +215,7 @@ public class FriendSystemFacade {
         // Check invitation exists in DB
         if (this.invitationsManager.invitationExists(senderID.getID(), receiverID.getID())) {
             // delete invitation
-            return this.invitationsManager.deleteInvitation(senderID.getID(), receiverID.getID());
+            return this.invitationsManager.deleteInvitation(receiverID.getID(), senderID.getID());
         } else {
             return LogHandler.logError(new Exception("Invitation does not exist!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }

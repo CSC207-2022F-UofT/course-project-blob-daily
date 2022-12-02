@@ -20,7 +20,9 @@ public class FriendsRepoTest {
     private final FriendsRepo friendsRepo;
     private final AccountSystemFacade accountSystemFacade;
     private final FriendsManager friendsManager;
-    private SessionID sessionID;
+    private SessionID userSessionID;
+    private SessionID friend1SessionID;
+    private SessionID friend2SessionID;
 
     private final String username = "username";
     private final String password = "abc123!";
