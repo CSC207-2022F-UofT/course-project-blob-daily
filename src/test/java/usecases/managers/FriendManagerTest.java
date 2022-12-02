@@ -323,6 +323,6 @@ public class FriendManagerTest {
         this.friendsRepo.save(new Friend(new AccountID(user2AccountID), user2List));
 
         // Action
-
+        this.friendsManager.deleteFriendByID();
     }
 }

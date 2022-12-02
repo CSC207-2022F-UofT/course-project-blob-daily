@@ -52,22 +52,44 @@ public class Invitation {
         this.timestamp = timestamp;
     }
 
+    // Getters
+
+    /**
+     * Retrieve the AccountID String as the sender
+     * @return the AccountID String as the sender
+     */
     public String getSenderID() {
         return this.senderID;
     }
 
+    /**
+     * Retrieve the AccountID String as the receiver
+     * @return the AccountID String as the receiver
+     */
     public String getReceiverID() {
         return this.receiverID;
     }
 
+    /**
+     * Retrieve the AccountID Object as the sender
+     * @return the AccountID Object as the sender
+     */
     public AccountID getSenderIDObject() {
         return this.senderIDObject;
     }
 
+    /**
+     * Retrieve the Account Object as the retriever
+     * @return the Account Object as the retriever
+     */
     public AccountID getReceiverIDObject() {
         return this.receiverIDObject;
     }
 
+    /**
+     * Retrieve the TimeStamp as java.util.Date
+     * @return the TimeStamp as java.util.Date
+     */
     public Date getTimestamp() {
         return this.timestamp;
     }

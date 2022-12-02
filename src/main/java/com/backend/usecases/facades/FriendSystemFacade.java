@@ -29,6 +29,13 @@ public class FriendSystemFacade {
     private final FriendsManager friendsManager;
     private final IErrorHandler errorHandler;
 
+    /**
+     * Spring Boot Dependency Injection of accountManger, invitationsManger, friendsManager, and errorHandler
+     * @param accountManager is AccountManager to be injected
+     * @param invitationsManager is InvitationsManager to be injected
+     * @param friendsManager is FriendsManager to be injected
+     * @param errorHandler is ErrorHandler to be injected
+     */
     @Autowired
     public FriendSystemFacade(AccountManager accountManager, InvitationsManager invitationsManager, FriendsManager friendsManager, IErrorHandler errorHandler) {
         this.accountManager = accountManager;
@@ -37,6 +44,12 @@ public class FriendSystemFacade {
         this.errorHandler = errorHandler;
     }
 
+    /**
+     * A Helper function to verify both Session and Invitation
+     * @param receiverUsername of type String, username to reference and verify both session and invitation
+     * @param sessionID of type String, a sessionID to reference and verify both session and invitation
+     * @return a response entity detailing successful verification of session and invitation, or any associated error
+     */
     private ResponseEntity<Object> verifySessionAndInvitation(String receiverUsername, String sessionID) {
         // check if it is a valid session
         AccountID userID = this.accountManager.verifySession(new SessionID(sessionID));
@@ -57,6 +70,12 @@ public class FriendSystemFacade {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    /**
+     * Retrieves the friends of the user
+     * @param sessionID of type String, sessionID to reference corresponding account to find the user's friends
+     * @return a response entity of an array of protectedAccount that are the friends of the user in JSON format or any
+     * associated error
+     */
     public ResponseEntity<Object> getUserFriends(String sessionID) {
         AccountID userID = this.accountManager.verifySession(new SessionID(sessionID));
         if (userID == null) {
@@ -77,6 +96,12 @@ public class FriendSystemFacade {
         return new ResponseEntity<>(invites, HttpStatus.OK);
     }
 
+    /**
+     * Deletion of a friend (remove from DB) given a valid sessionID and friendUsername
+     * @param friendUsername of type String, a username to reference and delete the friend from the user's friend list
+     * @param sessionID of type String, sessionID to reference corresponding account to delete friend from
+     * @return a response entity detailing successful deletion of friend or any associated error
+     */
     public ResponseEntity<Object> deleteFriend(String friendUsername, String sessionID) {
         AccountID accountID = this.accountManager.verifySession(new SessionID(sessionID));
         if (accountID == null) {
@@ -118,6 +143,12 @@ public class FriendSystemFacade {
         return this.errorHandler.logError(new NoSuchFileException("Friend does not have user in list!"), HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Deletion of user's instance in all friends list that contains user (specific for Account Deletion)
+     * @param sessionID of type String, sessionID to reference corresponding account to delete from all friends list
+     * @return a response entity detailing successful deletion of user from every associated friends list or any
+     * associated error
+     */
     // used by deleteAccount in AccountManager
     public ResponseEntity<Object> deleteAllCorrelatedFriends(String sessionID) {
         AccountID accountID = this.accountManager.verifySession(new SessionID(sessionID));
@@ -138,6 +169,13 @@ public class FriendSystemFacade {
         return new ResponseEntity<>("Delete user for all Correlated Friends list!", HttpStatus.OK);
     }
 
+    /**
+     * Retrieve invitations of the user as Receiver or Sender
+     * @param sessionID of type String, sessionID to reference corresponding account to retrieve invitations
+     * @param isReceiver of type boolean, informs the function to retrieve invitations as sender or receiver
+     * @return a response entity detailing successful retrieval of invites, as well as a JSONObject of invitations as
+     * Array. Otherwise, returns any associated error
+     */
     public ResponseEntity<Object> getInvitations(String sessionID, boolean isReceiver) {
         AccountID accountID = this.accountManager.verifySession(new SessionID(sessionID));
         if (accountID == null) {
@@ -162,6 +200,12 @@ public class FriendSystemFacade {
         return new ResponseEntity<>(invites, HttpStatus.OK);
     }
 
+    /**
+     * Creation of Invitation instance with given parameters
+     * @param receiverUsername of type String, username to reference the user who is receiving the Invitation
+     * @param sessionID of type String, sessionID to reference corresponding sender account to create Invitation
+     * @return a response entity detailing successful creation of Invitation or any associated error
+     */
     @SuppressWarnings("unchecked")
     public ResponseEntity<Object> sendInvitation(String receiverUsername, String sessionID) {
         // check if it is a valid session
@@ -196,6 +240,12 @@ public class FriendSystemFacade {
         return new ResponseEntity<>("Invitation successfully sent!", HttpStatus.CREATED);
     }
 
+    /**
+     * Delete Invitation as sender
+     * @param receiverUsername as type of String, a reference to corresponding user that is receiving the Invitation
+     * @param sessionID as type of String, a sessionID to reference
+     * @return a response entity detailing successful withdrawal or any associated error
+     */
     @SuppressWarnings("unchecked")
     public ResponseEntity<Object> withdrawInvitation(String receiverUsername, String sessionID) {
         // check if it is a valid session
@@ -224,6 +274,13 @@ public class FriendSystemFacade {
 
     }
 
+    /**
+     * Accepts or Declines Invitation associated with the given username and sessionID
+     * @param receiverUsername of type String, a reference to corresponding user
+     * @param sessionID of type String, the identifier used reference the sender account information
+     * @param isAccepted of type boolean, the identifier used to determine if invitation is accepted or not
+     * @return a response entity detailing successful handling of invitation or any associated error
+     */
     @SuppressWarnings("unchecked")
     public ResponseEntity<Object> handleInvitation(String receiverUsername, String sessionID, boolean isAccepted) {
         // check if it is a valid session
@@ -248,6 +305,11 @@ public class FriendSystemFacade {
         }
     }
 
+    /**
+     * Deletes all correlated invitation with the user
+     * @param sessionID of type String,
+     * @return
+     */
     public ResponseEntity<Object> deleteAllCorrelatedInvitations(String sessionID) {
         AccountID userID = this.accountManager.verifySession(new SessionID(sessionID));
         if (userID == null)

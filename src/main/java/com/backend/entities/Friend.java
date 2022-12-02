@@ -43,6 +43,10 @@ public class Friend {
         return this.accountIDObject;
     }
 
+    /**
+     * Retrieve the AccountID as String for this given instance
+     * @return the AccountID as String for this given instance
+     */
     public String getAccountID() { return this.accountID; }
 
     /**
