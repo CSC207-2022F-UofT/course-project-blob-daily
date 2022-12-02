@@ -22,8 +22,8 @@ public class FriendsManager {
     public FriendsManager(FriendsRepo friendsRepo) {
         FriendsManager.friendsRepo = friendsRepo;
     }
-    // helper functions
 
+    // Use-cases
     public ArrayList<String> getFriends(String userID) {
         Optional<Friend> friendList = friendsRepo.findById(userID);
         if (friendList.isPresent()) {
@@ -41,7 +41,6 @@ public class FriendsManager {
         return false;
     }
 
-    // Use-cases
     public ResponseEntity<Object> addFriend(String userID, String friendUserID) {
 
         if (friendsRepo.existsById(userID)) {
@@ -64,6 +63,7 @@ public class FriendsManager {
         return new ResponseEntity<>("Friend successfully added! for both sides!", HttpStatus.OK);
     }
 
+    // Repo specific methods
     public boolean userExists(String userID) {
         return friendsRepo.existsById(userID);
     }

@@ -1,4 +1,4 @@
-package usecases;
+package usecases.managers;
 
 import com.backend.QuestPetsApplication;
 import com.backend.entities.IDs.AccountID;
