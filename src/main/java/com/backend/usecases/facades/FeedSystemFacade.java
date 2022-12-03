@@ -25,6 +25,13 @@ public class FeedSystemFacade {
     private final PetManager petManager;
     private final IErrorHandler errorHandler;
 
+    /**
+     * Spring Boot Dependency Injection
+     * @param accountManager the dependency to be injected
+     * @param taskManager the dependency to be injected
+     * @param petManager the dependency to be injected
+     * @param errorHandler the dependency to be injected
+     */
     @Autowired
     public FeedSystemFacade(AccountManager accountManager, TaskManager taskManager, PetManager petManager, IErrorHandler errorHandler) {
         this.accountManager = accountManager;
@@ -33,6 +40,11 @@ public class FeedSystemFacade {
         this.errorHandler = errorHandler;
     }
 
+    /**
+     * Get a list of feed data representing information regarding recent posts made by friends
+     * @param sessionID of type String, password to reference associated account
+     * @return a response entity detailing successful completion (with a newly generated SessionID) or any associated error
+     */
     public ResponseEntity<Object> getFeed(String sessionID) {
         // verify session
         AccountID accountID = this.accountManager.verifySession(new SessionID(sessionID));
@@ -41,7 +53,7 @@ public class FeedSystemFacade {
         }
 
         // get list of friends
-        List<String> friends = new ArrayList<>(List.of("3q'Xc3z!If9W`Yf3G%Ms", "9j:Op4y<Ga6R+Cn9R>Lc", "1Q.Wm4V`Dm2Q$Fz8m]Ec"));
+        List<String> friends = new ArrayList<>(List.of("7T~Sp2w%Vl9t\"Wk4V]Fp"));
 
         // wrap FeedItem Objects
         List<FeedItem> feedItems = new ArrayList<>();
