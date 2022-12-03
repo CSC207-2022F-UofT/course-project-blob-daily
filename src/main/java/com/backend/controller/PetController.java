@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 
 @RestController
 public class PetController {
@@ -35,11 +34,11 @@ public class PetController {
     /**
      * Post request to replace the current pet with the same pet with an updated outfit from the database
      * @param sessionID string that represents the current session and verifies the action
-     * @param newOutfit ArrayList of ShopItems that will be for the updated outfit
+     * @param shopItem ShopItem that will be for the updated outfit
      */
     @PostMapping("/updatePetOutfit")
-    public ResponseEntity<Object> updatePetOutfit(@RequestParam SessionID sessionID, ArrayList<ShopItem> newOutfit){
-        return this.petSystemFacade.updateCurrentOutfit(sessionID, newOutfit);
+    public ResponseEntity<Object> updatePetOutfit(@RequestParam SessionID sessionID, ShopItem shopItem){
+        return this.petSystemFacade.updateCurrentOutfit(sessionID, shopItem);
     }
 
     /**

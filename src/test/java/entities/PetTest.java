@@ -19,7 +19,7 @@ public class PetTest {
     public void setUp() {
         LogHandler.DEPRECATED = true;
 
-        itemList.add(new ShopItem("1234567890", 19.90, "Pants", "Classic pair of white pants"));
+        itemList.add(new ShopItem("1234567890", 19.90, "Pants", "Classic pair of white pants", "", 2));
         pet = new Pet("1234567890", 19.90, 59.90, itemList, itemList);
     }
 
@@ -32,16 +32,16 @@ public class PetTest {
     @Test
     public void testPetGetID() {
         //Value
-        double expected = 19.90;
+        String expected = "1234567890";
 
         // Action
-        double actual = pet.getHealth();
+        String actual = pet.getID();
 
         // Assertion Message
         String verifyTestID= "The given invalid id is invalid";
 
         // Assertion Statement
-        Assertions.assertEquals(pet.getID(), "1234567890", verifyTestID);
+        Assertions.assertEquals(expected, actual, verifyTestID);
     }
 
     @Test

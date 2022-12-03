@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 
 @Service
 @Configurable
@@ -24,6 +23,14 @@ public class PetSystemFacade {
     private final BalanceManager balanceManager;
     private final IErrorHandler errorHandler;
 
+    /**
+     * Spring Boot Dependency Injection of the accountManager
+     * @param shopManager the dependency to be injected
+     * @param accountManager the dependency to be injected
+     * @param petManager the dependency to be injected
+     * @param balanceManager the dependency to be injected
+     * @param errorHandler the dependency to be injected
+     */
     @Autowired
     public PetSystemFacade(ShopManager shopManager, AccountManager accountManager, PetManager petManager, BalanceManager balanceManager, IErrorHandler errorHandler){
         this.shopManager = shopManager;
@@ -34,7 +41,7 @@ public class PetSystemFacade {
     }
 
     /**
-     * Post request of the pet owning the item and subtracting from its balance the cost of the item
+     * Post request of the allowing the pet owning the item and subtracting from its balance the cost of the item if it fulfills the requirements
      * @param sessionID string that represents the current session and verifies the action
      * @param itemID string that represents which item the pet is attempting to access
      */
@@ -69,12 +76,17 @@ public class PetSystemFacade {
         }
     }
 
-    public ResponseEntity<Object> updateCurrentOutfit(SessionID sessionID, ArrayList<ShopItem> newOutfit){
+    /**
+     * Post request of the allowing the pet to update the outfit
+     * @param sessionID string that represents the current session and verifies the action
+     * @param shopItem ShopItem of shopItem of outfit that the pet will wear
+     */
+    public ResponseEntity<Object> updateCurrentOutfit(SessionID sessionID, ShopItem shopItem){
         AccountID accountID = this.accountManager.verifySession(sessionID);
         if (accountID == null){
             return this.errorHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
         }
-        boolean result = this.shopManager.updateCurrentOutfit(accountID, newOutfit);
+        boolean result = this.shopManager.updateCurrentOutfit(accountID, shopItem);
         if (!result){
             return this.errorHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
         }
@@ -82,6 +94,10 @@ public class PetSystemFacade {
     }
 
 
+    /**
+     * Get request of the pet by the sessionID from the database
+     * @param sessionID string that represents the current session and verifies the action
+     */
     public ResponseEntity<Object> getPet(SessionID sessionID){
         AccountID accountID = this.accountManager.verifySession(sessionID);
         if (accountID == null){
@@ -90,6 +106,10 @@ public class PetSystemFacade {
         return new ResponseEntity<>(petManager.getPet(accountID.getID()), HttpStatus.OK);
     }
 
+    /**
+     * Get request of the pet's balance by the sessionID from the database
+     * @param sessionID string that represents the current session and verifies the action
+     */
     public ResponseEntity<Object> getBalance(SessionID sessionID){
         AccountID accountID = this.accountManager.verifySession(sessionID);
         if (accountID == null){
@@ -100,6 +120,9 @@ public class PetSystemFacade {
         return new ResponseEntity<>(balance, HttpStatus.OK);
     }
 
+    /**
+     * Get request of all the shopItems from the database
+     */
     public ResponseEntity<Object> getShopItems(){
         return new ResponseEntity<>(this.shopManager.getShopItems(), HttpStatus.OK);
     }

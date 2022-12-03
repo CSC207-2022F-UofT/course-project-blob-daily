@@ -20,6 +20,11 @@ public class HealthManager {
     private final PetRepo petRepo;
     private final IErrorHandler errorHandler;
 
+    /**
+     * Spring Boot Dependency Injection of the Accounts Repository
+     * @param petRepo the dependency to be injected
+     * @param errorHandler the dependency to be injected
+     */
     @Autowired
     public HealthManager(PetRepo petRepo, IErrorHandler errorHandler) {
         this.petRepo = petRepo;
@@ -27,7 +32,7 @@ public class HealthManager {
     }
 
     /**
-     * Post request of health added with the parameter amount
+     * Changing health with the parameter amount for the corresponding account
      * @param accountID string that represents the current session and verifies the action
      * @param amount the double that represents the amount added to the pet's balance
      */
@@ -37,8 +42,10 @@ public class HealthManager {
             this.errorHandler.logError(new SessionException("Pet is null since accountID was invalid"));
             return;
         }
-
         double updatedHealth = pet.get().getHealth() + amount;
+        if (updatedHealth > 100){
+            updatedHealth = 100;
+        }
 
         Pet updatedPet = new Pet(accountID, updatedHealth, pet.get().getBalance(), pet.get().getInventory(), pet.get().getCurrentOutfit());
         this.petRepo.save(updatedPet);
@@ -46,7 +53,6 @@ public class HealthManager {
 
     /**
      * Decay of health overtime if task have not been completed
-     *
      * @param accountID string that represents the current session and verifies the action
      */
     public void healthDecay(String accountID, List<TaskCompletionRecord> completionRecords){

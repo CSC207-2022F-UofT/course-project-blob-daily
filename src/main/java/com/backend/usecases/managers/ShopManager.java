@@ -24,6 +24,11 @@ public class ShopManager {
     private final PetRepo petRepo;
     private final IErrorHandler errorHandler;
 
+    /**
+     * Spring Boot Dependency Injection of the Accounts Repository
+     * @param petRepo the dependency to be injected
+     * @param errorHandler the dependency to be injected
+     */
     @Autowired
     public ShopManager(ShopItemRepo shopRepo, PetRepo petRepo, IErrorHandler errorHandler) {
         this.shopRepo = shopRepo;
@@ -33,7 +38,6 @@ public class ShopManager {
 
     /**
      * Returns all the shop items from the database through petRepo
-     *
      */
     public List<ShopItem> getShopItems() {
         return this.shopRepo.findAll();
@@ -41,7 +45,6 @@ public class ShopManager {
 
     /**
      * Returns a shop items from the database through petRepo
-     *
      * @param shopItemID string that represents the id of the shopItem
      */
     public ShopItem getShopItem(String shopItemID) {
@@ -54,17 +57,36 @@ public class ShopManager {
 
 
     /**
-     * Post request of the pet object after modifying it with the newOutfit
+     * Update the pet object after modifying it with the newOutfit
      * @param accountID string that represents the user and the pet's identity
-     * @param newOutfit ArrayList of shopItem that would represent which items the pet is wearing
+     * @param shopItem ShopItem that would represent which items the pet is wearing
      */
-    public boolean updateCurrentOutfit(AccountID accountID, ArrayList<ShopItem> newOutfit){
+    public boolean updateCurrentOutfit(AccountID accountID, ShopItem shopItem){
         Optional<Pet> pet = this.petRepo.findById(accountID.getID());
         if (pet.isEmpty()) {
             return false;
         }
 
-        Pet updatedPet = new Pet(accountID.getID(), pet.get().getHealth(), 0.0, pet.get().getInventory(), newOutfit);
+        ArrayList<ShopItem> curOutfit = pet.get().getCurrentOutfit();
+        ArrayList<ShopItem> newOutfit = new ArrayList<>();
+
+        boolean alreadyEquipped = false;
+
+        for(ShopItem s: curOutfit){
+            if (shopItem.getLocation() == s.getLocation()){
+                newOutfit.add(shopItem);
+                alreadyEquipped = true;
+            }
+            else{
+                newOutfit.add(s);
+            }
+        }
+
+        if(!alreadyEquipped){
+            newOutfit.add(shopItem);
+        }
+
+        Pet updatedPet = new Pet(accountID.getID(), pet.get().getHealth(), pet.get().getBalance(), pet.get().getInventory(), newOutfit);
         this.petRepo.save(updatedPet);
         return true;
     }

@@ -18,6 +18,11 @@ public class PetManager {
     private final PetRepo petRepo;
     private final IErrorHandler errorHandler;
 
+    /**
+     * Spring Boot Dependency Injection of the Accounts Repository
+     * @param petRepo the dependency to be injected
+     * @param errorHandler the dependency to be injected
+     */
     @Autowired
     public PetManager(PetRepo petRepo, IErrorHandler errorHandler) {
         this.petRepo = petRepo;
@@ -25,17 +30,21 @@ public class PetManager {
     }
 
     /**
-     * Get request to return the pet object and it's attributes
+     * Return the pet object and it's attributes
      * @param accountID string that represents the current session and verifies the action
      */
     public Pet getPet(String accountID){
         Optional<Pet> pet = petRepo.findById(accountID);
-        return pet.orElse(null);
+
+        if (pet.isEmpty()){
+            return null;
+        }
+        return pet.get();
     }
 
 
     /**
-     * Adds the default pet for an account
+     * Adds the default pet for an account into the database
      * @param id AccountId string that represents the pet linking to the account
      */
     public Pet initializePet(String id){
@@ -43,8 +52,11 @@ public class PetManager {
             return null;
         }
         ArrayList<ShopItem> curInventory = new ArrayList<>();
-        curInventory.add(new ShopItem("1480775928", 19.9, "brown pants", "a pair of classic fit brown pants"));
-        Pet pet = new Pet(id, 85.00, 25.4, curInventory, new ArrayList<>());
+        ArrayList<ShopItem> curOutfit = new ArrayList<>();
+        ShopItem shopItem = new ShopItem("1480775928", 19.9, "brown pants", "a pair of classic fit brown pants", "", 2);
+        curInventory.add(shopItem);
+        curOutfit.add(shopItem);
+        Pet pet = new Pet(id, 85.00, 25.4, curInventory, curOutfit);
         this.petRepo.save(pet);
         return pet;
     }

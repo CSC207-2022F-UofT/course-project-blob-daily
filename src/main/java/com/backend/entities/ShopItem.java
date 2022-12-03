@@ -19,15 +19,19 @@ public class ShopItem {
     private final Double cost;
     private final String name;
     private final String description;
+    private final String imageLink;
+    private final int location;
 
     // Contructor
     @PersistenceCreator
-    public ShopItem(String ID, Double cost, String name, String description){
+    public ShopItem(String ID, Double cost, String name, String description, String imageLink, int location){
         this.itemID = new ItemID(ID);
         this.ID = ID;
         this.cost = cost;
         this.name = name;
         this.description = description;
+        this.imageLink = imageLink;
+        this.location = location;
     }
 
     // Getters
@@ -57,5 +61,19 @@ public class ShopItem {
      */
     public String getDescription(){
         return description;
+    }
+
+    /**
+     * @return the link for the image
+     */
+    public String getImageLink(){
+        return imageLink;
+    }
+
+    /**
+     * @return the location
+     */
+    public int getLocation(){
+        return location;
     }
 }

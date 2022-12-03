@@ -15,6 +15,11 @@ public class BalanceManager {
     private final PetRepo petRepo;
     private final IErrorHandler errorHandler;
 
+    /**
+     * Spring Boot Dependency Injection of the Accounts Repository
+     * @param petRepo the dependency to be injected
+     * @param errorHandler the dependency to be injected
+     */
     @Autowired
     public BalanceManager(PetRepo petRepo, IErrorHandler errorHandler) {
         this.petRepo = petRepo;
@@ -22,7 +27,7 @@ public class BalanceManager {
     }
 
     /**
-     * Get request of balance from the database through the pet object
+     * Get the balance from the database through the pet object by the accountID
      * @param accountID string that represents the current session and verifies the action
      */
     public Double getBalance(String accountID){
@@ -37,7 +42,7 @@ public class BalanceManager {
     }
 
     /**
-     * Post request of balance changed with the parameter amount
+     * Update balance changed with the parameter amount for the corresponding account
      * @param accountID string that represents the current session and verifies the action
      * @param amount the double that represents the amount added to the pet's balance
      */
