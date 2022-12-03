@@ -1,7 +1,9 @@
 package usecases.facades;
 
 import com.backend.QuestPetsApplication;
+import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
+import com.backend.entities.users.Account;
 import com.backend.entities.users.ProtectedAccount;
 import com.backend.repositories.AccountsRepo;
 import com.backend.usecases.facades.AccountSystemFacade;
@@ -302,5 +304,95 @@ public class AccountSystemFacadeTest {
 
         // Assertion Statement
         Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, deleteMessage);
+    }
+
+    @Test
+    public void updateUsernameTest() {
+        // Setup (Not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.updateUsername(sessionID, "newUsername");
+        AccountID accountID = this.accountManager.getAccountIDByUsername("newUsername");
+        this.accountManager.deleteAccount(accountID);
+
+        // Assertion Message
+        String updateMessage = "Account was unexpectedly not updated when given credentials of account that exist";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, updateMessage);
+        Assertions.assertFalse(this.accountsRepo.existsById(accountID.getID()), updateMessage);
+    }
+
+    @Test
+    public void updateUsernameInvalidSessionTest() {
+        // Setup (Not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.updateUsername(new SessionID("invalidID"), "newUsername");
+
+        // Assertion Message
+        String updateMessage = "Account was unexpectedly updated when given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, updateMessage);
+    }
+
+    @Test
+    public void updateUsernameInvalidUsernameTest() {
+        // Setup (Not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.updateUsername(sessionID, "inv");
+
+        // Assertion Message
+        String updateMessage = "Account was unexpectedly updated when given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, updateMessage);
+    }
+
+    @Test
+    public void updatePasswordTest() {
+        // Setup (Not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.updatePassword(sessionID, "abc124!");
+        Account account = this.accountManager.validateCredentials(username, this.accountManager.hash("abc124!"));
+        this.accountManager.deleteAccount(account.getAccountIDObject());
+
+        // Assertion Message
+        String updateMessage = "Account was unexpectedly not updated when given credentials of account that exist";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, updateMessage);
+        Assertions.assertFalse(this.accountsRepo.existsById(account.getAccountID()), updateMessage);
+    }
+
+    @Test
+    public void updatePasswordInvalidSessionTest() {
+        // Setup (Not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.updatePassword(new SessionID("invalidID"), "abc124!");
+
+        // Assertion Message
+        String updateMessage = "Account was unexpectedly updated when given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, updateMessage);
+    }
+
+    @Test
+    public void updatePasswordInvalidUsernameTest() {
+        // Setup (Not Required)
+
+        // Action
+        ResponseEntity<Object> responseEntity = this.accountSystemFacade.updateUsername(sessionID, "inv");
+
+        // Assertion Message
+        String updateMessage = "Account was unexpectedly updated when given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, updateMessage);
     }
 }

@@ -72,14 +72,13 @@ public class PetManagerTest {
     @Test
     public void getPetTest(){
         // Action
-        Optional<Pet> expectedPet = petManager.getPet(accountID.getID());
+        Pet expectedPet = petManager.getPet(accountID.getID());
 
         // Assertion Message
         String addPetMessage = "The given sessionID to add Pet is invalid";
 
         // Assertion Statement
-        Assertions.assertTrue(expectedPet.isPresent());
-        Assertions.assertEquals(expectedPet.get().getID(), pet.getID(),  addPetMessage);
+        Assertions.assertEquals(expectedPet.getID(), pet.getID(),  addPetMessage);
     }
 
     @Test
@@ -148,11 +147,10 @@ public class PetManagerTest {
 
         // Action
         petManager.deletePet(accountID.getID());
-        Optional<Pet> pet = petManager.getPet(accountID.getID());
-        boolean actual = pet.isEmpty();
+        Pet pet = petManager.getPet(accountID.getID());
 
         // Assertion Statement
-        Assertions.assertTrue(actual);
+        Assertions.assertNull(pet);
 
     }
 
@@ -161,11 +159,10 @@ public class PetManagerTest {
 
         // Action
         petManager.deletePet("");
-        Optional<Pet> pet = petManager.getPet(accountID.getID());
-        boolean actual = pet.isEmpty();
+        Pet pet = petManager.getPet(accountID.getID());
 
         // Assertion Statement
-        Assertions.assertFalse(actual);
+        Assertions.assertNotNull(pet);
 
     }
 }

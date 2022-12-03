@@ -2,6 +2,7 @@ package com.backend.entities;
 
 
 import com.backend.entities.IDs.AccountID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.annotation.Transient;
@@ -16,9 +17,12 @@ import java.util.Date;
 public class TaskCompletionRecord {
     //instance variables
     @Id
+    @JsonIgnore
     private String ID;
     @Transient
+    @JsonIgnore
     private final AccountID accountIDObject;
+    @JsonIgnore
     private final String accountID;
     private final Date date;
     private final String name;
@@ -59,6 +63,7 @@ public class TaskCompletionRecord {
      * get the unique ID
      * @return a string of ID
      */
+    @JsonIgnore
     public String getID() {
         return this.ID;
     }
@@ -68,6 +73,7 @@ public class TaskCompletionRecord {
      * @return an accountID that completed the task
      */
     @Transient
+    @JsonIgnore
     public AccountID getAccountIDObject(){
         return this.accountIDObject;
     }

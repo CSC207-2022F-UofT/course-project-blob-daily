@@ -268,4 +268,102 @@ public class AccountControllerTest {
         // Assertion Statement
         Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), getAccountMessage);
     }
+
+    @Test
+    public void updateAccountUsernameTest() {
+        // Values
+        HttpStatus expectedStatus = HttpStatus.OK;
+
+        // Action
+        ResponseEntity<Object> actualResponse = this.accountController.updateAccountUsername(sessionID.getID(), "newUsername");
+
+        // Assertion Message
+        String getAccountMessage = "Unexpectedly not able to update information for a existent account given valid credentials";
+
+        // Assertion Statement
+        Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), getAccountMessage);
+        Assertions.assertNotNull(this.accountManager.validateCredentials("newUsername", this.accountManager.hash(password)), getAccountMessage);
+
+        // Special Tear-down
+        this.accountManager.deleteAccount(this.accountManager.validateCredentials("newUsername", this.accountManager.hash(password)).getAccountIDObject());
+    }
+
+    @Test
+    public void updateAccountUsernameInvalidSessionTest() {
+        // Values
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+
+        // Action
+        ResponseEntity<Object> actualResponse = this.accountController.updateAccountUsername("Invalid", "newUsername");
+
+        // Assertion Message
+        String getAccountMessage = "Unexpectedly able to update information for a existent account given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), getAccountMessage);
+    }
+
+    @Test
+    public void updateAccountUsernameInvalidUsernameTest() {
+        // Values
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+
+        // Action
+        ResponseEntity<Object> actualResponse = this.accountController.updateAccountUsername(sessionID.getID(), "inv");
+
+        // Assertion Message
+        String getAccountMessage = "Unexpectedly able to update information for a existent account given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), getAccountMessage);
+    }
+
+    @Test
+    public void updateAccountPasswordTest() {
+        // Values
+        HttpStatus expectedStatus = HttpStatus.OK;
+
+        // Action
+        ResponseEntity<Object> actualResponse = this.accountController.updateAccountPassword(sessionID.getID(), "abc124!");
+
+        // Assertion Message
+        String getAccountMessage = "Unexpectedly not able to update information for a existent account given valid credentials";
+
+        // Assertion Statement
+        Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), getAccountMessage);
+        Assertions.assertNotNull(this.accountManager.validateCredentials(username, this.accountManager.hash("abc124!")), getAccountMessage);
+
+        // Special Tear-down
+        this.accountManager.deleteAccount(this.accountManager.validateCredentials(username, this.accountManager.hash("abc124!")).getAccountIDObject());
+    }
+
+    @Test
+    public void updateAccountPasswordInvalidSessionTest() {
+        // Values
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+
+        // Action
+        ResponseEntity<Object> actualResponse = this.accountController.updateAccountPassword("InvalidID", "abc124!");
+
+        // Assertion Message
+        String getAccountMessage = "Unexpectedly able to update information for a existent account given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), getAccountMessage);
+    }
+
+    @Test
+    public void updateAccountPasswordInvalidPasswordTest() {
+        // Values
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+
+        // Action
+        ResponseEntity<Object> actualResponse = this.accountController.updateAccountPassword(sessionID.getID(), "InvalidPassword");
+
+        // Assertion Message
+        String getAccountMessage = "Unexpectedly able to update information for a existent account given invalid credentials";
+
+        // Assertion Statement
+        Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), getAccountMessage);
+    }
 }

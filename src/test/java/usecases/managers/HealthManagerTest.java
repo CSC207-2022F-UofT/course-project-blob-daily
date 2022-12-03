@@ -84,10 +84,8 @@ public class HealthManagerTest {
         //Action
         healthManager.updateHealth(accountID.getID(), 10);
 
-        Optional<Pet> pet = petManager.getPet(accountID.getID());
-
-        Assertions.assertTrue(pet.isPresent());
-        double actual = pet.get().getHealth();
+        Pet pet = petManager.getPet(accountID.getID());
+        double actual = pet.getHealth();
 
         Assertions.assertEquals(expected, actual);
     }
@@ -96,13 +94,11 @@ public class HealthManagerTest {
     public void noHealthDecayTest(){
         healthManager.healthDecay(accountID.getID(), completionRecords);
 
-        Optional<Pet> pet = petManager.getPet(accountID.getID());
-
-        Assertions.assertTrue(pet.isPresent());
+        Pet pet = petManager.getPet(accountID.getID());
 
         double expected = 85;
 
-        double actual = pet.get().getHealth();
+        double actual = pet.getHealth();
 
         Assertions.assertEquals(expected, actual);
     }
@@ -112,13 +108,11 @@ public class HealthManagerTest {
         List<TaskCompletionRecord> completed = new ArrayList<>();
         healthManager.healthDecay(accountID.getID(), completed);
 
-        Optional<Pet> pet = petManager.getPet(accountID.getID());
-
-        Assertions.assertTrue(pet.isPresent());
+        Pet pet = petManager.getPet(accountID.getID());
 
         double expected = 80;
 
-        double actual = pet.get().getHealth();
+        double actual = pet.getHealth();
 
         Assertions.assertEquals(expected, actual);
     }

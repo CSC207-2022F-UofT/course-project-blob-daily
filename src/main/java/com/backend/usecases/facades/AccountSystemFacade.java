@@ -10,6 +10,9 @@ import com.backend.error.exceptions.AccountInfoException;
 import com.backend.error.exceptions.SessionException;
 import com.backend.usecases.IErrorHandler;
 import com.backend.usecases.managers.AccountManager;
+import com.backend.usecases.managers.HealthManager;
+import com.backend.usecases.managers.PetManager;
+import com.backend.usecases.managers.TaskManager;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,15 +26,25 @@ import java.util.Map;
 @Service
 public class AccountSystemFacade {
     private final AccountManager accountManager;
+    private final PetManager petManager;
+    private final HealthManager healthManager;
+    private final TaskManager taskManager;
     private final IErrorHandler errorHandler;
 
     /**
      * Spring Boot Dependency Injection of the accountManager
+     *
      * @param accountManager the dependency to be injected
+     * @param petManager     the dependency to be injected
+     * @param healthManager  the dependency to be injected
+     * @param taskManager    the dependency to be injected
      */
     @Autowired
-    public AccountSystemFacade (AccountManager accountManager, IErrorHandler errorHandler) {
+    public AccountSystemFacade (AccountManager accountManager, PetManager petManager, HealthManager healthManager, TaskManager taskManager, IErrorHandler errorHandler) {
         this.accountManager = accountManager;
+        this.petManager = petManager;
+        this.healthManager = healthManager;
+        this.taskManager = taskManager;
         this.errorHandler = errorHandler;
     }
 
@@ -63,6 +76,9 @@ public class AccountSystemFacade {
 
         // Save to DB
         this.accountManager.updateAccount(account);
+
+        // Other Manager Calls
+        this.healthManager.healthDecay(account.getAccountID(), this.taskManager.getTaskCompletionRecords(account.getAccountIDObject()));
 
         JSONObject returnObject = new JSONObject(Map.of("sessionID", account.getSessionIDObject().getID()));
 
@@ -115,6 +131,7 @@ public class AccountSystemFacade {
         this.accountManager.updateAccount(account);
 
         // Other Manager Calls
+        this.petManager.initializePet(account.getAccountID());
 
         JSONObject returnObject = new JSONObject(Map.of("sessionID", account.getSessionIDObject().getID()));
 
@@ -134,7 +151,7 @@ public class AccountSystemFacade {
         if (accountID == null ) return errorHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
 
         // Other manager calls
-
+        this.petManager.deletePet(accountID.getID());
 
         // Delete account by the accountID
         if (!this.accountManager.deleteAccount(accountID)) {
@@ -162,9 +179,76 @@ public class AccountSystemFacade {
         ProtectedAccount protectedAccount = this.accountManager.getAccountInfo(accountID);
 
         if (protectedAccount == null) {
-            return errorHandler.logError(new AccountNotFoundException("The account connot be found with the given information"), HttpStatus.NOT_FOUND);
+            return errorHandler.logError(new AccountNotFoundException("The account cannot be found with the given information"), HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(protectedAccount, HttpStatus.OK);
+    }
+
+    /**
+     * Update account credentials associated with the given id and new username
+     * @param sessionID of type SessionID, the identifier used to reference account information
+     * @param newUsername of type String, newUsername to change the account credential to
+     * @return a new ProtectedAccount with new information associated with the given id parameter
+     */
+    public ResponseEntity<Object> updateUsername(SessionID sessionID, String newUsername) {
+        // Validate username
+        Username newUsernameObject = new Username(newUsername);
+
+        // Verify sessionID
+        AccountID accountID = this.accountManager.verifySession(sessionID);
+
+        // Check for errors
+        if (accountID == null) {
+            return errorHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
+        }
+        if (!newUsernameObject.isValid()) {
+            return this.errorHandler.logError(new AccountInfoException("This is not a valid username"), HttpStatus.BAD_REQUEST);
+        }
+
+        // Get account information
+        Account account = this.accountManager.getAccount(accountID);
+        this.accountManager.updateAccount(new Account(accountID, newUsername, account.getPassword(), account.getTimestamp()));
+        ProtectedAccount accountInformation = this.accountManager.getAccountInfo(accountID);
+
+        if (accountInformation == null) {
+            return errorHandler.logError(new AccountNotFoundException("The account cannot be found with the given information"), HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(accountInformation, HttpStatus.OK);
+    }
+
+    /**
+     * Update account credentials associated with the given id and new password
+     * @param sessionID of type SessionID, the identifier used to reference account information
+     * @param newPassword of type String, newPassword to change the account credential to
+     * @return a new ProtectedAccount with new information associated with the given id parameter
+     */
+    public ResponseEntity<Object> updatePassword(SessionID sessionID, String newPassword) {
+        // Validate password
+        Password newPasswordObject = new Password(newPassword);
+
+        if (!newPasswordObject.isValid()) {
+            return this.errorHandler.logError(new AccountInfoException("This is not a valid username"), HttpStatus.BAD_REQUEST);
+        }
+
+        // Verify sessionID
+        AccountID accountID = this.accountManager.verifySession(sessionID);
+
+        // Check for errors
+        if (accountID == null) {
+            return errorHandler.logError(new SessionException("Invalid Session"), HttpStatus.BAD_REQUEST);
+        }
+
+        // Get account information
+        Account account = this.accountManager.getAccount(accountID);
+        this.accountManager.updateAccount(new Account(accountID, account.getUsername(), this.accountManager.hash(newPassword), account.getTimestamp()));
+        ProtectedAccount accountInformation = this.accountManager.getAccountInfo(accountID);
+
+        if (accountInformation == null) {
+            return errorHandler.logError(new AccountNotFoundException("The account cannot be found with the given information"), HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(accountInformation, HttpStatus.OK);
     }
 }

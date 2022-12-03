@@ -186,54 +186,6 @@ public class PetSystemFacadeTest {
     }
 
     @Test
-    public void addHealthFacadeTest(){
-        //action
-        ResponseEntity<?> responseEntity = petSystemFacade.addHealth(sessionID, 10);
-
-        //assertion message
-        String errorMessage = "Unable to add Health to invalid session";
-
-        //assertion statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, errorMessage);
-    }
-
-    @Test
-    public void addHealthFacadeInvalidTest(){
-        //action
-        ResponseEntity<?> responseEntity = petSystemFacade.addHealth(new SessionID(""), 10);
-
-        //assertion message
-        String errorMessage = "Unexpected to complete add Health with invalid sessionID";
-
-        //assertion statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);
-    }
-
-    @Test
-    public void healthDecayFacadeTest(){
-        //action
-        ResponseEntity<?> responseEntity = petSystemFacade.healthDecay(sessionID);
-
-        //assertion message
-        String errorMessage = "Unable to check health decay to invalid session";
-
-        //assertion statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, errorMessage);
-    }
-
-    @Test
-    public void healthDecayFacadeInvalidTest(){
-        //action
-        ResponseEntity<?> responseEntity = petSystemFacade.healthDecay(new SessionID(""));
-
-        //assertion message
-        String errorMessage = "Unexpected to complete health decay with invalid sessionID";
-
-        //assertion statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);
-    }
-
-    @Test
     public void getBalanceFacadeTest(){
         //action
         ResponseEntity<?> responseEntity = petSystemFacade.getBalance(sessionID);
@@ -252,30 +204,6 @@ public class PetSystemFacadeTest {
 
         //assertion message
         String errorMessage = "Unexpected to complete getBalance with invalid sessionID";
-
-        //assertion statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);
-    }
-
-    @Test
-    public void updateBalanceFacadeTest(){
-        //action
-        ResponseEntity<?> responseEntity = petSystemFacade.updateBalance(sessionID, 10);
-
-        //assertion message
-        String errorMessage = "Unable to updateBalance due to invalid session";
-
-        //assertion statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, errorMessage);
-    }
-
-    @Test
-    public void updateBalanceFacadeInvalidTest(){
-        //action
-        ResponseEntity<?> responseEntity = petSystemFacade.updateBalance(new SessionID(""), 10);
-
-        //assertion message
-        String errorMessage = "Unexpected to complete updateBalance with invalid sessionID";
 
         //assertion statement
         Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);

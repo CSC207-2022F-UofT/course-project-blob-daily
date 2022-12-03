@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Objects;
 
@@ -34,12 +36,21 @@ public class AccountsRepoTest {
 
     @BeforeEach
     public void setup() {
-        sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(username, password).getBody())).get("sessionID"));
+        ResponseEntity<Object> register = this.accountSystemFacade.registerAccount(this.username, this.password);
+
+        if (!(register.getStatusCode() == HttpStatus.OK)){
+            sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(this.username, this.password).getBody())).get("sessionID"));
+        } else  {
+            sessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(register.getBody())).get("sessionID"));
+        }
+
     }
 
     @AfterEach
     public void tearDown() {
-        this.accountSystemFacade.logoutAccount(sessionID);
+        if (sessionID != null) {
+            this.accountSystemFacade.logoutAccount(this.sessionID);
+        }
     }
 
     @Test

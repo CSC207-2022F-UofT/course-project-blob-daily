@@ -14,4 +14,17 @@ public class FeedItem {
         this.record = record;
         this.pet = pet;
     }
+
+    public ProtectedAccount getAccount() {
+        return this.account;
+    }
+
+    public Pet getPet() {
+        return this.pet;
+    }
+
+    @SuppressWarnings("unused")
+    public TaskCompletionRecord getRecord() {
+        return this.record;
+    }
 }
