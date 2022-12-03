@@ -1,4 +1,4 @@
-![banner](https://i.postimg.cc/634y7psn/blob-banner-small.png)
+![banner](https://i.postimg.cc/wvNjq4Jk/blob-even-smaller.png)
 
 # Backend for QuestPets
 
