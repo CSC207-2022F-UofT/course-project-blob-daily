@@ -37,12 +37,12 @@ public class FriendsRepoTest {
 
     @BeforeEach
     public void setup() {
-        String username = "username";
+        String username = "dummy1";
         String password = "abc123!";
         userSessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(username, password).getBody())).get("sessionID"));
-        String friend1Username = "potter";
+        String friend1Username = "dummy2";
         friend1SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(friend1Username, password).getBody())).get("sessionID"));
-        String friend2Username = "peter";
+        String friend2Username = "dummy3";
         friend2SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(friend2Username, password).getBody())).get("sessionID"));
     }
 
@@ -51,9 +51,6 @@ public class FriendsRepoTest {
         this.accountSystemFacade.logoutAccount(userSessionID);
         this.accountSystemFacade.logoutAccount(friend1SessionID);
         this.accountSystemFacade.logoutAccount(friend2SessionID);
-        this.friendsRepo.deleteById(userSessionID.getID());
-        this.friendsRepo.deleteById(friend1SessionID.getID());
-        this.friendsRepo.deleteById(friend2SessionID.getID());
     }
 
     @Test
@@ -96,6 +93,11 @@ public class FriendsRepoTest {
 
         // Assertion Statement
         Assertions.assertTrue(actualList.contains(friend1AccountID) && actualList.contains(friend2AccountID), findAllContainingUserIDMessage);
+
+        // Custom Cleanup
+        this.friendsRepo.deleteById(userAccountID);
+        this.friendsRepo.deleteById(friend1AccountID);
+        this.friendsRepo.deleteById(friend2AccountID);
     }
 
 

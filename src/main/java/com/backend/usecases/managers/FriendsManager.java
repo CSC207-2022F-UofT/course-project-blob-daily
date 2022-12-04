@@ -3,6 +3,7 @@ package com.backend.usecases.managers;
 import com.backend.entities.Friend;
 import com.backend.repositories.FriendsRepo;
 import com.backend.usecases.IErrorHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Service
 @Configurable
 public class FriendsManager {
-    private static FriendsRepo friendsRepo;
+    private final FriendsRepo friendsRepo;
     private final IErrorHandler errorHandler;
 
     /**
@@ -25,8 +26,9 @@ public class FriendsManager {
      * @param friendsRepo repository to be injected
      * @param errorHandler the error handler to be injected
      */
+    @Autowired
     public FriendsManager(FriendsRepo friendsRepo, IErrorHandler errorHandler) {
-        FriendsManager.friendsRepo = friendsRepo;
+        this.friendsRepo = friendsRepo;
         this.errorHandler = errorHandler;
     }
 

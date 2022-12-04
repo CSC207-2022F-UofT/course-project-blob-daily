@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @SpringBootTest(classes = QuestPetsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,9 +31,7 @@ public class FriendManagerTest {
     private final AccountManager accountManager;
     private SessionID user1SessionID;
     private SessionID user2SessionID;
-    private final String user1 = "dummy1";
-    private final String user2 = "dummy2";
-    private final String password = "abc123!";
+    private SessionID user3SessionID;
 
     @Autowired
     public FriendManagerTest(FriendsRepo friendsRepo, FriendsManager friendsManager, AccountSystemFacade accountSystemFacade, AccountManager accountManager) {
@@ -44,20 +43,32 @@ public class FriendManagerTest {
 
     @BeforeEach
     public void setup() {
-        ResponseEntity<Object> register1 = this.accountSystemFacade.registerAccount(user1, this.password);
-        ResponseEntity<Object> register2 = this.accountSystemFacade.registerAccount(user2, this.password);
+        String user1 = "dummy1";
+        String user2 = "dummy2";
+        String user3 = "dummy3";
+        String password = "abc123!";
+
+        ResponseEntity<Object> register1 = this.accountSystemFacade.registerAccount(user1, password);
+        ResponseEntity<Object> register2 = this.accountSystemFacade.registerAccount(user2, password);
+        ResponseEntity<Object> register3 = this.accountSystemFacade.registerAccount(user3, password);
 
 
         if (!(register1.getStatusCode() == HttpStatus.OK)){
-            user1SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(user1, this.password).getBody())).get("sessionID"));
+            user1SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(user1, password).getBody())).get("sessionID"));
         } else  {
             user1SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(register1.getBody())).get("sessionID"));
         }
 
         if (!(register2.getStatusCode() == HttpStatus.OK)){
-            user2SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(user2, this.password).getBody())).get("sessionID"));
+            user2SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(user2, password).getBody())).get("sessionID"));
         } else  {
             user2SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(register2.getBody())).get("sessionID"));
+        }
+
+        if (!(register3.getStatusCode() == HttpStatus.OK)){
+            user3SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(user3, password).getBody())).get("sessionID"));
+        } else  {
+            user3SessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(register3.getBody())).get("sessionID"));
         }
 
     }
@@ -69,6 +80,9 @@ public class FriendManagerTest {
         }
         if (user2SessionID != null) {
             this.accountSystemFacade.logoutAccount(user2SessionID);
+        }
+        if (user3SessionID != null) {
+            this.accountSystemFacade.logoutAccount(user3SessionID);
         }
     }
 
@@ -116,7 +130,7 @@ public class FriendManagerTest {
         String getFriendsMessage = "The user's friend list is not empty";
 
         // Assertion Statement
-        Assertions.assertEquals(0, actualList.size());
+        Assertions.assertEquals(0, actualList.size(), getFriendsMessage);
         // Custom CleanUp
         this.friendsRepo.deleteById(user1AccountID);
     }
@@ -154,8 +168,7 @@ public class FriendManagerTest {
         String user1AccountID = Objects.requireNonNull(this.accountManager.verifySession(user1SessionID)).getID();
         String user2AccountID = Objects.requireNonNull(this.accountManager.verifySession(user2SessionID)).getID();
 
-        ArrayList<String> user1List = new ArrayList<>();
-        user1List.add(user2AccountID);
+
         ArrayList<String> user2List = new ArrayList<>();
         user2List.add(user1AccountID);
 
@@ -323,6 +336,89 @@ public class FriendManagerTest {
         this.friendsRepo.save(new Friend(new AccountID(user2AccountID), user2List));
 
         // Action
-        this.friendsManager.deleteFriendByID();
+        this.friendsManager.deleteFriendByID(user1AccountID);
+
+        // Assertion Message
+        String deleteFriendByIDMessage = "User exists in Friends Collection";
+
+        // Assertion Statement
+        Assertions.assertEquals(this.friendsManager.getFriends(user1AccountID).size(), 0, deleteFriendByIDMessage);
+
+        // Custom Cleanup
+        this.friendsRepo.deleteById(user1AccountID);
+        this.friendsRepo.deleteById(user2AccountID);
+    }
+    @Test
+    public void getAllContainingUserIDTest() {
+        // Values
+        String user1AccountID = Objects.requireNonNull(this.accountManager.verifySession(user1SessionID)).getID();
+        String user2AccountID = Objects.requireNonNull(this.accountManager.verifySession(user2SessionID)).getID();
+        String user3AccountID = Objects.requireNonNull(this.accountManager.verifySession(user3SessionID)).getID();
+
+        ArrayList<String> user1List = new ArrayList<>();
+        user1List.add(user2AccountID);
+        user1List.add(user3AccountID);
+        ArrayList<String> user2List = new ArrayList<>();
+        user2List.add(user1AccountID);
+        ArrayList<String> user3List = new ArrayList<>();
+        user3List.add(user1AccountID);
+
+        this.friendsRepo.save(new Friend(new AccountID(user1AccountID), user1List));
+        this.friendsRepo.save(new Friend(new AccountID(user2AccountID), user2List));
+        this.friendsRepo.save(new Friend(new AccountID(user3AccountID), user3List));
+
+        // Action
+        List<Friend> friendsContainingUserID = friendsManager.getAllContainingUserID(user1AccountID);
+        ArrayList<String> actualList = new ArrayList<>();
+
+        for(Friend friend : friendsContainingUserID) {
+            actualList.add(friend.getAccountID());
+        }
+        // Assertion Message
+        String getAllContainingUserIDMessage = "User does not exist in Friend's Account";
+
+        // Assertion Statement
+        Assertions.assertTrue(actualList.contains(user2AccountID) && actualList.contains(user3AccountID), getAllContainingUserIDMessage);
+
+        // Custom Cleanup
+        this.friendsRepo.deleteById(user1AccountID);
+        this.friendsRepo.deleteById(user2AccountID);
+        this.friendsRepo.deleteById(user3AccountID);
+    }
+
+    @Test
+    public void getAllContainingUserIDNoFriendsTest() {
+        // Values
+        String user1AccountID = Objects.requireNonNull(this.accountManager.verifySession(user1SessionID)).getID();
+        String user2AccountID = Objects.requireNonNull(this.accountManager.verifySession(user2SessionID)).getID();
+        String user3AccountID = Objects.requireNonNull(this.accountManager.verifySession(user3SessionID)).getID();
+
+        ArrayList<String> user1List = new ArrayList<>();
+        ArrayList<String> user2List = new ArrayList<>();
+        user2List.add(user3AccountID);
+        ArrayList<String> user3List = new ArrayList<>();
+        user3List.add(user2AccountID);
+
+        this.friendsRepo.save(new Friend(new AccountID(user1AccountID), user1List));
+        this.friendsRepo.save(new Friend(new AccountID(user2AccountID), user2List));
+        this.friendsRepo.save(new Friend(new AccountID(user3AccountID), user3List));
+
+        // Action
+        List<Friend> friendsContainingUserID = friendsManager.getAllContainingUserID(user1AccountID);
+        ArrayList<String> actualList = new ArrayList<>();
+
+        for(Friend friend : friendsContainingUserID) {
+            actualList.add(friend.getAccountID());
+        }
+        // Assertion Message
+        String getAllContainingUserIDNoFriendsMessage = "User does exist in Friend's Account";
+
+        // Assertion Statement
+        Assertions.assertTrue(!actualList.contains(user2AccountID) && !actualList.contains(user3AccountID), getAllContainingUserIDNoFriendsMessage);
+
+        // Custom Cleanup
+        this.friendsRepo.deleteById(user1AccountID);
+        this.friendsRepo.deleteById(user2AccountID);
+        this.friendsRepo.deleteById(user3AccountID);
     }
 }

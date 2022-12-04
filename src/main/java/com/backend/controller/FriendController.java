@@ -27,7 +27,7 @@ public class FriendController {
     }
 
     @DeleteMapping("/friends/deleteAllCorrelatedFriends")
-    public ResponseEntity<Object> deleteALlCorrelatedFriends(@RequestParam String sessionID) {
+    public ResponseEntity<Object> deleteAllCorrelatedFriends(@RequestParam String sessionID) {
         return this.friendSystemFacade.deleteAllCorrelatedFriends(sessionID);
     }
 }

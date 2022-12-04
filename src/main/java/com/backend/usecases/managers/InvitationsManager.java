@@ -16,7 +16,7 @@ import java.util.*;
 @Configurable
 public class InvitationsManager {
 
-    private static InvitationsRepo invitationsRepo;
+    private final InvitationsRepo invitationsRepo;
     private final IErrorHandler errorHandler;
 
     /**
@@ -26,7 +26,7 @@ public class InvitationsManager {
      */
     @Autowired
     public InvitationsManager(InvitationsRepo invitationsRepo, IErrorHandler errorHandler) {
-        InvitationsManager.invitationsRepo = invitationsRepo;
+        this.invitationsRepo = invitationsRepo;
         this.errorHandler = errorHandler;
     }
 
@@ -42,19 +42,19 @@ public class InvitationsManager {
 
     /**
      * Helper function to check if Users Exists
-     * @param sender of type String, senderID to reference the user as sender of the Invitation
-     * @param receiver of type String, receiverID to reference the use as receiver of the Invitation
+     * @param senderID of type String, senderID to reference the user as sender of the Invitation
+     * @param receiverID of type String, receiverID to reference the use as receiver of the Invitation
      * @return RespondEntity detailing the success of checking both users exists, or errors
      */
-    private ResponseEntity<Object> checkUsersExist(String sender, String receiver) {
-        if (sender == null && receiver == null) {
-            return this.errorHandler.logError(new NullPointerException("Sender and receiver does not exist!"), HttpStatus.NOT_FOUND);
-        } else if (sender == null) {
-            return this.errorHandler.logError(new NullPointerException("Sender does not exist!"), HttpStatus.NOT_FOUND);
-        } else if (receiver == null)
-            return this.errorHandler.logError(new NullPointerException("Receiver does not exist!"), HttpStatus.NOT_FOUND);
-
-        else return null;
+    public ResponseEntity<Object> checkUsersExist(String senderID, String receiverID) {
+        if (senderID == null && receiverID == null) {
+            return errorHandler.logError(new NullPointerException("Sender and receiver does not exist!"), HttpStatus.NOT_FOUND);
+        } else if (senderID == null) {
+            return errorHandler.logError(new NullPointerException("Sender does not exist!"), HttpStatus.NOT_FOUND);
+        } else if (receiverID == null){
+            return errorHandler.logError(new NullPointerException("Receiver does not exist!"), HttpStatus.NOT_FOUND);
+        }
+        return null;
     }
 
     /**
@@ -65,9 +65,9 @@ public class InvitationsManager {
     public ResponseEntity<Object> verifyInvitation(Invitation invitation) {
 
         // check if the invitation follows the entities structure
-        if (invitation.getReceiverIDObject() == null) return this.errorHandler.logError(new InvalidParameterException("Invalid receiverID"), HttpStatus.CONFLICT);
-        if (invitation.getSenderIDObject() == null) return this.errorHandler.logError(new InvalidParameterException("Invalid senderID"), HttpStatus.CONFLICT);
-        if (invitation.getTimestamp() == null) return this.errorHandler.logError(new InvalidParameterException("Invalid TimeStamp"), HttpStatus.CONFLICT);
+        if (invitation.getReceiverID() == null) return errorHandler.logError(new InvalidParameterException("Invalid receiverID"), HttpStatus.CONFLICT);
+        if (invitation.getSenderID() == null) return errorHandler.logError(new InvalidParameterException("Invalid senderID"), HttpStatus.CONFLICT);
+        if (invitation.getTimestamp() == null) return errorHandler.logError(new InvalidParameterException("Invalid TimeStamp"), HttpStatus.CONFLICT);
         String senderID = invitation.getSenderID();
         String receiverID = invitation.getReceiverID();
 
@@ -77,7 +77,7 @@ public class InvitationsManager {
 
         // Check if sender and receiver are not the same
         if (senderID.equals(receiverID)) {
-            return this.errorHandler.logError(new InvalidParameterException("Sender and Receiver are the same!"), HttpStatus.CONFLICT);
+            return errorHandler.logError(new InvalidParameterException("Sender and Receiver are the same!"), HttpStatus.CONFLICT);
         }
 
         ArrayList<String> senderAndReceiverID = new ArrayList<>();
@@ -102,7 +102,6 @@ public class InvitationsManager {
      * @return ResponseEntity Object detailing the success of deletion or errors
      */
     public ResponseEntity<Object> deleteInvitation(String accepterID, String senderID) {
-        System.out.println(accepterID + senderID);
         invitationsRepo.deleteById(senderID + accepterID);
         return new ResponseEntity<>("Invitation successfully deleted!", HttpStatus.OK);
     }
@@ -129,7 +128,7 @@ public class InvitationsManager {
      * Delete all Invitations containing userID as receiver or sender
      * @param invitations of type List, List of invitations to be deleted from the Invitations Collection
      */
-    public void deleteAllInvitationsRelatedTo(List<Invitation> invitations) {
+    public void deleteAllInvitationsRelatedToUser(List<Invitation> invitations) {
         invitationsRepo.deleteAll(invitations);
     }
 

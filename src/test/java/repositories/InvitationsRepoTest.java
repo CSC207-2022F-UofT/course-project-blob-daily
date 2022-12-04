@@ -38,9 +38,9 @@ public class InvitationsRepoTest {
 
     @BeforeEach
     public void setup() {
-        String username = "username";
-        String friendUsername1 = "peter";
-        String friendUsername2 = "potter";
+        String username = "dummy1";
+        String friendUsername1 = "dummy2";
+        String friendUsername2 = "dummy3";
         String password = "abc123!";
         userSessionID = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(username, password).getBody())).get("sessionID"));
         friendSessionID1 = new SessionID((String) ((JSONObject) Objects.requireNonNull(this.accountSystemFacade.loginAccount(friendUsername1, password).getBody())).get("sessionID"));

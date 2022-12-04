@@ -50,7 +50,7 @@ public class FriendSystemFacade {
      * @param sessionID of type String, a sessionID to reference and verify both session and invitation
      * @return a response entity detailing successful verification of session and invitation, or any associated error
      */
-    private ResponseEntity<Object> verifySessionAndInvitation(String receiverUsername, String sessionID) {
+    public ResponseEntity<Object> verifySessionAndInvitation(String receiverUsername, String sessionID) {
         // check if it is a valid session
         AccountID userID = this.accountManager.verifySession(new SessionID(sessionID));
         if (userID == null)
@@ -117,7 +117,7 @@ public class FriendSystemFacade {
             ArrayList<String> friendList = this.friendsManager.getFriends(friendID);
 
             if (userList.size() == 0) {
-                return this.errorHandler.logError(new NoSuchFileException("Friend does not exist!"), HttpStatus.NOT_FOUND);
+                return this.errorHandler.logError(new NoSuchFileException("User's friend list is empty!"), HttpStatus.NOT_FOUND);
             } else {
                 if (userList.contains(friendID)) {
                     userList.remove(friendID);
@@ -127,7 +127,7 @@ public class FriendSystemFacade {
                 }
             }
             if (friendList.size() == 0) {
-                return this.errorHandler.logError(new NoSuchFileException("Friend does not exist!"), HttpStatus.NOT_FOUND);
+                return this.errorHandler.logError(new NoSuchFileException("User does not exist in Friend's List!"), HttpStatus.NOT_FOUND);
             } else {
                 if (friendList.contains(userID)) {
                     friendList.remove(userID);
@@ -137,10 +137,10 @@ public class FriendSystemFacade {
             return new ResponseEntity<>("Successfully removed users from each other's friendList!", HttpStatus.OK);
 
         } else if (!this.friendsManager.userExists(userID) && !this.friendsManager.userExists(friendID))
-            return this.errorHandler.logError(new NoSuchFileException("Both do not exist in each other's list!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new NoSuchFileException("Both do not have Friends!"), HttpStatus.NOT_FOUND);
         else if (!this.friendsManager.userExists(userID))
-            return this.errorHandler.logError(new NoSuchFileException("User does not have friend in list!"), HttpStatus.NOT_FOUND);
-        return this.errorHandler.logError(new NoSuchFileException("Friend does not have user in list!"), HttpStatus.NOT_FOUND);
+            return this.errorHandler.logError(new NoSuchFileException("User does not have friends!"), HttpStatus.NOT_FOUND);
+        return this.errorHandler.logError(new NoSuchFileException("Friend does not have friends!"), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -166,7 +166,7 @@ public class FriendSystemFacade {
             updatedList.remove(accountID.getID());
             this.friendsManager.updateFriendsList(new Friend(friend.getAccountID(), updatedList));
         }
-        return new ResponseEntity<>("Delete user for all Correlated Friends list!", HttpStatus.OK);
+        return new ResponseEntity<>("Deleted user for all Correlated Friends list!", HttpStatus.OK);
     }
 
     /**
@@ -322,8 +322,8 @@ public class FriendSystemFacade {
             return this.errorHandler.logError(new NoSuchFileException("No Invitations correlated to the user!"), HttpStatus.NOT_FOUND);
         }
 
-        this.invitationsManager.deleteAllInvitationsRelatedTo(invitationsAsReceiver);
-        this.invitationsManager.deleteAllInvitationsRelatedTo(invitationsAsSender);
+        this.invitationsManager.deleteAllInvitationsRelatedToUser(invitationsAsReceiver);
+        this.invitationsManager.deleteAllInvitationsRelatedToUser(invitationsAsSender);
 
         return new ResponseEntity<>("Correlated Invitations all successfully deleted!", HttpStatus.OK);
     }
