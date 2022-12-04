@@ -91,7 +91,6 @@ public abstract class CriteriaExpression implements IConditionHandler {
      * Get the current string representation of criteria for this Criteria Expression
      * @return the criteria variable
      */
-    @SuppressWarnings("unused")
     public String getCondition() {
         return this.condition;
     }

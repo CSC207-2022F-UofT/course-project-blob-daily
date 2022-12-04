@@ -144,7 +144,7 @@ public class AccountManager {
     }
 
     /**
-     * Will create a new instance of a Account with the given information with newly generated IDs.
+     * Will create a new instance of an Account with the given valid information with newly generated IDs.
      * @param username of type String,
      * @param password of type String,
      * @return new instance of account with given information

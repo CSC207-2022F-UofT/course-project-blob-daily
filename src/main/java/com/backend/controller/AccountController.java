@@ -66,6 +66,30 @@ public class AccountController {
     }
 
     /**
+     * Patch request to update the account associated with the given parameter
+     * @param sessionID of type String, sessionID to reference the account to be deleted
+     * @param newUsername of type String, newUsername to change the account credential to
+     * @return a response entity detailing successful completion or any associated error
+     */
+    @PatchMapping("/updateUsername" )
+    public ResponseEntity<Object> updateAccountUsername(@RequestParam String sessionID, String newUsername){
+        // Run AccountManager service
+        return this.accountSystemFacade.updateUsername(new SessionID(sessionID), newUsername);
+    }
+
+    /**
+     * Patch request to update the account associated with the given parameter
+     * @param sessionID of type String, sessionID to reference the account to be deleted
+     * @param newPassword of type String, newPassword to change the account credential to
+     * @return a response entity detailing successful completion or any associated error
+     */
+    @PatchMapping("/updatePassword" )
+    public ResponseEntity<Object> updateAccountPassword(@RequestParam String sessionID, String newPassword){
+        // Run AccountManager service
+        return this.accountSystemFacade.updatePassword(new SessionID(sessionID), newPassword);
+    }
+
+    /**
      * Get request to retrieve the information associated with the given parameter
      * @param sessionID of type String, sessionID to reference the associated account
      * @return a response entity detailing successful completion (with the information of the associated Protected Account entity) or any associated error

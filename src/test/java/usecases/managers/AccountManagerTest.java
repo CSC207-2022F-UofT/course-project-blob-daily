@@ -142,9 +142,8 @@ public class AccountManagerTest {
     }
 
     @Test
-    public void verifyInvalidAccountInfoProtectedAccountTest() {
+    public void verifyInvalidAccountInfoTest() {
         // Values
-
         ProtectedAccount protectedAccount = new ProtectedAccount(username, null);
 
         // Action
@@ -212,7 +211,7 @@ public class AccountManagerTest {
     }
 
     @Test
-    public void getAccountInfoAccountIDTest() {
+    public void getAccountInfoTest() {
         // Values
         AccountID accountID = this.accountManager.verifySession(sessionID);
         ProtectedAccount expectedAccount = new ProtectedAccount(username, null);
@@ -226,238 +225,6 @@ public class AccountManagerTest {
         // Assertion Statement
         assert actualAccount != null;
         Assertions.assertEquals(expectedAccount.getUsername(), actualAccount.getUsername(), accountInfoMessage);
-    }
-
-    @Test
-    public void getAccountInfoSessionIDTest() {
-        // Values
-        ProtectedAccount expectedAccount = new ProtectedAccount(username, null);
-
-        // Action
-        ProtectedAccount actualAccount = this.accountManager.getAccountInfo(this.accountManager.verifySession(sessionID));
-
-        // Assertion Message
-        String accountInfoMessage = "The given accountID didn't yield the corresponding account information";
-
-        // Assertion Statement
-        assert actualAccount != null;
-        Assertions.assertEquals(expectedAccount.getUsername(), actualAccount.getUsername(), accountInfoMessage);
-    }
-
-    @Test
-    public void registerTest() {
-        // Setup
-        this.accountSystemFacade.deleteAccount(sessionID);
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.registerAccount(username, password);
-        sessionID = new SessionID(((JSONObject) Objects.requireNonNull(responseEntity.getBody())).get("sessionID").toString());
-
-        // Assertion Message
-        String registerMessage = "Could not register an account with valid credentials";
-
-        // Assertion Statement
-        Assertions.assertTrue(this.accountsRepo.existsById(Objects.requireNonNull(this.accountManager.verifySession(sessionID)).getID()), registerMessage);
-    }
-
-    @Test
-    public void registerAlreadyExistsTest() {
-        // Setup (Non Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.registerAccount(username, password);
-
-        // Assertion Message
-        String registerMessage = "Account was unexpectedly 'created' when given existing credentials";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, registerMessage);
-    }
-
-    @Test
-    public void registerInvalidInfoTest() {
-        // Setup (Non Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.registerAccount(username, "");
-
-        // Assertion Message
-        String registerMessage = "Account was unexpectedly 'created' when given invalid credentials";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, registerMessage);
-    }
-
-    @Test
-    public void loginTest() {
-        // Setup
-        this.accountSystemFacade.logoutAccount(sessionID);
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.loginAccount(username, password);
-        sessionID = new SessionID(((JSONObject) Objects.requireNonNull(responseEntity.getBody())).get("sessionID").toString());
-
-        // Assertion Message
-        String loginMessage = "Could not login an account with valid credentials";
-
-        // Assertion Statement
-        Assertions.assertTrue(this.accountsRepo.existsById(Objects.requireNonNull(this.accountManager.verifySession(sessionID)).getID()), loginMessage);
-    }
-
-    @Test
-    public void loginAlreadyLoggedInTest() {
-        // Setup (Non Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.loginAccount(username, password);
-
-        // Assertion Message
-        String loginMessage = "Account was unexpectedly 'logged in' when given credentials of an already logged in account";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.UNAUTHORIZED, loginMessage);
-    }
-
-    @Test
-    public void loginInvalidInfoTest() {
-        // Setup (Non Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.loginAccount(username, "");
-
-        // Assertion Message
-        String loginMessage = "Account was unexpectedly 'logged in' when given invalid credentials";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, loginMessage);
-    }
-
-    @Test
-    public void loginAccountDoesNotExistTest() {
-        // Setup (Non Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.loginAccount("notUsername", password);
-
-        // Assertion Message
-        String loginMessage = "Account was unexpectedly 'logged in' when given credentials of account that doesn't exist";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.NOT_FOUND, loginMessage);
-    }
-
-    @Test
-    public void logoutTest() {
-        // Setup (not Required)
-
-        // Action
-        this.accountSystemFacade.logoutAccount(sessionID);
-
-        // Assertion Message
-        String logoutMessage = "Could not logout an account with valid credentials";
-
-        // Assertion Statement
-        Assertions.assertNull(this.accountsRepo.findBySessionID(sessionID.getID()), logoutMessage);
-    }
-
-    @Test
-    public void logoutAlreadyLoggedOutTest() {
-        // Setup
-        this.accountSystemFacade.logoutAccount(sessionID);
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(sessionID);
-
-        // Assertion Message
-        String logoutMessage = "Account was unexpectedly 'logged out' when given credentials of an already logged in account";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, logoutMessage);
-    }
-
-    @Test
-    public void logoutInvalidInfoTest() {
-        // Setup (Non Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(new SessionID("invalidID"));
-
-        // Assertion Message
-        String logoutMessage = "Account was unexpectedly 'logged out' when given invalid credentials";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, logoutMessage);
-    }
-
-    @Test
-    public void logoutAccountDoesNotExistTest() {
-        // Setup (Not Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(new SessionID("diajmdlanmdln80"));
-
-        // Assertion Message
-        String logoutMessage = "Account was unexpectedly 'logged in' when given credentials of account that doesn't exist";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, logoutMessage);
-    }
-
-    @Test
-    public void deleteTest() {
-        // Setup (not Required)
-
-        // Action
-        this.accountSystemFacade.deleteAccount(sessionID);
-
-        // Assertion Message
-        String deleteMessage = "Could not delete an account with valid credentials";
-
-        // Assertion Statement
-        Assertions.assertNull(this.accountsRepo.findBySessionID(sessionID.getID()), deleteMessage);
-    }
-
-    @Test
-    public void deleteUnauthorizedTest() {
-        // Setup
-        this.accountSystemFacade.logoutAccount(sessionID);
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.deleteAccount(sessionID);
-
-        // Assertion Message
-        String deleteMessage = "Account was unexpectedly 'deleted' when given unauthorized credentials";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, deleteMessage);
-    }
-
-    @Test
-    public void deleteInvalidInfoTest() {
-        // Setup (Non Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(new SessionID("invalidID"));
-
-        // Assertion Message
-        String deleteMessage = "Account was unexpectedly 'deleted' when given invalid credentials";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, deleteMessage);
-    }
-
-    @Test
-    public void deleteAccountDoesNotExistTest() {
-        // Setup (Not Required)
-
-        // Action
-        ResponseEntity<Object> responseEntity = this.accountSystemFacade.logoutAccount(new SessionID("diajmdlanmdln80"));
-
-        // Assertion Message
-        String deleteMessage = "Account was unexpectedly 'delete' when given credentials of account that doesn't exist";
-
-        // Assertion Statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, deleteMessage);
     }
 
     @Test
@@ -489,5 +256,144 @@ public class AccountManagerTest {
 
         // Assertion Statement
         Assertions.assertNull(actualAccountID, getAccountIDMessage);
+    }
+
+    @Test
+    public void createAccountTest() {
+        // Setup (Not required)
+
+        // Action
+        Account actualAccount = this.accountManager.createAccount(username, password);
+
+        // Assertion Message
+        String createAccountMessage = "The actual Account did not match the expected Account";
+
+        // Assertion Statement
+        Assertions.assertNotNull(actualAccount.getAccountID(), createAccountMessage);
+        Assertions.assertNotNull(actualAccount.getSessionID(), createAccountMessage);
+        Assertions.assertEquals(username, actualAccount.getUsername(), createAccountMessage);
+        Assertions.assertEquals(password, actualAccount.getPassword(), createAccountMessage);
+    }
+
+    @Test
+    public void hashPasswordTest() {
+        // Setup
+        String expectedHash = this.accountManager.hash(password);
+
+        // Action
+        Account actualAccount = new Account(new SessionID(null), username, password);
+        this.accountManager.hashPassword(actualAccount, password);
+
+        // Assertion Message
+        String hashPasswordMessage = "The actual Hash did not match the expected Hash in the given account";
+
+        // Assertion Statement
+        Assertions.assertEquals(expectedHash, actualAccount.getPassword(), hashPasswordMessage);
+    }
+
+    @Test
+    public void accountExistsTrueTest() {
+        // Setup (Not Required)
+
+        // Action
+        boolean result = this.accountManager.accountExists(new Account(sessionID, username, password));
+
+        // Assertion Message
+        String accountExistsMessage = "Unexpectedly could not find a existent account";
+
+        // Assertion Statement
+        Assertions.assertTrue(result, accountExistsMessage);
+    }
+
+    @Test
+    public void accountExistsFalseTest() {
+        // Setup (Not Required)
+
+        // Action
+        boolean result = this.accountManager.accountExists(new Account(sessionID, "notAUsername", password));
+
+        // Assertion Message
+        String accountExistsMessage = "Unexpectedly could find a non-existent account";
+
+        // Assertion Statement
+        Assertions.assertFalse(result, accountExistsMessage);
+    }
+
+    @Test
+    public void updateAccountTest() {
+        // Setup
+        SessionID newSessionID = new SessionID(null);
+        newSessionID.generateID();
+        Account expectedAccount = new Account(newSessionID, "testingPurpose", password);
+
+        // Action
+        this.accountManager.updateAccount(expectedAccount);
+
+        // Assertion Message
+        String updateAccountMessage = "Unexpectedly could not update the database with the new account information";
+
+        // Assertion Statement
+        Assertions.assertTrue(this.accountManager.accountExists(expectedAccount), updateAccountMessage);
+
+        // Special Tear-Down
+        this.accountSystemFacade.deleteAccount(newSessionID);
+    }
+
+    @Test
+    public void validateCredentialsTest() {
+        // Setup (Not Required)
+
+        // Action
+        Account resultantAccount = this.accountManager.validateCredentials(username, this.accountManager.hash(password));
+
+        // Assertion Message
+        String validateCredentialsMessage = "Unexpectedly could not find matching/valid credentials the database";
+
+        // Assertion Statement
+        Assertions.assertNotNull(resultantAccount, validateCredentialsMessage);
+    }
+
+    @Test
+    public void validateCredentialsInvalidTest() {
+        // Setup (Not Required)
+
+        // Action
+        Account resultantAccount = this.accountManager.validateCredentials("invalidUsername", password);
+
+        // Assertion Message
+        String validateCredentialsMessage = "Unexpectedly could find matching/valid credentials the database";
+
+        // Assertion Statement
+        Assertions.assertNull(resultantAccount, validateCredentialsMessage);
+    }
+
+    @Test
+    public void getAccountTest() {
+        // Setup (Not Required)
+
+        // Action
+        Account resultantAccount = this.accountManager.getAccount(this.accountManager.verifySession(sessionID));
+
+        // Assertion Message
+        String getAccountMessage = "Unexpectedly could not find matching/valid account in the database";
+
+        // Assertion Statement
+        Assertions.assertEquals(username, resultantAccount.getUsername(), getAccountMessage);
+        Assertions.assertEquals(this.accountManager.hash(password), resultantAccount.getPassword(), getAccountMessage);
+        Assertions.assertEquals(sessionID.getID(), resultantAccount.getSessionID(), getAccountMessage);
+    }
+
+    @Test
+    public void getAccountInvalidTest() {
+        // Setup (Not Required)
+
+        // Action
+        Account resultantAccount = this.accountManager.getAccount(new AccountID("invalidID"));
+
+        // Assertion Message
+        String getAccountMessage = "Unexpectedly could find matching/valid account in the database";
+
+        // Assertion Statement
+        Assertions.assertNull(resultantAccount, getAccountMessage);
     }
 }

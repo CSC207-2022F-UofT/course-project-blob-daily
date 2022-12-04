@@ -54,7 +54,6 @@ public class LogHandler implements IConditionHandler, IErrorHandler {
      * Log an info message to the console with the given parameter
      * @param message of type String, message to be displayed
      */
-    @Override
     public void logInfo(String message) {
         logMessage(message, "INFO");
     }
@@ -66,15 +65,6 @@ public class LogHandler implements IConditionHandler, IErrorHandler {
     @Override
     public void logWarning(String message) {
         logMessage(message, "WARNING");
-    }
-
-    /**
-     * Log a severe message to the console with the given parameter
-     * @param message of type String, message to be displayed
-     */
-    @Override
-    public void logSevere(String message) {
-        logMessage(message, "SEVERE");
     }
 
     /**
@@ -98,19 +88,18 @@ public class LogHandler implements IConditionHandler, IErrorHandler {
 
     /**
      * Log an error message to the console with the given parameter and package a response entity with the given information
-     * @param e of type Exception, exception with information to be displayed (message, stackTrace, etc)
+     * @param exception of type Exception, exception with information to be displayed (message, stackTrace, etc)
      * @param status of type HttpStatus, status of the REST response to be generated
      * @return a ResponseEntity with the associated exception message and status code
      */
     @Override
-    public ResponseEntity<Object> logError(Exception e, HttpStatus status) {
-        this.logError(e);
-
+    public ResponseEntity<Object> logError(Exception exception, HttpStatus status) {
+        this.logError(exception);
 
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("Error", e.getClass().getName());
-        jsonObject.put("Message", e.getMessage());
+        jsonObject.put("Error", exception.getClass().getName());
+        jsonObject.put("Message", exception.getMessage());
 
 
         return new ResponseEntity<>(jsonObject, status);
