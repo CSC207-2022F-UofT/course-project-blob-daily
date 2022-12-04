@@ -96,7 +96,6 @@ public class LogHandler implements IConditionHandler, IErrorHandler {
     public ResponseEntity<Object> logError(Exception exception, HttpStatus status) {
         this.logError(exception);
 
-
         JSONObject jsonObject = new JSONObject();
 
         jsonObject.put("Error", exception.getClass().getName());
