@@ -32,6 +32,7 @@ public class PetSystemFacade {
      * @param errorHandler the dependency to be injected
      */
     @Autowired
+    @SuppressWarnings("unused")
     public PetSystemFacade(ShopManager shopManager, AccountManager accountManager, PetManager petManager, BalanceManager balanceManager, IErrorHandler errorHandler){
         this.shopManager = shopManager;
         this.accountManager = accountManager;

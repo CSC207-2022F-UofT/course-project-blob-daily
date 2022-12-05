@@ -28,6 +28,7 @@ public class TaskSystemFacade {
     private final IErrorHandler errorHandler;
 
     @Autowired
+    @SuppressWarnings("unused")
     public TaskSystemFacade(TaskManager taskManager, AccountManager accountManager, BalanceManager balanceManager, HealthManager healthManager, IErrorHandler errorHandler) {
         this.taskManager = taskManager;
         this.accountManager = accountManager;

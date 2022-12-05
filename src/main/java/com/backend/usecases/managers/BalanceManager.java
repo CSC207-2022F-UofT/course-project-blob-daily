@@ -20,6 +20,7 @@ public class BalanceManager {
      * @param petRepo the dependency to be injected
      * @param errorHandler the dependency to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public BalanceManager(PetRepo petRepo, IErrorHandler errorHandler) {
         this.petRepo = petRepo;

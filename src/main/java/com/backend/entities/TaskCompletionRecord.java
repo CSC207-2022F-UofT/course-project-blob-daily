@@ -18,6 +18,7 @@ public class TaskCompletionRecord {
     //instance variables
     @Id
     @JsonIgnore
+    @SuppressWarnings("unused")
     private String ID;
     @Transient
     @JsonIgnore

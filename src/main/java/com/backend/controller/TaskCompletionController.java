@@ -16,6 +16,7 @@ public class TaskCompletionController {
      * Spring Boot dependency injection
      * @param taskSystemFacade of type TaskSystemFacade, establishes connection to the task system facade
      */
+    @SuppressWarnings("unused")
     public TaskCompletionController(TaskSystemFacade taskSystemFacade){
         this.taskSystemFacade = taskSystemFacade;
     }

@@ -26,6 +26,7 @@ public class FriendsManager {
      * @param friendsRepo repository to be injected
      * @param errorHandler the error handler to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public FriendsManager(FriendsRepo friendsRepo, IErrorHandler errorHandler) {
         this.friendsRepo = friendsRepo;

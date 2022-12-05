@@ -35,6 +35,7 @@ public class FeedSystemFacade {
      * @param petManager     the dependency to be injected
      * @param errorHandler   the dependency to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public FeedSystemFacade(AccountManager accountManager, TaskManager taskManager, PetManager petManager, FriendsManager friendsManager, IErrorHandler errorHandler) {
         this.accountManager = accountManager;

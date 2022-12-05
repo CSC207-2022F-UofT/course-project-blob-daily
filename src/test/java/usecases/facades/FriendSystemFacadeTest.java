@@ -6,7 +6,6 @@ import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
 import com.backend.entities.Invitation;
 import com.backend.entities.users.ProtectedAccount;
-import com.backend.repositories.AccountsRepo;
 import com.backend.repositories.FriendsRepo;
 import com.backend.repositories.InvitationsRepo;
 import com.backend.usecases.facades.AccountSystemFacade;

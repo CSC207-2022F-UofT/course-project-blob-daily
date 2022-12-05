@@ -16,7 +16,7 @@ public class Friend {
     @Transient
     private final AccountID accountIDObject;
     @Id
-    private String accountID;
+    private final String accountID;
 
     private final ArrayList<String> friends;
 

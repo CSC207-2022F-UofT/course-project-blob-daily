@@ -30,6 +30,7 @@ public class ShopManager {
      * @param errorHandler the dependency to be injected
      */
     @Autowired
+    @SuppressWarnings("unused")
     public ShopManager(ShopItemRepo shopRepo, PetRepo petRepo, IErrorHandler errorHandler) {
         this.shopRepo = shopRepo;
         this.petRepo = petRepo;

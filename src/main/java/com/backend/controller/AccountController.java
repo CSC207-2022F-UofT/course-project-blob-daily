@@ -14,6 +14,7 @@ public class AccountController {
      * Spring Boot Dependency Injection of the accountSystemFacade
      * @param accountSystemFacade the dependency to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public AccountController(AccountSystemFacade accountSystemFacade) {
         this.accountSystemFacade = accountSystemFacade;

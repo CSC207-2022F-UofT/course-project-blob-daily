@@ -15,6 +15,7 @@ public class ShopItem {
     @Transient
     private final ItemID itemID;
     @Id
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final String ID;
     private final Double cost;
     private final String name;

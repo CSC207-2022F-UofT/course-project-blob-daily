@@ -14,7 +14,9 @@ import java.util.ArrayList;
  */
 @Document(collection = "PetsCollection")
 public class Pet {
+
     @Transient
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final AccountID accountID;
     @Id
     @JsonIgnore

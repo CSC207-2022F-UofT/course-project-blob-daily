@@ -40,6 +40,7 @@ public class AccountSystemFacade {
      * @param healthManager      the dependency to be injected
      * @param taskManager        the dependency to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public AccountSystemFacade (AccountManager accountManager, PetManager petManager, HealthManager healthManager, TaskManager taskManager, FriendSystemFacade friendSystemFacade, IErrorHandler errorHandler) {
         this.accountManager = accountManager;

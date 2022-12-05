@@ -24,6 +24,7 @@ public class AccountManager {
      * Spring Boot Dependency Injection of the Accounts Repository
      * @param accountsRepo the dependency to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public AccountManager(AccountsRepo accountsRepo) {
         this.accountsRepo = accountsRepo;

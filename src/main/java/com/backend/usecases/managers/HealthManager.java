@@ -25,6 +25,7 @@ public class HealthManager {
      * @param petRepo the dependency to be injected
      * @param errorHandler the dependency to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public HealthManager(PetRepo petRepo, IErrorHandler errorHandler) {
         this.petRepo = petRepo;

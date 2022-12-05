@@ -11,6 +11,7 @@ public class FriendController {
 
     private final FriendSystemFacade friendSystemFacade;
 
+    @SuppressWarnings("unused")
     @Autowired
     public FriendController(FriendSystemFacade friendSystemFacade) {
         this.friendSystemFacade = friendSystemFacade;

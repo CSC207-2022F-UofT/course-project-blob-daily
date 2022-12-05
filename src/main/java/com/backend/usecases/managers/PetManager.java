@@ -24,6 +24,7 @@ public class PetManager {
      * @param errorHandler the dependency to be injected
      */
     @Autowired
+    @SuppressWarnings("unused")
     public PetManager(PetRepo petRepo, IErrorHandler errorHandler) {
         this.petRepo = petRepo;
         this.errorHandler = errorHandler;

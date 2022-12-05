@@ -24,6 +24,7 @@ public class InvitationsManager {
      * @param invitationsRepo the repository dependency to be injected
      * @param errorHandler the ErrorHandler dependency to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public InvitationsManager(InvitationsRepo invitationsRepo, IErrorHandler errorHandler) {
         this.invitationsRepo = invitationsRepo;

@@ -36,6 +36,7 @@ public class FriendSystemFacade {
      * @param friendsManager is FriendsManager to be injected
      * @param errorHandler is ErrorHandler to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public FriendSystemFacade(AccountManager accountManager, InvitationsManager invitationsManager, FriendsManager friendsManager, IErrorHandler errorHandler) {
         this.accountManager = accountManager;

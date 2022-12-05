@@ -15,6 +15,7 @@ public class FeedController {
      * Spring Boot Dependency Injection of the accountSystemFacade
      * @param feedSystemFacade the dependency to be injected
      */
+    @SuppressWarnings("unused")
     @Autowired
     public FeedController(FeedSystemFacade feedSystemFacade) {
         this.feedSystemFacade = feedSystemFacade;

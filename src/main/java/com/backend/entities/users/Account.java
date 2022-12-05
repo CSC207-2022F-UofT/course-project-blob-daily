@@ -18,6 +18,8 @@ public class Account extends ProtectedAccount{
     // Instance Variables
     @Transient
     private final AccountID accountIDObject;
+
+    @SuppressWarnings("unused")
     @Id
     private String accountID;
     @Transient

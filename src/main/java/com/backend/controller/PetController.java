@@ -15,6 +15,7 @@ public class PetController {
 
     private final PetSystemFacade petSystemFacade;
 
+    @SuppressWarnings("unused")
     @Autowired
     public PetController(PetSystemFacade petSystemFacade){
         this.petSystemFacade = petSystemFacade;

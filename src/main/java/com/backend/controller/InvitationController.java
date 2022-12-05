@@ -10,6 +10,7 @@ public class InvitationController {
 
     private final FriendSystemFacade friendSystemFacade;
 
+    @SuppressWarnings("unused")
     @Autowired
     public InvitationController(FriendSystemFacade friendSystemFacade) {
         this.friendSystemFacade = friendSystemFacade;

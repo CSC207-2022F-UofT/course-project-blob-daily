@@ -19,6 +19,7 @@ public class FeedItem {
      * Get the ProtectedAccount information associated with this feedItem
      * @return the ProtectedAccount for this instance
      */
+    @SuppressWarnings("unused")
     public ProtectedAccount getAccount() {
         return this.account;
     }
@@ -27,6 +28,7 @@ public class FeedItem {
      * Get the Pet information associated with this feedItem
      * @return the Pet for this instance
      */
+    @SuppressWarnings("unused")
     public Pet getPet() {
         return this.pet;
     }

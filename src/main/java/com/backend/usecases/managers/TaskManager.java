@@ -34,6 +34,7 @@ public class TaskManager {
      * @param completeRepo of type TaskCompletionRepo, establishes connection to the task completion repository
      */
     @Autowired
+    @SuppressWarnings("unused")
     public TaskManager(TaskRepo taskRepo, TaskActiveRepo activeRepo, TaskCompletionRepo completeRepo){
         this.taskRepo = taskRepo;
         this.activeRepo = activeRepo;

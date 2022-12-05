@@ -24,6 +24,7 @@ public class Invitation {
     private final AccountID receiverIDObject;
 
     @Id
+    @SuppressWarnings("unused")
     private final String ID;
 
     private final String senderID;

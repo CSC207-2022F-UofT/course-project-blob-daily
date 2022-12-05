@@ -27,17 +27,17 @@ public class TaskCompletionRepoTest {
     private final TaskActiveRepo taskActiveRepo;
     private final AccountSystemFacade accountSystemFacade;
     private final AccountManager accountManager;
+    private final TaskCompletionRepo taskCompletionRepo;
 
     @Autowired
-    public TaskCompletionRepoTest(TaskManager taskManager, TaskActiveRepo taskActiveRepo, AccountSystemFacade accountSystemFacade, AccountManager accountManager) {
+    public TaskCompletionRepoTest(TaskManager taskManager, TaskActiveRepo taskActiveRepo, AccountSystemFacade accountSystemFacade, AccountManager accountManager, TaskCompletionRepo taskCompletionRepo) {
         this.taskManager = taskManager;
         this.taskActiveRepo = taskActiveRepo;
         this.accountSystemFacade = accountSystemFacade;
         this.accountManager = accountManager;
+        this.taskCompletionRepo = taskCompletionRepo;
     }
 
-    @Autowired
-    TaskCompletionRepo completionRepo;
     private AccountID accountID;
     private SessionID sessionID;
 
@@ -67,7 +67,7 @@ public class TaskCompletionRepoTest {
         //actions
         taskManager.completeTask(accountID, expectedTask, expectedImage);
 
-        List<TaskCompletionRecord> records = completionRepo.findAllByAccountID(expectedAccountID);
+        List<TaskCompletionRecord> records = this.taskCompletionRepo.findAllByAccountID(expectedAccountID);
         TaskCompletionRecord record = records.get(0);
 
         //assertion message
