@@ -27,7 +27,7 @@ function App() {
 
 
     const loginReq = `http://localhost:8080/login?username=${username}&password=${password}`;
-    const registerReq = `http://localhost:8080/register?username=${username}&password=${password}`;
+    const registerReq = `http://localhost:8080/register?username=${createUsername}&password=${createPassword}`;
 
     const navigate = useNavigate();
 
