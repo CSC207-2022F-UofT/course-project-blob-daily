@@ -63,10 +63,14 @@ function Settings(props){
     return(
         <div>
             <Navbar curPage={3}/>
-            <AccountApi sessionId={props.sessionId}/>
+            
+                <div className='accountName'>
+                    <h2><AccountApi sessionId={props.sessionId}/></h2>
+                </div>
                 <div className="settingsForm">
                     <input
                         className="answerBox"
+                        placeholder='New username...'
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
@@ -79,6 +83,7 @@ function Settings(props){
                 <div className="settingsForm">
                     <input
                         className="answerBox"
+                        placeholder='New password...'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import "./PetApi.css";
+import "./ItemsApi.css"
 
 class ItemsApi extends Component{
     constructor(props) {
@@ -34,7 +35,7 @@ class ItemsApi extends Component{
         const {items, error} = this.state;
         if (items){
             return (
-                <div>
+                <div className="main">
                     <table>
                         <thead>
                             <tr>

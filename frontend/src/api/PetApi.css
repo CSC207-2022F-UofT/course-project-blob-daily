@@ -12,3 +12,7 @@
     flex-direction: row-reverse;
 
 }
+
+.imageRendering {
+    image-rendering: pixelated;
+}

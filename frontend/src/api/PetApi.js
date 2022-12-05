@@ -21,30 +21,6 @@ class PetApi extends Component {
             this.setState({hatImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
             this.setState({bodyImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
             this.setState({pantsImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-
-            // for (let i = 0;  i < body.currentOutfit.length; i++){
-            //     console.log('this ran')
-            //     if (body.currentOutfit[i].location === 0) {
-            //         this.setState({hatImage: body.currentOutfit[i].imageLink})
-            //     } 
-            //     else if (body.currentOutfit[i].location === 1) {
-            //         this.setState({bodyImage: body.currentOutfit[i].imageLink})
-            //     } else if (body.currentOutfit[i].location === 2) {
-            //         this.setState({pantsImage: body.currentOutfit[i].imageLink})
-            //     } else {
-            //         this.setState({hatImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-            //         this.setState({bodyImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-            //         this.setState({pantsImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-            //     }
-            // }
-
-            // this.setState({hatImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-            // this.setState({bodyImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-            // this.setState({pantsImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-
-            // this.setState({hatImage: body.currentOutfit[1].imageLink})
-            // this.setState({bodyImage: body.currentOutfit[2].imageLink})
-            // this.setState({pantsImage: body.currentOutfit[0].imageLink})
         }
     }
 
@@ -123,7 +99,7 @@ class PetApi extends Component {
 
                         </table>
                     </div>
-                    <div>
+                    <div className="imageRendering">
                         <h2>Outfit</h2>
                         <table>
                             <thead>

@@ -13,6 +13,12 @@
     outline: none;
 }
 
+.accountName {
+    padding-left: 100px;
+    padding-top: 30px;
+    display: flex;
+}
+
 .settingsForm{
     padding-left: 100px;
     padding-top: 30px;
