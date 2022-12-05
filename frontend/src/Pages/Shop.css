@@ -2,12 +2,14 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+
 }
 
 .avatar {
     width: 600px;
     height: 450px;
     background-color: gray;
+
 }
 
 
@@ -35,6 +37,8 @@
     height: 500px;
     order: 0;
     image-rendering: pixelated;
+    margin-right: 50px;
+    border-radius: 10px;
 }
 
 .avatarLayer {

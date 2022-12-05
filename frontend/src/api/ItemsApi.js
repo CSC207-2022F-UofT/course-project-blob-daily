@@ -1,4 +1,5 @@
 import { Component } from "react";
+import "./PetApi.css";
 
 class ItemsApi extends Component{
     constructor(props) {
@@ -59,7 +60,7 @@ class ItemsApi extends Component{
                                         <td>{item.description}</td>
                                         <td>{item.cost}</td>
                                         <td>
-                                            <button onClick={() =>
+                                            <button className="shopButton" onClick={() =>
                                                 this.handleBuy(item.id)}>Buy</button>
                                         </td>
                                     </tr>

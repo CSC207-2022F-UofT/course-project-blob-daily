@@ -1,16 +1,17 @@
-import { Component } from "react";
+import {Component} from "react";
+import "./PetApi.css";
 
-class PetApi extends Component{
+class PetApi extends Component {
     constructor(props) {
         super(props);
         this.state = {pet: [], inventory: [], outfit: [], hatImage: "", bodyImage: "", pantsImage: ""};
     }
 
-    
+
     async componentDidMount() {
         const response = await fetch(`http://localhost:8080/pet?sessionID=${(this.props.sessionId)}`);
         const body = await response.json();
-        
+
         if (response.status === 200) {
             this.setState({pet: body});
             this.setState({inventory: body.inventory});
@@ -19,8 +20,8 @@ class PetApi extends Component{
 
             this.setState({hatImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
             this.setState({bodyImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-            this.setState({pantsImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})    
-            
+            this.setState({pantsImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
+
             // for (let i = 0;  i < body.currentOutfit.length; i++){
             //     console.log('this ran')
             //     if (body.currentOutfit[i].location === 0) {
@@ -40,27 +41,27 @@ class PetApi extends Component{
             // this.setState({hatImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
             // this.setState({bodyImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
             // this.setState({pantsImage: "https://i.postimg.cc/LsxXyhs3/butt-ass-naked.png"})
-            
+
             // this.setState({hatImage: body.currentOutfit[1].imageLink})
             // this.setState({bodyImage: body.currentOutfit[2].imageLink})
             // this.setState({pantsImage: body.currentOutfit[0].imageLink})
         }
     }
+
     async componentDidUpdate() {
         const response = await fetch(`http://localhost:8080/pet?sessionID=${(this.props.sessionId)}`);
         const body = await response.json();
-        
+
         if (response.status === 200) {
             this.setState({pet: body});
             this.setState({inventory: body.inventory});
             this.setState({outfit: body.currentOutfit})
 
-            for (let i = 0;  i < body.currentOutfit.length; i++){
+            for (let i = 0; i < body.currentOutfit.length; i++) {
                 console.log('this ran')
                 if (body.currentOutfit[i].location === 0) {
                     this.setState({hatImage: body.currentOutfit[i].imageLink})
-                } 
-                else if (body.currentOutfit[i].location === 1) {
+                } else if (body.currentOutfit[i].location === 1) {
                     this.setState({bodyImage: body.currentOutfit[i].imageLink})
                 } else if (body.currentOutfit[i].location === 2) {
                     this.setState({pantsImage: body.currentOutfit[i].imageLink})
@@ -73,22 +74,22 @@ class PetApi extends Component{
         }
     }
 
-    async handleEquip(id){
+    async handleEquip(id) {
         const response = await fetch(`http://localhost:8080/updatePetOutfit?sessionID=${(this.props.sessionId)}&itemID=${id}`, {method: 'POST'})
         const body = await response.json();
 
         if (response.status === 200) {
-            console.log("successful equip");            
-        } 
+            console.log("successful equip");
+        }
     }
 
-    
 
     render() {
-        const {pet, inventory, outfit, hatImage, bodyImage, pantsImage} = this.state; 
-        if (pet){
+        const {pet, inventory, outfit, hatImage, bodyImage, pantsImage} = this.state;
+        if (pet) {
             return (
-                <div>
+                <div className="shopFlex">
+                    <div>
                     <div>
                         <h2>Health</h2>
                         {pet.health}
@@ -99,77 +100,78 @@ class PetApi extends Component{
                         <h2>Inventory</h2>
                         <table>
                             <thead>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
                             </thead>
-                            
+
                             <tbody>
-                                {
-                                    inventory.map(item =>
-                                        <tr key ={item.id}>
-                                            <td>{item.name}</td>
-                                            <td>
-                                                <button onClick={()=>
-                                                this.handleEquip(item.id)}>Equip</button>
-                                            </td>
-                                        </tr>
-                                    )
-                                }
+                            {
+                                inventory.map(item =>
+                                    <tr key={item.id}>
+                                        <td>{item.name}</td>
+                                        <td>
+                                            <button className="shopButton" onClick={() =>
+                                                this.handleEquip(item.id)}>Equip
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )
+                            }
                             </tbody>
-                            
+
                         </table>
                     </div>
                     <div>
                         <h2>Outfit</h2>
                         <table>
                             <thead>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
                             </thead>
 
                             <tbody>
-                                {
-                                    outfit.map((cItem, index) =>
-                                        <tr key ={index}>
-                                            <td>{cItem.name}</td>
-                                            <td>
-                                                <img
-                                                    src= {cItem.imageLink}
-                                                    width={60}
-                                                />
-                                            </td>
-                                        </tr>
-                                    )
-                                }
+                            {
+                                outfit.map((cItem, index) =>
+                                    <tr key={index}>
+                                        <td>{cItem.name}</td>
+                                        <td>
+                                            <img
+                                                src={cItem.imageLink}
+                                                width={60}
+                                            />
+                                        </td>
+                                    </tr>
+                                )
+                            }
                             </tbody>
 
                         </table>
+                    </div>
+                    </div>
+                        <div>
+                        <div className="petDisplay">
 
-                <div className="petDisplay">
-                    {console.log('---')}
-                    {console.log(bodyImage)}
-                    {console.log(hatImage)}
-                    {console.log(pantsImage)}
+                            <div className="avatarLayer">
+                                <img
+                                    src="https://cdn.discordapp.com/attachments/1034200471088414760/1048447502069805076/avatar.png"
+                                    width={500} alt="avatar-layer"/>
+                            </div>
+                            <div className="hatLayer">
+                                <img src={hatImage} width={500} alt="hat-layer"/>
+                            </div>
+                            <div className="shirtLayer">
+                                <img src={bodyImage} width={500} alt="shirt-layer"/>
+                            </div>
+                            <div className="pantsLayer">
+                                <img src={pantsImage} width={500} alt="pants-layer"/>
+                            </div>
+                        </div>
 
-                    <div className="avatarLayer">
-                        <img src="https://cdn.discordapp.com/attachments/1034200471088414760/1048447502069805076/avatar.png" width={500} alt="avatar-layer"/>
-                    </div>
-                    <div className="hatLayer">
-                        <img src={hatImage} width={500} alt="hat-layer"/>
-                    </div>
-                    <div className="shirtLayer">
-                        <img src={bodyImage} width={500} alt="shirt-layer"/>
-                    </div>
-                    <div className="pantsLayer">
-                        <img src={pantsImage} width={500} alt="pants-layer"/>
-                    </div>
-                </div>
-
-                    </div>
+                        </div>
                 </div>
             )
         }

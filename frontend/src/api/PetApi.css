@@ -1,0 +1,14 @@
+.shopButton {
+    border-radius: 15px;
+    background-color: #fdfaf6;
+    border-color: black;
+    width: 100px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.shopFlex {
+    display: flex;
+    flex-direction: row-reverse;
+
+}
