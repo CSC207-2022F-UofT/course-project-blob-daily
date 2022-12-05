@@ -30,7 +30,6 @@ function Friends(props){
     return(
         <div>
             <Navbar curPage={1}/>
-            <AccountApi sessionId={props.sessionId}/>
             <div className="FriendsMain">
                 <div className="Friends">
                 <h3>Friends</h3>
@@ -69,7 +68,7 @@ function Friends(props){
                             value={addFriend}
                             onChange={(e) => setAddFriend(e.target.value)}
                         />
-                        <button className="blue" onClick={handleAddClick}>Send</button>
+                        <button className="blueButton" onClick={handleAddClick}>Send</button>
                     </div>
 
                     {/* <h3>Remove Friend</h3>

@@ -31,6 +31,13 @@
     margin-bottom: 0px;
 }
 
+.blueButton {
+    color: blue;
+    background-color: #fdfaf6;
+    border-radius: 10px;
+    width: 100px;
+}
+
 .blue {
     color: blue;
 }

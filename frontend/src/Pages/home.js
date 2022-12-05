@@ -8,7 +8,6 @@ function Home(props){
     return(
         <div>
             <Navbar curPage={0}/>
-            <AccountApi sessionId={props.sessionId} className="alignRight"/>
             <div className="homeMain">
 
                 <div className="feed">
