@@ -18,19 +18,7 @@ function Home(props){
                 <div className="goal">
                     <h2>Daily Challenge</h2>
                     <p>Do something out of your comfort zone</p>
-                    <TaskApi sessionId={props.sessionId}/>
-                    {/* <div className="progress">
-                        <div className="fillBar"/>
-                        
-                    </div> */}
-                    {/* <button onClick={()=> createTaskCompletion}>
-                            Complete Task
-                    </button> */}
-                    {/* <h2>Upload complete task</h2>
-                    <input className="uploadImage"
-                        name="upload-img-input"
-                        type="file"
-                    /> */}
+                    <TaskApi sessionId={props.sessionId}/>                    
                 </div>
 
             </div>
