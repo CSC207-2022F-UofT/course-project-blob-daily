@@ -44,7 +44,7 @@ public class TaskSystemFacade {
         }
 
         //check if the task name and reward are correct
-        if (!this.taskManager.verifyTask(name, reward)) {
+        if (!this.taskManager.verifyTask(name, image, reward)) {
             return this.errorHandler.logError(new Exception("Task does not exist"), HttpStatus.BAD_REQUEST);
         }
 
@@ -54,8 +54,8 @@ public class TaskSystemFacade {
         }
 
         //update the pet
-        this.balanceManager.updateBalance(sessionID.getID(), reward);
-        this.healthManager.updateHealth(account.getID(), reward);
+        this.balanceManager.updateBalance(account.getID(), reward);
+        this.healthManager.updateHealth(account.getID(), reward / 5);
         TaskCompletionRecord record = this.taskManager.completeTask(account, name, image);
         return new ResponseEntity<>(record, HttpStatus.OK);
     }

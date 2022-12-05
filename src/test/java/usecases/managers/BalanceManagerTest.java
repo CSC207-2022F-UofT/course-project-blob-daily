@@ -3,6 +3,7 @@ package usecases.managers;
 import com.backend.QuestPetsApplication;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
+import com.backend.entities.Pet;
 import com.backend.usecases.facades.AccountSystemFacade;
 import com.backend.usecases.managers.AccountManager;
 import com.backend.usecases.managers.BalanceManager;
@@ -62,40 +63,15 @@ public class BalanceManagerTest {
     }
 
     @Test
-    public void getBalanceTest(){
-
-        //Value
-        double expected = 25.4;
-
-        //Action
-        double actual = balanceManager.getBalance(accountID.getID());
-
-
-        Assertions.assertEquals(expected, actual, 0);
-    }
-
-    @Test
-    public void getInvalidBalanceTest(){
-
-        //Value
-        Double expected = null;
-
-        //Action
-        Double actual = balanceManager.getBalance("");
-
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
     public void updateBalanceTest(){
         boolean result = balanceManager.updateBalance(accountID.getID(), 10);
 
         //Value
-        double expected = 35.4;
+        double expected = 335.0;
 
         //Action
-        double actual = balanceManager.getBalance(accountID.getID());
+        Pet pet = petManager.getPet(accountID.getID());
+        double actual = pet.getBalance();
 
         Assertions.assertEquals(expected, actual, 0.0001);
         Assertions.assertTrue(result);

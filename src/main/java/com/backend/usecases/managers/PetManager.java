@@ -53,10 +53,10 @@ public class PetManager {
         }
         ArrayList<ShopItem> curInventory = new ArrayList<>();
         ArrayList<ShopItem> curOutfit = new ArrayList<>();
-        ShopItem shopItem = new ShopItem("1480775928", 19.9, "brown pants", "a pair of classic fit brown pants", "", 2);
+        ShopItem shopItem = new ShopItem("1480775935", 25.9, "Brown pants", "Keeps you grounded", "https://cdn.discordapp.com/attachments/1031600935782326434/1048421619758018631/pants4.png", 2);
         curInventory.add(shopItem);
         curOutfit.add(shopItem);
-        Pet pet = new Pet(id, 85.00, 25.4, curInventory, curOutfit);
+        Pet pet = new Pet(id, 85.00, 325.0, curInventory, curOutfit);
         this.petRepo.save(pet);
         return pet;
     }

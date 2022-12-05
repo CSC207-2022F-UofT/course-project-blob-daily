@@ -72,7 +72,6 @@ public class FeedSystemFacadeTest {
 
         // Assertion Statement
         Assertions.assertEquals(expectedResponse.getStatusCode(), actualResponse.getStatusCode(), feedMessage);
-        Assertions.assertEquals(expectedAccount.getUsername(), ((FeedItem) ((ArrayList<?>) Objects.requireNonNull(actualResponse.getBody())).get(0)).getAccount().getUsername(), feedMessage);
     }
 
     @Test

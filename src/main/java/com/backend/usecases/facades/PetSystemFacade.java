@@ -79,13 +79,14 @@ public class PetSystemFacade {
     /**
      * Post request of the allowing the pet to update the outfit
      * @param sessionID string that represents the current session and verifies the action
-     * @param shopItem ShopItem of shopItem of outfit that the pet will wear
+     * @param itemID ItemID of shopItem of outfit that the pet will wear
      */
-    public ResponseEntity<Object> updateCurrentOutfit(SessionID sessionID, ShopItem shopItem){
+    public ResponseEntity<Object> updateCurrentOutfit(SessionID sessionID, String itemID){
         AccountID accountID = this.accountManager.verifySession(sessionID);
         if (accountID == null){
             return this.errorHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
         }
+        ShopItem shopItem = this.shopManager.getShopItem(itemID);
         boolean result = this.shopManager.updateCurrentOutfit(accountID, shopItem);
         if (!result){
             return this.errorHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
@@ -104,20 +105,6 @@ public class PetSystemFacade {
             return this.errorHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(petManager.getPet(accountID.getID()), HttpStatus.OK);
-    }
-
-    /**
-     * Get request of the pet's balance by the sessionID from the database
-     * @param sessionID string that represents the current session and verifies the action
-     */
-    public ResponseEntity<Object> getBalance(SessionID sessionID){
-        AccountID accountID = this.accountManager.verifySession(sessionID);
-        if (accountID == null){
-            return this.errorHandler.logError(new SessionException("Account ID is null since sessionID was invalid"), HttpStatus.BAD_REQUEST);
-        }
-
-        double balance = this.balanceManager.getBalance(accountID.getID());
-        return new ResponseEntity<>(balance, HttpStatus.OK);
     }
 
     /**

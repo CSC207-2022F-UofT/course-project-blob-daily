@@ -167,7 +167,7 @@ public class ShopManagerTest {
     @Test
     public void checkSufficientBalancePositiveTest(){
         // Value
-        double expectedDifference = 3.5;
+        double expectedDifference = 303.1;
 
         // Action
         double actualDifference = shopManager.checkSufficientBalance(accountID, "1480775929");
@@ -178,7 +178,7 @@ public class ShopManagerTest {
     @Test
     public void checkSufficientBalanceNegativeTest(){
         // Value
-        double expectedDifference = -10.5;
+        double expectedDifference = 289.1;
 
         // Action
         double actualDifference = shopManager.checkSufficientBalance(accountID, "1480775931");

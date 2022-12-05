@@ -7,6 +7,7 @@ import com.backend.entities.TaskCompletionRecord;
 import com.backend.error.exceptions.SessionException;
 import com.backend.usecases.IErrorHandler;
 import com.backend.usecases.managers.AccountManager;
+import com.backend.usecases.managers.FriendsManager;
 import com.backend.usecases.managers.PetManager;
 import com.backend.usecases.managers.TaskManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +24,23 @@ public class FeedSystemFacade {
     private final AccountManager accountManager;
     private final TaskManager taskManager;
     private final PetManager petManager;
+    private final FriendsManager friendsManager;
     private final IErrorHandler errorHandler;
 
     /**
      * Spring Boot Dependency Injection
+     *
      * @param accountManager the dependency to be injected
-     * @param taskManager the dependency to be injected
-     * @param petManager the dependency to be injected
-     * @param errorHandler the dependency to be injected
+     * @param taskManager    the dependency to be injected
+     * @param petManager     the dependency to be injected
+     * @param errorHandler   the dependency to be injected
      */
     @Autowired
-    public FeedSystemFacade(AccountManager accountManager, TaskManager taskManager, PetManager petManager, IErrorHandler errorHandler) {
+    public FeedSystemFacade(AccountManager accountManager, TaskManager taskManager, PetManager petManager, FriendsManager friendsManager, IErrorHandler errorHandler) {
         this.accountManager = accountManager;
         this.taskManager = taskManager;
         this.petManager = petManager;
+        this.friendsManager = friendsManager;
         this.errorHandler = errorHandler;
     }
 
@@ -53,17 +57,18 @@ public class FeedSystemFacade {
         }
 
         // get list of friends
-        List<String> friends = new ArrayList<>(List.of("7T~Sp2w%Vl9t\"Wk4V]Fp"));
+        List<String> friends = this.friendsManager.getFriends(accountID.getID());
 
         // wrap FeedItem Objects
         List<FeedItem> feedItems = new ArrayList<>();
+        List<TaskCompletionRecord> recordList = this.taskManager.getAllTaskCompletionRecords();
+        Collections.reverse(recordList);
 
-        for (TaskCompletionRecord record : this.taskManager.getAllTaskCompletionRecords()) {
+        for (TaskCompletionRecord record : recordList.subList(0, 9)) {
             if (friends.contains(record.getAccountID())) {
                 feedItems.add(new FeedItem(this.accountManager.getAccountInfo(record.getAccountIDObject()), record, this.petManager.getPet(record.getAccountID())));
             }
         }
-        Collections.reverse(feedItems);
 
         return new ResponseEntity<>(feedItems, HttpStatus.OK);
     }

@@ -27,21 +27,6 @@ public class BalanceManager {
     }
 
     /**
-     * Get the balance from the database through the pet object by the accountID
-     * @param accountID string that represents the current session and verifies the action
-     */
-    public Double getBalance(String accountID){
-        Optional<Pet> pet = this.petRepo.findById(accountID);
-
-        if (pet.isEmpty()) {
-            this.errorHandler.logError(new Exception("Pet object is empty"));
-            return null;
-        }
-
-        return pet.get().getBalance();
-    }
-
-    /**
      * Update balance changed with the parameter amount for the corresponding account
      * @param accountID string that represents the current session and verifies the action
      * @param amount the double that represents the amount added to the pet's balance

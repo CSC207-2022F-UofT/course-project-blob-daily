@@ -29,22 +29,24 @@ public class AccountSystemFacade {
     private final PetManager petManager;
     private final HealthManager healthManager;
     private final TaskManager taskManager;
+    private final FriendSystemFacade friendSystemFacade;
     private final IErrorHandler errorHandler;
 
     /**
      * Spring Boot Dependency Injection of the accountManager
      *
-     * @param accountManager the dependency to be injected
-     * @param petManager     the dependency to be injected
-     * @param healthManager  the dependency to be injected
-     * @param taskManager    the dependency to be injected
+     * @param accountManager     the dependency to be injected
+     * @param petManager         the dependency to be injected
+     * @param healthManager      the dependency to be injected
+     * @param taskManager        the dependency to be injected
      */
     @Autowired
-    public AccountSystemFacade (AccountManager accountManager, PetManager petManager, HealthManager healthManager, TaskManager taskManager, IErrorHandler errorHandler) {
+    public AccountSystemFacade (AccountManager accountManager, PetManager petManager, HealthManager healthManager, TaskManager taskManager, FriendSystemFacade friendSystemFacade, IErrorHandler errorHandler) {
         this.accountManager = accountManager;
         this.petManager = petManager;
         this.healthManager = healthManager;
         this.taskManager = taskManager;
+        this.friendSystemFacade = friendSystemFacade;
         this.errorHandler = errorHandler;
     }
 
@@ -152,6 +154,8 @@ public class AccountSystemFacade {
 
         // Other manager calls
         this.petManager.deletePet(accountID.getID());
+        this.friendSystemFacade.deleteAllCorrelatedFriends(sessionID.getID());
+        this.friendSystemFacade.deleteAllCorrelatedInvitations(sessionID.getID());
 
         // Delete account by the accountID
         if (!this.accountManager.deleteAccount(accountID)) {

@@ -3,13 +3,11 @@ package usecases.facades;
 import com.backend.QuestPetsApplication;
 import com.backend.entities.IDs.AccountID;
 import com.backend.entities.IDs.SessionID;
-import com.backend.entities.ShopItem;
+import com.backend.entities.Pet;
 import com.backend.usecases.facades.AccountSystemFacade;
 import com.backend.usecases.facades.PetSystemFacade;
 import com.backend.usecases.managers.AccountManager;
-import com.backend.usecases.managers.BalanceManager;
 import com.backend.usecases.managers.PetManager;
-import com.backend.usecases.managers.ShopManager;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -26,22 +24,17 @@ import java.util.Objects;
 public class PetSystemFacadeTest {
     private SessionID sessionID;
     private AccountID accountID;
-    private final BalanceManager balanceManager;
     private final PetSystemFacade petSystemFacade;
     private final AccountSystemFacade accountSystemFacade;
     private final AccountManager accountManager;
     private final PetManager petManager;
-    private final ShopManager shopManager;
-    private ShopItem shopItem;
 
     @Autowired
-    public PetSystemFacadeTest(BalanceManager balanceManager, PetSystemFacade petSystemFacade, AccountSystemFacade accountSystemFacade, AccountManager accountManager, PetManager petManager, ShopManager shopManager) {
-        this.balanceManager = balanceManager;
+    public PetSystemFacadeTest(PetSystemFacade petSystemFacade, AccountSystemFacade accountSystemFacade, AccountManager accountManager, PetManager petManager) {
         this.petSystemFacade = petSystemFacade;
         this.accountSystemFacade = accountSystemFacade;
         this.accountManager = accountManager;
         this.petManager = petManager;
-        this.shopManager = shopManager;
     }
 
     @BeforeEach
@@ -59,7 +52,6 @@ public class PetSystemFacadeTest {
         Assertions.assertNotNull(accountID);
 
         this.petManager.initializePet(accountID.getID());
-        shopItem = this.shopManager.getShopItem("1480775928");
     }
 
     @AfterEach
@@ -97,11 +89,12 @@ public class PetSystemFacadeTest {
     @Test
     public void purchaseItemRemainingBalanceTest(){
         //expected
-        double expectedBalance = 5.5;
+        double expectedBalance = 305.1;
 
         //action
         petSystemFacade.purchaseItem(sessionID.getID(), "1480775937");
-        double actualBalance = balanceManager.getBalance(accountID.getID());
+        Pet pet = this.petManager.getPet(accountID.getID());
+        double actualBalance = pet.getBalance();
 
         //assertion message
         String errorMessage = "Incorrect remaining balance after item purchased";
@@ -129,7 +122,7 @@ public class PetSystemFacadeTest {
     @Test
     public void purchaseItemAlreadyOwnedTest(){
         //expected
-        String expectedResponse = "Item already owned";
+        String expectedResponse = "Item purchased";
 
         //action
         ResponseEntity<?> responseEntity = petSystemFacade.purchaseItem(sessionID.getID(), "1480775928");
@@ -145,7 +138,7 @@ public class PetSystemFacadeTest {
     @Test
     public void updateCurrentOutfitFacadeTest(){
         //action
-        ResponseEntity<?> responseEntity = petSystemFacade.updateCurrentOutfit(sessionID, shopItem);
+        ResponseEntity<?> responseEntity = petSystemFacade.updateCurrentOutfit(sessionID, "1480775928");
 
         //assertion message
         String errorMessage = "Unable to update current outfit due to invalid session";
@@ -157,7 +150,7 @@ public class PetSystemFacadeTest {
     @Test
     public void updateCurrentOutfitFacadeInvalidTest(){
         //action
-        ResponseEntity<?> responseEntity = petSystemFacade.updateCurrentOutfit(new SessionID(""), shopItem);
+        ResponseEntity<?> responseEntity = petSystemFacade.updateCurrentOutfit(new SessionID(""), "1480775928");
 
         //assertion message
         String errorMessage = "Unexpected to complete update current outfit with invalid itemID";
@@ -185,30 +178,6 @@ public class PetSystemFacadeTest {
 
         //assertion message
         String errorMessage = "Unexpected to complete get Pet with invalid sessionID";
-
-        //assertion statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);
-    }
-
-    @Test
-    public void getBalanceFacadeTest(){
-        //action
-        ResponseEntity<?> responseEntity = petSystemFacade.getBalance(sessionID);
-
-        //assertion message
-        String errorMessage = "Unable to getBalance due to invalid session";
-
-        //assertion statement
-        Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.OK, errorMessage);
-    }
-
-    @Test
-    public void getBalanceFacadeInvalidTest(){
-        //action
-        ResponseEntity<?> responseEntity = petSystemFacade.getBalance(new SessionID(""));
-
-        //assertion message
-        String errorMessage = "Unexpected to complete getBalance with invalid sessionID";
 
         //assertion statement
         Assertions.assertSame(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST, errorMessage);

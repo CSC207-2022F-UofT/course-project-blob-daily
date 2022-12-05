@@ -57,7 +57,11 @@ public class TaskManager {
      * @param reward of type double, the reward from the task
      * @return true if the task name and reward are valid, false otherwise
      */
-    public boolean verifyTask(String name, double reward) {
+    public boolean verifyTask(String name, String image, double reward) {
+        if (image.equals("")){
+            return false;
+        }
+
         //check if the task is part of active tasks and reward is correct
         List <TaskActive> active = this.activeRepo.findAll();
         TaskActive current = null;
@@ -124,7 +128,7 @@ public class TaskManager {
         String today = new Date(System.currentTimeMillis()).toString().substring(0, 10);
         String recent = taskActives.get(0).getDate();
 
-        if (recent.equals(today)){
+        if (taskActives.isEmpty() || recent.equals(today)){
             return updateActiveTasks(account, taskActives);
         }
         else {

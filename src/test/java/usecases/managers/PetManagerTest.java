@@ -115,7 +115,7 @@ public class PetManagerTest {
         boolean expected = true;
 
         // Action
-        ShopItem shopItem = shopManager.getShopItem("1480775928");
+        ShopItem shopItem = shopManager.getShopItem("1480775935");
         boolean actual = petManager.checkInventory(accountID, shopItem);
 
         // Assertion Message

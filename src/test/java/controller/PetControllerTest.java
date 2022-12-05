@@ -3,7 +3,6 @@ package controller;
 import com.backend.QuestPetsApplication;
 import com.backend.controller.PetController;
 import com.backend.entities.IDs.SessionID;
-import com.backend.entities.ShopItem;
 import com.backend.usecases.facades.AccountSystemFacade;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -63,28 +62,12 @@ public class PetControllerTest {
         HttpStatus expectedStatus = HttpStatus.OK;
 
         // Action
-        ShopItem shopItem = new ShopItem("1234567890", 99.9, "Top Hat", "Testing item", "", 0);
-        ResponseEntity<Object> actualResponse = petController.updatePetOutfit(sessionID, shopItem);
+        ResponseEntity<Object> actualResponse = petController.updatePetOutfit(sessionID, "1480775928");
 
         // Assertion Message
         String updatePetOutfitMessage = "Unexpectedly unable to update Pet Outfit entity given valid sessionID and curOutfit";
 
         // Assertion Statement
         Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), updatePetOutfitMessage);
-    }
-
-    @Test
-    public void getPetBalanceController(){
-        // Values
-        HttpStatus expectedStatus = HttpStatus.OK;
-
-        // Action
-        ResponseEntity<Object> actualResponse = petController.getBalance(sessionID);
-
-        // Assertion Message
-        String getPetBalanceMessage = "Unexpectedly unable to get Pet balance given valid sessionID";
-
-        // Assertion Statement
-        Assertions.assertEquals(expectedStatus, actualResponse.getStatusCode(), getPetBalanceMessage);
     }
 }

@@ -77,7 +77,7 @@ public class TaskManagerTest {
     @Test
     public void verifyTaskTest(){
         //action
-        boolean expectedOutput = taskManager.verifyTask(task, reward);
+        boolean expectedOutput = taskManager.verifyTask(task, image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task since it does not exist";
@@ -89,7 +89,7 @@ public class TaskManagerTest {
     @Test
     public void verifyTaskInvalidNameTest(){
         //action
-        boolean expectedOutput = taskManager.verifyTask("bad name", reward);
+        boolean expectedOutput = taskManager.verifyTask("bad name", image, reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task since it does not exist";
@@ -101,7 +101,19 @@ public class TaskManagerTest {
     @Test
     public void verifyTaskInvalidRewardTest(){
         //action
-        boolean expectedOutput = taskManager.verifyTask(task, 10000);
+        boolean expectedOutput = taskManager.verifyTask(task, image,10000);
+
+        //assertion message
+        String completeTaskMessage = "Unable finish task since it does not exist";
+
+        //assertion statement
+        Assertions.assertFalse(expectedOutput, completeTaskMessage);
+    }
+
+    @Test
+    public void verifyTaskInvalidImageTest(){
+        //action
+        boolean expectedOutput = taskManager.verifyTask(task, "", reward);
 
         //assertion message
         String completeTaskMessage = "Unable finish task since it does not exist";
