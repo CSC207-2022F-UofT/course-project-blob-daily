@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { resolvePath } from "react-router-dom";
+import './FeedApi.css'
 
 class FeedApi extends Component{
     constructor(props) {
@@ -29,36 +30,47 @@ class FeedApi extends Component{
         const {feeds} = this.state;
         if (feeds) {
             return (
-                <div>
-                    <table>  
-                        <tbody>
-                            {
-                                feeds.map((feed, index) =>
-                                    <tr key ={index}>
-                                        <td>{feed.account.username}</td>
-                                        {/* <td>
-                                            {
-                                                feed.pet.map(outfit =>
-                                                    <tr key={outfit.id}>
-                                                        <td>{outfit.name}</td>
-                                                    </tr>
-                                                )
-                                            }
-                                        </td> */}
-                                        <td>{feed.record.name}</td> 
-                                        <td>
-                                            <img 
-                                                src={feed.record.image}
-                                                width={600}
-                                            />
-                                        </td>
-                                        <td>{feed.record.date}</td>
-                                    </tr>
-                                )
-                            } 
-                        </tbody>
-                    </table>
+                <div>                 
+
+                    {/* <div className="feedItem">
+                        <div>
+                            <div className="feedPhoto">
+                                <img 
+                                    src="https://wallpaperaccess.com/full/1480472.jpg"
+                                    width={600} alt="feed image"
+                                />
+                            </div>
+                            <div>@username11 - Mon Dec 05</div>
+                            <div>---</div>
+                            <div>Allnighter inside Robarts</div>
+                        </div>
+                    </div> */}
+                    
+                    {
+                        feeds.map((feed, index) =>
+                            <div className="feedItem">
+                                <div key ={index}>
+                                    <div className="feedPhoto">
+                                        <img 
+                                            src={feed.record.image}
+                                            width={600} alt="feedImage"
+                                        />
+                                    </div>
+                                    
+                                    <div>
+                                        @{feed.account.username} - {feed.record.date}
+                                    </div>
+                                    <div>---</div>
+                                    <div>
+                                        {feed.record.name}
+                                    </div> 
+                                </div>
+                            </div>
+                        )
+                    } 
+
                 </div>
+
             )
         }         
     }

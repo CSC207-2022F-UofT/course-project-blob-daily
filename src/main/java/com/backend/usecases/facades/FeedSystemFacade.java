@@ -64,7 +64,11 @@ public class FeedSystemFacade {
         List<TaskCompletionRecord> recordList = this.taskManager.getAllTaskCompletionRecords();
         Collections.reverse(recordList);
 
-        for (TaskCompletionRecord record : recordList.subList(0, 9)) {
+        if (recordList.size() >= 11){
+            recordList = recordList.subList(0, 9);
+        }
+
+        for (TaskCompletionRecord record : recordList) {
             if (friends.contains(record.getAccountID())) {
                 feedItems.add(new FeedItem(this.accountManager.getAccountInfo(record.getAccountIDObject()), record, this.petManager.getPet(record.getAccountID())));
             }

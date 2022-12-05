@@ -1,0 +1,17 @@
+.feedItem {
+    display: flex;
+    flex-direction: column;
+    border-style: solid;
+    border-color: #DBDBDB;
+    border-radius: 1%;
+    padding: 10px;
+    margin-bottom: 40px;
+    margin-right: 20px;
+    padding-bottom: 20px;
+}
+
+.feedPhoto {
+    border-radius: 20%;
+    margin-bottom: 20px;
+}
+

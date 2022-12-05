@@ -57,6 +57,7 @@ class TaskApi extends Component{
         if (tasks) {
             return (
                 <div>
+                    <h2>Daily Challenges</h2>
                     <table>
                         
                         <tbody>
