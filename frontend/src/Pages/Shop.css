@@ -1,0 +1,70 @@
+.shopDisplay {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.avatar {
+    width: 600px;
+    height: 450px;
+    background-color: gray;
+}
+
+
+
+.shopText {
+    font-weight: 300;
+}
+
+.manageFlex {
+    width: 200px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+.petDisplay {
+    position: relative;
+    flex-shrink: 2;
+    flex-direction: row;
+    background-color: #edd3d3;
+    /* width: 1080px; */
+    width: 300px;
+    height: 500px;
+    order: 0;
+    image-rendering: pixelated;
+}
+
+.avatarLayer {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hatLayer {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.shirtLayer {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pantsLayer {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.accountName {
+    /* left: 50%; */
+}

@@ -1,0 +1,46 @@
+.blue {
+    color: blue;
+}
+
+.answerBox {
+    height: 20px;
+    width: 130px;
+    padding-left: 5px;
+    background-color: #fdfaf6;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: 250;
+    outline: none;
+}
+
+.settingsForm{
+    padding-left: 100px;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.settingsForm p {
+    margin: 0px;
+    padding-top: 4px;
+    padding-left: 10px;
+}
+
+.space {
+    padding-bottom: 100px;
+}
+
+.account {
+    color: red;
+    width: 200px;
+    height: 50px;
+    margin-left: 100px;
+    margin-top: 20px;
+    background-color: #fdfaf6;
+    border-radius: 10px;
+
+}
+
+.errorTextSettings {
+    padding-left: 100px;
+}
