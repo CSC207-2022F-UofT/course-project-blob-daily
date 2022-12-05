@@ -31,7 +31,6 @@ class FeedApi extends Component{
         if (feeds) {
             return (
                 <div>                 
-
                     {/* <div className="feedItem">
                         <div>
                             <div className="feedPhoto">

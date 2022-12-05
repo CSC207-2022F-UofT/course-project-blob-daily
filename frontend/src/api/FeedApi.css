@@ -15,3 +15,49 @@
     margin-bottom: 20px;
 }
 
+.taskAndPet {
+    flex-direction: row;
+}
+
+.petShowcase {
+    position: relative;
+    flex-shrink: 2;
+    flex-direction: row;
+    background-color: #edd3d3;
+    /* width: 1080px; */
+    width: 160px;
+    height: 220px;
+    order: 0;
+    image-rendering: pixelated;
+    margin-right: 50px;
+    border-radius: 10px;
+}
+
+
+.avatarLayer {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hatLayer {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.shirtLayer {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pantsLayer {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

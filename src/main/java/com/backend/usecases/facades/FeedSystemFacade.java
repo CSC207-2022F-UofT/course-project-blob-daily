@@ -58,6 +58,7 @@ public class FeedSystemFacade {
 
         // get list of friends
         List<String> friends = this.friendsManager.getFriends(accountID.getID());
+        friends.add(accountID.getID());
 
         // wrap FeedItem Objects
         List<FeedItem> feedItems = new ArrayList<>();

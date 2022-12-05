@@ -1,6 +1,5 @@
 import { Component } from "react";
 import { resolvePath } from "react-router-dom";
-
 class TaskApi extends Component{
     constructor(props) {
         super(props);
@@ -79,7 +78,7 @@ class TaskApi extends Component{
                         </tbody>
                     </table>
                     <div>
-                        <input type="text" value={this.state.image} onChange={(e) => this.setState({image: e.target.value})}/>
+                        <input placeholder="Insert image link..." type="text" value={this.state.image} onChange={(e) => this.setState({image: e.target.value})}/>
                     </div>
                     <div>
                         {error ? <p>Could not complete the task</p>: <p></p>}
