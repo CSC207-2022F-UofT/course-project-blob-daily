@@ -1,4 +1,5 @@
 import { Component } from "react";
+import "./PetApi.css"
 
 class FriendsApi extends Component{
     constructor(props) {
@@ -45,7 +46,7 @@ class FriendsApi extends Component{
                                     <tr key={friend.username}>
                                         <td>{friend.username}</td>
                                         <td>
-                                            <button onClick={() =>
+                                            <button className="shopButton" onClick={() =>
                                             this.handleUnfriend(friend.username)}>Unfriend</button>
                                         </td>
                                     </tr>

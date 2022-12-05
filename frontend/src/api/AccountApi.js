@@ -27,8 +27,8 @@ class AccountApi extends Component{
     render() {
         const {account} = this.state;
         return(
-            <div>
-                {account.username}
+            <div className="usernameStyle">
+                You are logged in as : {account.username}
             </div>
         )
     }
