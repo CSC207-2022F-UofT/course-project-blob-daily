@@ -4,7 +4,7 @@ import com.backend.entities.criteria.Criteria;
 import com.backend.entities.criteria.conditions.ContainsAtleastTypeExpression;
 import com.backend.entities.criteria.conditions.ContainsOnlyTypeExpression;
 import com.backend.entities.criteria.conditions.SizeRangeExpression;
-import com.backend.entities.criteria.generatable;
+import com.backend.entities.criteria.Generatable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Represents a Password Entity (password string, validity, generation, etc).
  */
-public class Password implements generatable {
+public class Password implements Generatable {
     // Instance Variables
     public static final Criteria criteria = new Criteria(new ArrayList<>(List.of(
             new SizeRangeExpression(5, 20, null),

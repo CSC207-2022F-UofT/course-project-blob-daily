@@ -1,12 +1,24 @@
 package com.backend.controller;
 
 import com.backend.entities.IDs.SessionID;
-import com.backend.usecases.AccountManager;
+import com.backend.usecases.facades.AccountSystemFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AccountController {
+    private final AccountSystemFacade accountSystemFacade;
+
+    /**
+     * Spring Boot Dependency Injection of the accountSystemFacade
+     * @param accountSystemFacade the dependency to be injected
+     */
+    @Autowired
+    public AccountController(AccountSystemFacade accountSystemFacade) {
+        this.accountSystemFacade = accountSystemFacade;
+    }
+
     /**
      * Post request to log in with the given credentials
      * @param username of type String, username to reference associated account
@@ -16,7 +28,7 @@ public class AccountController {
     @PostMapping("/login" )
     public ResponseEntity<Object> loginAccount(@RequestParam String username, String password){
         // Run AccountManager service
-        return AccountManager.loginAccount(username, password);
+        return this.accountSystemFacade.loginAccount(username, password);
     }
 
     /**
@@ -27,7 +39,7 @@ public class AccountController {
     @PostMapping("/logout" )
     public ResponseEntity<Object> logoutAccount(@RequestParam String sessionID){
         // Run AccountManager service
-        return AccountManager.logoutAccount(new SessionID(sessionID));
+        return this.accountSystemFacade.logoutAccount(new SessionID(sessionID));
     }
 
     /**
@@ -39,7 +51,7 @@ public class AccountController {
     @PostMapping("/register" )
     public ResponseEntity<Object> registerAccount(@RequestParam String username, String password){
         // Run AccountManager service
-        return AccountManager.registerAccount(username, password);
+        return this.accountSystemFacade.registerAccount(username, password);
     }
 
     /**
@@ -50,7 +62,31 @@ public class AccountController {
     @DeleteMapping("/delete" )
     public ResponseEntity<Object> deleteAccount(@RequestParam String sessionID){
         // Run AccountManager service
-        return AccountManager.deleteAccount(new SessionID(sessionID));
+        return this.accountSystemFacade.deleteAccount(new SessionID(sessionID));
+    }
+
+    /**
+     * Patch request to update the account associated with the given parameter
+     * @param sessionID of type String, sessionID to reference the account to be deleted
+     * @param newUsername of type String, newUsername to change the account credential to
+     * @return a response entity detailing successful completion or any associated error
+     */
+    @PatchMapping("/updateUsername" )
+    public ResponseEntity<Object> updateAccountUsername(@RequestParam String sessionID, String newUsername){
+        // Run AccountManager service
+        return this.accountSystemFacade.updateUsername(new SessionID(sessionID), newUsername);
+    }
+
+    /**
+     * Patch request to update the account associated with the given parameter
+     * @param sessionID of type String, sessionID to reference the account to be deleted
+     * @param newPassword of type String, newPassword to change the account credential to
+     * @return a response entity detailing successful completion or any associated error
+     */
+    @PatchMapping("/updatePassword" )
+    public ResponseEntity<Object> updateAccountPassword(@RequestParam String sessionID, String newPassword){
+        // Run AccountManager service
+        return this.accountSystemFacade.updatePassword(new SessionID(sessionID), newPassword);
     }
 
     /**
@@ -61,6 +97,6 @@ public class AccountController {
     @GetMapping("/account" )
     public ResponseEntity<Object> getAccount(@RequestParam String sessionID) {
         // Run AccountManager service
-        return AccountManager.getAccountInfo(new SessionID(sessionID));
+        return this.accountSystemFacade.getAccountInfo(new SessionID(sessionID));
     }
 }

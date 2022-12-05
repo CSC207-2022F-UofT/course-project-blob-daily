@@ -1,6 +1,7 @@
 package com.backend.entities;
 
 import com.backend.entities.IDs.AccountID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,6 +17,7 @@ public class Pet {
     @Transient
     private final AccountID accountID;
     @Id
+    @JsonIgnore
     private final String ID;
     private final Double health;
     private final Double balance;
@@ -36,6 +38,7 @@ public class Pet {
     /**
      * @return the id of the entity
      */
+    @JsonIgnore
     public String getID(){
         return ID;
     }

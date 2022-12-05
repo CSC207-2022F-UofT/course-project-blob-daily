@@ -1,10 +1,10 @@
 package com.backend.entities.criteria;
 
 import com.backend.entities.criteria.conditions.CriteriaExpression;
+import com.backend.entities.criteria.conditions.IConditionHandler;
 import com.backend.entities.criteria.conditions.SizeExpression;
 import com.backend.entities.criteria.conditions.SizeRangeExpression;
 import com.backend.error.exceptions.CriteriaException;
-import com.backend.error.handlers.LogHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Interface to support generating a string for a given criteria
  */
-public interface generatable extends verifiable{
+public interface Generatable extends Verifiable, IConditionHandler {
     /**
      * Generate a new string given a criteria
      * @param criteria of type Criteria, criteria to generate a new valid string with
@@ -59,7 +59,7 @@ public interface generatable extends verifiable{
 
         if (!this.isValid(newString.toString(), criteria)) {
             String errorMessage = String.format("Invalid criteria, %s%n", criteria);
-            LogHandler.logError(new CriteriaException(errorMessage));
+            this.logError(new CriteriaException(errorMessage));
         }
 
         return newString.toString();

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ShopItemTest {
-    private final ShopItem shopItem = new ShopItem("1234567890", 19.90, "Pants", "Classic pair of white pants");
+    private final ShopItem shopItem = new ShopItem("1234567890", 19.90, "Pants", "Classic pair of white pants", "", 2);
 
     @BeforeEach
     public void setUp() {
@@ -32,22 +32,22 @@ public class ShopItemTest {
         String verifyShopItemID = "The given invalid balance is invalid";
 
         // Assertion Statement
-        Assertions.assertEquals(shopItem.getID(), "1234567890", verifyShopItemID );
+        Assertions.assertEquals(expected, actual, verifyShopItemID );
     }
 
     @Test
     public void testShopItemCost() {
         //Value
-        String expected = "1234567890";
+        Double expected = 19.90;
 
         // Action
-        String actual = shopItem.getID();
+        Double actual = shopItem.getCost();
 
         // Assertion Message
-        String verifyShopItemID = "The given invalid balance is invalid";
+        String verifyShopItemCost = "The given invalid balance is invalid";
 
         // Assertion Statement
-        Assertions.assertEquals(shopItem.getCost(), 19.90, 0);
+        Assertions.assertEquals(expected, actual, verifyShopItemCost);
     }
 
     @Test
@@ -72,6 +72,36 @@ public class ShopItemTest {
 
         // Action
         String actual = shopItem.getDescription();
+
+        // Assertion Message
+        String verifyShopDescription = "The given invalid description is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(expected, actual, verifyShopDescription);
+    }
+
+    @Test
+    public void testShopItemLink(){
+        //Value
+        String expected = "";
+
+        // Action
+        String actual = shopItem.getImageLink();
+
+        // Assertion Message
+        String verifyShopDescription = "The given invalid description is invalid";
+
+        // Assertion Statement
+        Assertions.assertEquals(expected, actual, verifyShopDescription);
+    }
+
+    @Test
+    public void testShopItemLocation(){
+        //Value
+        int expected = 2;
+
+        // Action
+        int actual = shopItem.getLocation();
 
         // Assertion Message
         String verifyShopDescription = "The given invalid description is invalid";

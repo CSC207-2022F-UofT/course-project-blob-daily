@@ -1,10 +1,12 @@
 package com.backend.error.handlers;
 
 
+import com.backend.entities.criteria.conditions.IConditionHandler;
+import com.backend.usecases.IErrorHandler;
 import net.minidev.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.logging.ConsoleHandler;
@@ -12,7 +14,8 @@ import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LogHandler {
+@Service
+public class LogHandler implements IConditionHandler, IErrorHandler {
     // Variables
     private static final Logger LOGGER = Logger.getLogger( LogHandler.class.getName() );
 
@@ -51,7 +54,7 @@ public class LogHandler {
      * Log an info message to the console with the given parameter
      * @param message of type String, message to be displayed
      */
-    public static void logInfo(String message) {
+    public void logInfo(String message) {
         logMessage(message, "INFO");
     }
 
@@ -59,25 +62,17 @@ public class LogHandler {
      * Log a warning message to the console with the given parameter
      * @param message of type String, message to be displayed
      */
-    @SuppressWarnings("unused")
-    public static void logWarning(String message) {
+    @Override
+    public void logWarning(String message) {
         logMessage(message, "WARNING");
-    }
-
-    /**
-     * Log a severe message to the console with the given parameter
-     * @param message of type String, message to be displayed
-     */
-    @SuppressWarnings("unused")
-    public static void logSevere(String message) {
-        logMessage(message, "SEVERE");
     }
 
     /**
      * Log an error message to the console with the given parameter
      * @param e of type Exception, exception with information to be displayed (message, stackTrace, etc)
      */
-    public static void logError(Exception e) {
+    @Override
+    public void logError(Exception e) {
         if (!DEPRECATED) {
             if (e.getMessage() != null) {
                 LOGGER.log(Level.SEVERE, e.getMessage(), e);
@@ -87,24 +82,24 @@ public class LogHandler {
 
             e.printStackTrace();
         } else {
-            logInfo(e.getMessage());
+            this.logInfo(e.getMessage());
         }
     }
 
     /**
      * Log an error message to the console with the given parameter and package a response entity with the given information
-     * @param e of type Exception, exception with information to be displayed (message, stackTrace, etc)
+     * @param exception of type Exception, exception with information to be displayed (message, stackTrace, etc)
      * @param status of type HttpStatus, status of the REST response to be generated
      * @return a ResponseEntity with the associated exception message and status code
      */
-    public static ResponseEntity<Object> logError(Exception e, HttpStatus status) {
-        logError(e);
-
+    @Override
+    public ResponseEntity<Object> logError(Exception exception, HttpStatus status) {
+        this.logError(exception);
 
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("Error", e.getClass().getName());
-        jsonObject.put("Message", e.getMessage());
+        jsonObject.put("Error", exception.getClass().getName());
+        jsonObject.put("Message", exception.getMessage());
 
 
         return new ResponseEntity<>(jsonObject, status);

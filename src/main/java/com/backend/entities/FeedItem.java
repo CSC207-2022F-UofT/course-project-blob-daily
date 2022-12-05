@@ -14,4 +14,29 @@ public class FeedItem {
         this.record = record;
         this.pet = pet;
     }
+
+    /**
+     * Get the ProtectedAccount information associated with this feedItem
+     * @return the ProtectedAccount for this instance
+     */
+    public ProtectedAccount getAccount() {
+        return this.account;
+    }
+
+    /**
+     * Get the Pet information associated with this feedItem
+     * @return the Pet for this instance
+     */
+    public Pet getPet() {
+        return this.pet;
+    }
+
+    /**
+     * Get the TaskCompletionRecord information associated with this feedItem
+     * @return the TaskCompletionRecord for this instance
+     */
+    @SuppressWarnings("unused")
+    public TaskCompletionRecord getRecord() {
+        return this.record;
+    }
 }
