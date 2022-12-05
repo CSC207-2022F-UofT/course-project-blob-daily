@@ -1,4 +1,5 @@
 import { Component } from "react";
+import "./PetApi.css"
 
 class IncomingInvitationsApi extends Component{
     constructor(props) {
@@ -53,9 +54,9 @@ class IncomingInvitationsApi extends Component{
                                     <tr key= {invitation.username}>
                                         <td>{invitation.username}</td>
                                         <td>
-                                            <button onClick={() =>
+                                            <button className="shopButton" onClick={() =>
                                                 this.handleAccept(invitation.username)}>Accept</button>
-                                            <button onClick={() =>
+                                            <button className="shopButton" onClick={() =>
                                                 this.handleDecline(invitation.username)}>Decline</button>
                                         </td>
 

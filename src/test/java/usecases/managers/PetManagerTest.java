@@ -110,22 +110,6 @@ public class PetManagerTest {
     }
 
     @Test
-    public void checkInventoryTest(){
-        // Value
-        boolean expected = true;
-
-        // Action
-        ShopItem shopItem = shopManager.getShopItem("1480775935");
-        boolean actual = petManager.checkInventory(accountID, shopItem);
-
-        // Assertion Message
-        String failedMessage = "The given check inventory Test failed";
-
-        // Assertion Statement
-        Assertions.assertEquals(expected, actual, failedMessage);
-    }
-
-    @Test
     public void checkNotInInventoryTest(){
         // Value
         boolean expected = false;

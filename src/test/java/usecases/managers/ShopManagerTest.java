@@ -101,38 +101,6 @@ public class ShopManagerTest {
     }
 
     @Test
-    public void updateCurrentOutfitUniqueTest(){
-        ShopItem shopItem = new ShopItem("2468135790", 19.90, "Boots", "Classic pair of white boots", "", 3);
-        boolean result = shopManager.updateCurrentOutfit(accountID, shopItem);
-        Pet pet = petManager.getPet(accountID.getID());
-
-        //Value
-        String expected = "2468135790";
-
-        // Action
-        String actual = pet.getCurrentOutfit().get(1).getID();
-
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertTrue(result);
-    }
-
-    @Test
-    public void updateCurrentOutfitUniqueLengthTest(){
-        ShopItem shopItem = new ShopItem("2468135790", 19.90, "Boots", "Classic pair of white boots", "", 3);
-        boolean result = shopManager.updateCurrentOutfit(accountID, shopItem);
-        Pet pet = petManager.getPet(accountID.getID());
-
-        //Value
-        int expected = 2;
-
-        // Action
-        int actual = pet.getCurrentOutfit().size();
-
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertTrue(result);
-    }
-
-    @Test
     public void updateCurrentOutfitReplaceTest(){
         ShopItem shopItem = new ShopItem("2468135790", 19.90, "Pants", "Classic pair of white pants", "", 2);
         boolean result = shopManager.updateCurrentOutfit(accountID, shopItem);
